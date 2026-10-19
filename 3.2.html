@@ -1,0 +1,988 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sub 3.2 - Output LED Analog (PWM)</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      body {
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 9999px;
+      }
+
+      /* Animasi Arus Listrik Kabel */
+      @keyframes dashMove {
+        to {
+          stroke-dashoffset: -8;
+        }
+      }
+      .animate-dash {
+        animation: dashMove 0.4s linear infinite;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased pb-10"
+  >
+    <!-- HEADER APP -->
+    <header
+      class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3"
+      >
+        <div class="flex items-center gap-3">
+          <a
+            href="index.html"
+            class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-sm transition-colors"
+            title="Kembali"
+          >
+            <i class="fa-solid fa-home"></i>
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span
+                class="text-[10px] font-extrabold bg-teal-100 text-teal-800 px-2 py-0.5 rounded uppercase tracking-wider"
+              >
+                SUB 3.2
+              </span>
+            </div>
+            <h1
+              class="text-sm sm:text-base font-black text-slate-900 leading-tight mt-0.5"
+            >
+              Output LED Analog: PWM & Gradasi Kecerahan
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <!-- HERO BANNER RINGKAS -->
+      <section
+        class="bg-gradient-to-r from-teal-800 to-teal-700 text-white rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden"
+      >
+        <div
+          class="absolute -right-4 -bottom-6 opacity-15 pointer-events-none hidden sm:block select-none"
+        >
+          <i class="fa-solid fa-sliders text-[140px] text-teal-100"></i>
+        </div>
+        <div class="relative z-10 space-y-1.5 max-w-3xl">
+          <div
+            class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
+          >
+            <i class="fa-solid fa-microchip text-teal-200-300 text-xs"></i>
+            <span>Praktik Output Analog (PWM)</span>
+          </div>
+          <h2
+            class="text-lg sm:text-xl font-extrabold text-white leading-tight display-font"
+          >
+            Pengontrolan Tingkat Kecerahan LED (PWM)
+          </h2>
+          <p
+            class="text-xs sm:text-sm text-teal-50/90 leading-relaxed font-normal"
+          >
+            Pelajari cara mengendalikan intensitas cahaya LED menggunakan Sinyal
+            PWM via instruksi
+            <code class="font-mono text-teal-200 font-bold"
+              >analogWrite(pin, nilai PWM)</code
+            >
+            mulai dari tingkatan Redup (PWM 25), Sedang (PWM 100), Terang (PWM
+            255), hingga Transisi Otomatis.
+          </p>
+        </div>
+      </section>
+
+      <!-- SKEMA RANGKAIAN & VISUAL HARDWARE LED -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- GAMBAR RANGKAIAN (2 Kolom) -->
+        <div
+          class="md:col-span-2 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between"
+        >
+          <div
+            class="w-full flex items-center justify-between mb-3 border-b border-slate-100 pb-2.5"
+          >
+            <h2
+              class="text-sm sm:text-base font-extrabold text-slate-800 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-diagram-project text-teal-600"></i> Skema
+              Rangkaian Analog
+            </h2>
+            <span
+              class="text-xs font-semibold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-100"
+            >
+              PIN PWM ~3 & GND
+            </span>
+          </div>
+
+          <div
+            class="w-full bg-slate-50 p-3 sm:p-5 rounded-xl border border-slate-200 flex items-center justify-center min-h-[220px]"
+          >
+            <img
+              src="img/modul03/3.2.1.png"
+              alt="Skema Rangkaian PWM LED Arduino"
+              class="max-h-[260px] w-auto max-w-full object-contain rounded-lg border border-slate-200 bg-white p-2 shadow-xs"
+              onerror="
+                this.onerror = null;
+                this.src = 'rangkaian1.png';
+              "
+            />
+          </div>
+        </div>
+
+        <!-- SIMULASI ANIMASI HARDWARE LED REALISTIS (1 Kolom - ANALOG GRADASI) -->
+        <div
+          class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between items-center text-center overflow-hidden"
+        >
+          <div
+            class="w-full border-b border-slate-100 pb-2.5 flex items-center justify-between mb-2"
+          >
+            <h2
+              class="text-sm sm:text-base font-extrabold text-slate-800 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-microchip text-teal-600"></i> Visual
+              Hardware
+            </h2>
+            <span
+              class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200"
+              >PWM ~3</span
+            >
+          </div>
+
+          <!-- CONTAINER SVG SIMULATOR HARDWARE -->
+          <div
+            class="relative w-full h-full min-h-[220px] bg-slate-50 rounded-2xl p-4 flex flex-col items-center justify-center overflow-hidden border border-slate-200 shadow-xs my-auto"
+          >
+            <!-- BACKGROUND GRID CERAH -->
+            <div
+              class="absolute inset-0 opacity-30 bg-[radial-gradient(#94a3b8_1px,transparent_1px)] [background-size:16px_16px]"
+            ></div>
+
+            <!-- SVG REALISTIC LED WITH PWM INTENSITY -->
+            <svg
+              viewBox="0 0 200 160"
+              class="w-48 h-48 z-10 filter drop-shadow-md"
+            >
+              <defs>
+                <!-- Halo Pendar Cahaya LED Off -->
+                <radialGradient id="ledGlowOff" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#ef4444" stop-opacity="0" />
+                  <stop offset="100%" stop-color="#ef4444" stop-opacity="0" />
+                </radialGradient>
+
+                <!-- Halo Pendar Cahaya LED On -->
+                <radialGradient id="ledGlowOn" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#ff4d4d" stop-opacity="0.9" />
+                  <stop offset="50%" stop-color="#ef4444" stop-opacity="0.5" />
+                  <stop offset="100%" stop-color="#ef4444" stop-opacity="0" />
+                </radialGradient>
+
+                <!-- Gradien Lensa Kaca LED -->
+                <linearGradient
+                  id="lensReflect"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6" />
+                  <stop offset="40%" stop-color="#ffffff" stop-opacity="0.1" />
+                  <stop offset="100%" stop-color="#000000" stop-opacity="0.3" />
+                </linearGradient>
+              </defs>
+
+              <!-- KAKI LED (Anode & Cathode) -->
+              <rect x="91" y="80" width="4" height="60" fill="#64748b" rx="1" />
+              <rect
+                x="105"
+                y="80"
+                width="4"
+                height="60"
+                fill="#94a3b8"
+                rx="1"
+              />
+
+              <!-- PENDARAN CAHAYA (GLOW HALO DENGAN OPACITY DYNAMIS) -->
+              <circle
+                id="svgGlow"
+                cx="100"
+                cy="55"
+                r="45"
+                fill="url(#ledGlowOff)"
+                style="opacity: 0"
+                class="transition-all duration-300"
+              />
+
+              <!-- BADAN UTAMA LED (BODY) -->
+              <path
+                id="svgLedBody"
+                d="M 80 55 A 20 20 0 0 1 120 55 L 120 75 A 2 2 0 0 1 118 77 L 82 77 A 2 2 0 0 1 80 75 Z"
+                fill="#7f1d1d"
+                class="transition-colors duration-300"
+              />
+
+              <!-- ELEMEN DALAM LED (ANVIL & POST) -->
+              <path
+                d="M 90 65 L 95 55 L 98 65 Z"
+                fill="#f87171"
+                opacity="0.7"
+              />
+              <path
+                d="M 105 65 L 105 58 Z"
+                stroke="#f87171"
+                stroke-width="2"
+                opacity="0.7"
+              />
+
+              <!-- LAPISAN REFLEKSI KACA (GLASS REFLECTION) -->
+              <path
+                d="M 80 55 A 20 20 0 0 1 120 55 L 120 75 A 2 2 0 0 1 118 77 L 82 77 A 2 2 0 0 1 80 75 Z"
+                fill="url(#lensReflect)"
+              />
+              <ellipse
+                cx="93"
+                cy="45"
+                rx="5"
+                ry="8"
+                fill="#ffffff"
+                opacity="0.4"
+                transform="rotate(-20 93 45)"
+              />
+            </svg>
+
+            <!-- STATUS BADGE LED -->
+            <div
+              id="ledStatusBadge"
+              class="z-10 mt-1 text-[11px] font-mono font-bold px-3 py-1 rounded-full bg-slate-200 text-slate-600 border border-slate-300 transition-all duration-200"
+            >
+              STATUS: MATI (PWM 0)
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SELEKTOR MISI PRAKTIKUM PWM (Pill Buttons) -->
+      <section class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h3
+            class="text-base sm:text-lg font-extrabold text-slate-900 flex items-center gap-2"
+          >
+            <i class="fa-solid fa-gamepad text-teal-600"></i> Pilih Misi
+            Praktikum
+          </h3>
+          <span
+            class="text-xs font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-100"
+          >
+            4 Opsi Kode PWM
+          </span>
+        </div>
+
+        <!-- TOMBOL STRIP MISI 4A, 4B, 4C, 4D -->
+        <div class="flex flex-wrap gap-2.5">
+          <button
+            onclick="switchMission('4A')"
+            id="sub-btn-4a"
+            class="px-4 py-2.5 rounded-2xl text-xs font-bold bg-teal-700 text-white shadow-xs transition cursor-pointer flex items-center gap-2"
+          >
+            <i class="fa-solid fa-moon"></i> Kode 4A: Redup (PWM 25)
+          </button>
+          <button
+            onclick="switchMission('4B')"
+            id="sub-btn-4b"
+            class="px-4 py-2.5 rounded-2xl text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition cursor-pointer flex items-center gap-2"
+          >
+            <i class="fa-solid fa-circle-half-stroke"></i> Kode 4B: Sedang (PWM
+            100)
+          </button>
+          <button
+            onclick="switchMission('4C')"
+            id="sub-btn-4c"
+            class="px-4 py-2.5 rounded-2xl text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition cursor-pointer flex items-center gap-2"
+          >
+            <i class="fa-solid fa-sun"></i> Kode 4C: Terang (PWM 255)
+          </button>
+          <button
+            onclick="switchMission('4D')"
+            id="sub-btn-4d"
+            class="px-4 py-2.5 rounded-2xl text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition cursor-pointer flex items-center gap-2"
+          >
+            <i class="fa-solid fa-arrows-rotate"></i> Kode 4D: Transisi Otomatis
+          </button>
+        </div>
+
+        <!-- PANEL DESKRIPSI MISI -->
+        <div
+          id="mission-description-box"
+          class="bg-teal-50/80 border border-teal-200 rounded-xl p-3.5 text-xs sm:text-sm text-teal-950 flex items-start gap-3"
+        >
+          <div
+            class="w-8 h-8 rounded-lg bg-teal-600 text-white flex items-center justify-center shrink-0 font-bold text-sm"
+          >
+            <i id="mission-icon" class="fa-solid fa-moon"></i>
+          </div>
+          <div class="space-y-1">
+            <div id="mission-title" class="font-bold">
+              Kode 4A: Redup (PWM 25)
+            </div>
+            <p id="mission-goal" class="text-slate-600 text-xs">
+              <strong>Tugas 4A:</strong> Kirim nilai PWM 25 (~10% daya) untuk
+              menyalakan LED dalam kondisi redup. Klik
+              <strong>Upload & Run</strong>!
+            </p>
+          </div>
+        </div>
+
+        <!-- EDITOR ARDUINO IDE -->
+        <div
+          class="rounded-xl overflow-hidden shadow-md border border-slate-300 bg-white font-sans"
+        >
+          <!-- ARDUINO IDE HEADER BAR -->
+          <div
+            class="bg-[#008184] px-3 py-2 flex items-center justify-between text-white select-none"
+          >
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-1.5">
+                <button
+                  title="Verify Sketch"
+                  class="w-7 h-7 rounded-full bg-[#006e71] hover:bg-[#005a5d] text-emerald-300 flex items-center justify-center transition"
+                >
+                  <i class="fa-solid fa-check text-xs"></i>
+                </button>
+              </div>
+
+              <div
+                class="bg-white text-slate-800 px-3 py-1 rounded-md text-xs font-medium flex items-center gap-2 border border-teal-700 shadow-xs"
+              >
+                <i class="fa-solid fa-microchip text-teal-600"></i>
+                <span id="boardName">Arduino Uno</span>
+                <i
+                  class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1"
+                ></i>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button
+                id="btnCopy"
+                onclick="copyCode()"
+                class="bg-[#006e71] hover:bg-[#005a5d] text-white text-xs font-semibold px-3 py-1 rounded-md flex items-center gap-1.5 transition border border-teal-600 cursor-pointer"
+              >
+                <i id="btnCopyIcon" class="fa-solid fa-copy"></i>
+                <span id="btnCopyText" class="hidden sm:inline"
+                  >Salin Kode</span
+                >
+              </button>
+            </div>
+          </div>
+
+          <!-- ARDUINO IDE SUB-HEADER -->
+          <div
+            class="bg-slate-100 border-b border-slate-200 px-3 py-1.5 flex items-center justify-between text-slate-600 text-xs select-none"
+          >
+            <div
+              class="flex items-center gap-2 font-mono font-medium text-slate-700"
+            >
+              <i class="fa-solid fa-file-code text-teal-600"></i>
+              <span id="ideTitle">sketch_misi4a_redup.ino</span>
+            </div>
+            <div class="flex items-center gap-3 text-slate-400 text-xs">
+              <i
+                class="fa-solid fa-terminal text-teal-600"
+                title="Serial Monitor Active"
+              ></i>
+            </div>
+          </div>
+
+          <!-- EDITOR WORKSPACE -->
+          <div class="flex min-h-[220px]">
+            <div
+              class="w-10 bg-slate-50 border-r border-slate-200 flex flex-col items-center py-3 gap-4 text-slate-400 text-xs select-none hidden sm:flex shrink-0"
+            >
+              <i class="fa-regular fa-copy text-teal-700 font-bold"></i>
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <i class="fa-solid fa-cubes"></i>
+              <i class="fa-solid fa-book"></i>
+            </div>
+
+            <div class="p-3 sm:p-4 overflow-x-auto w-full bg-white">
+              <div
+                id="codeDisplay"
+                class="font-mono text-xs sm:text-sm leading-relaxed"
+              ></div>
+            </div>
+          </div>
+
+          <!-- IDE STATUS BAR -->
+          <div
+            class="bg-[#005f63] px-3 py-1 text-[11px] text-teal-100 flex justify-between items-center font-sans border-t border-teal-800 select-none"
+          >
+            <span class="flex items-center gap-1.5" id="ideStatusContainer">
+              <span
+                class="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse"
+              ></span>
+              <span id="ideStatusText">Ready | Pin Output PWM: PIN ~3</span>
+            </span>
+            <span class="font-mono text-[10px] text-teal-200"
+              >Arduino Uno on COM3</span
+            >
+          </div>
+        </div>
+
+        <!-- SERIAL MONITOR SECTION -->
+        <div
+          class="rounded-xl overflow-hidden shadow-sm border border-slate-300 bg-white font-sans mt-4"
+        >
+          <!-- SERIAL MONITOR HEADER (TOMBOL UPLOAD & RUN, STOP, CLEAR) -->
+          <div
+            class="bg-slate-200/90 border-b border-slate-300 px-3 py-2 flex flex-wrap items-center justify-between gap-2 text-slate-800 select-none"
+          >
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-terminal text-teal-700 text-xs"></i>
+              <span class="font-bold text-xs uppercase tracking-wide"
+                >Serial Monitor (Simulasi PWM Output)</span
+              >
+              <span
+                class="text-[10px] font-mono bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold hidden sm:inline-block"
+                >COM3: 9600 baud</span
+              >
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="flex items-center gap-1.5">
+              <!-- TOMBOL UPLOAD & RUN -->
+              <button
+                id="btnUpload"
+                onclick="uploadAndRun()"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-2.5 py-1 rounded shadow-xs flex items-center gap-1.5 transition cursor-pointer"
+                title="Jalankan Simulasi"
+              >
+                <i class="fa-solid fa-play text-[10px]"></i>
+                <span>Upload & Run</span>
+              </button>
+
+              <!-- TOMBOL STOP -->
+              <button
+                id="btnStop"
+                onclick="stopProgram()"
+                class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold px-2.5 py-1 rounded shadow-xs flex items-center gap-1.5 transition cursor-pointer"
+                title="Hentikan Simulasi"
+              >
+                <i class="fa-solid fa-stop text-[10px]"></i>
+                <span>Stop</span>
+              </button>
+
+              <!-- TOMBOL CLEAR -->
+              <button
+                onclick="clearSerialMonitor()"
+                class="bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold px-2 py-1 rounded border border-slate-300 transition cursor-pointer"
+                title="Bersihkan Tampilan"
+              >
+                <i class="fa-solid fa-eraser text-slate-500 mr-1"></i>Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- SERIAL MONITOR DISPLAY AREA -->
+          <div
+            class="p-3 bg-white min-h-[150px] max-h-[200px] overflow-y-auto font-mono text-xs text-slate-800 space-y-1.5 border-b border-slate-200"
+            id="serialMonitorOutput"
+          >
+            <div class="text-slate-400 italic">
+              [Serial Monitor Siap. Klik "Upload & Run" untuk memulai]
+            </div>
+          </div>
+
+          <!-- SERIAL MONITOR FOOTER / OPTIONS -->
+          <div
+            class="bg-slate-50 px-3 py-1.5 text-[11px] text-slate-600 flex justify-between items-center font-sans"
+          >
+            <div class="flex items-center gap-2 text-xs">
+              <span
+                class="w-2 h-2 rounded-full bg-emerald-500 inline-block"
+              ></span>
+              <span class="text-slate-500 font-mono text-[11px]"
+                >Status: Connected @ 9600 baud</span
+              >
+            </div>
+
+            <!-- TOGGLE OPTION -->
+            <div class="flex items-center gap-3 text-[11px] text-slate-500">
+              <label
+                class="flex items-center gap-1.5 cursor-pointer select-none"
+              >
+                <input
+                  type="checkbox"
+                  id="chkTimestamp"
+                  onchange="toggleTimestampVisibility()"
+                  checked
+                  class="rounded text-teal-600 focus:ring-teal-500 cursor-pointer"
+                />
+                <span class="font-medium text-slate-600">Show Timestamp</span>
+              </label>
+
+              <label
+                class="flex items-center gap-1.5 cursor-pointer select-none"
+              >
+                <input
+                  type="checkbox"
+                  id="chkAutoscroll"
+                  checked
+                  class="rounded text-teal-600 focus:ring-teal-500 cursor-pointer"
+                />
+                <span class="font-medium text-slate-600">Autoscroll</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NAVIGATION FOOTER -->
+      <nav class="flex items-center justify-between pt-2">
+        <a
+          href="3.1.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs transition-colors shadow-2xs"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Sub 3.1: Pengenalan PWM</span>
+        </a>
+        <a
+          href="3.3.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 font-bold text-xs transition-colors shadow-xs"
+        >
+          <span>Sub 3.3: Potensiosmeter PWM</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </nav>
+    </main>
+
+    <footer
+      class="max-w-6xl mx-auto w-full px-4 pt-4 text-center text-xs text-slate-400 font-medium"
+    >
+      <p>© MIKRO EDU - SMK SMTI Yogyakarta | Teknik Kimia Industri</p>
+    </footer>
+
+    <!-- SCRIPT LOGIKA PROGRAM -->
+    <script>
+      const missions = {
+        "4A": {
+          filename: "sketch_misi4a_redup.ino",
+          title: "Kode 4A: Redup (PWM 25)",
+          icon: "fa-moon",
+          desc: "<strong>Tugas 4A:</strong> Kirim nilai PWM 25 (~10% daya) untuk menyalakan LED dalam kondisi redup.",
+          rawCode: `// --- MISI 4A: LED REDUP (PWM 25) ---
+int pinLED = 3; // Kaki LED terhubung ke Pin PWM ~3
+
+void setup() {
+  Serial.begin(9600);      // Memulai komunikasi serial (9600 baud)
+  pinMode(pinLED, OUTPUT); // Set pin 3 sebagai Output
+}
+
+void loop() {
+  analogWrite(pinLED, 25); // Kirim sinyal PWM = 25 (Redup)
+  Serial.println("Status LED: REDUP (PWM: 25 | 10%)");
+  delay(1000);             // Jeda 1 detik
+}`,
+        },
+        "4B": {
+          filename: "sketch_misi4b_sedang.ino",
+          title: "Kode 4B: Sedang (PWM 100)",
+          icon: "fa-circle-half-stroke",
+          desc: "<strong>Tugas 4B:</strong> Kirim nilai PWM 100 (~39% daya) untuk menyalakan LED dalam kondisi sedang.",
+          rawCode: `// --- MISI 4B: LED SEDANG (PWM 100) ---
+int pinLED = 3; // Kaki LED terhubung ke Pin PWM ~3
+
+void setup() {
+  Serial.begin(9600);      // Memulai komunikasi serial
+  pinMode(pinLED, OUTPUT); // Set pin 3 sebagai Output
+}
+
+void loop() {
+  analogWrite(pinLED, 100); // Kirim sinyal PWM = 100 (Sedang)
+  Serial.println("Status LED: SEDANG (PWM: 100 | 39%)");
+  delay(1000);              // Jeda 1 detik
+}`,
+        },
+        "4C": {
+          filename: "sketch_misi4c_terang.ino",
+          title: "Kode 4C: Terang (PWM 255)",
+          icon: "fa-sun",
+          desc: "<strong>Tugas 4C:</strong> Kirim nilai PWM 255 (100% daya) untuk menyalakan LED secara maksimal.",
+          rawCode: `// --- MISI 4C: LED TERANG (PWM 255) ---
+int pinLED = 3; // Kaki LED terhubung ke Pin PWM ~3
+
+void setup() {
+  Serial.begin(9600);      // Memulai komunikasi serial
+  pinMode(pinLED, OUTPUT); // Set pin 3 sebagai Output
+}
+
+void loop() {
+  analogWrite(pinLED, 255); // Kirim sinyal PWM = 255 (Maksimal)
+  Serial.println("Status LED: TERANG (PWM: 255 | 100%)");
+  delay(1000);              // Jeda 1 detik
+}`,
+        },
+        "4D": {
+          filename: "sketch_misi4d_transisi.ino",
+          title: "Kode 4D: Transisi Otomatis",
+          icon: "fa-arrows-rotate",
+          desc: "<strong>Tugas 4D:</strong> Program melakukan transisi dari Redup (PWM 25) -> Sedang (PWM 100) -> Terang (PWM 255) -> Mati (PWM 0) secara bertahap.",
+          rawCode: `// --- MISI 4D: TRANSISI OTOMATIS ---
+int pinLED = 3; // Kaki LED terhubung ke Pin PWM ~3
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(pinLED, OUTPUT);
+}
+
+void loop() {
+  // Tahap 1: Redup
+  analogWrite(pinLED, 25);
+  Serial.println("Transisi Stage 1 - REDUP (PWM: 25)");
+  delay(1000);
+
+  // Tahap 2: Sedang
+  analogWrite(pinLED, 100);
+  Serial.println("Transisi Stage 2 - SEDANG (PWM: 100)");
+  delay(1000);
+
+  // Tahap 3: Terang
+  analogWrite(pinLED, 255);
+  Serial.println("Transisi Stage 3 - TERANG (PWM: 255)");
+  delay(1000);
+
+  // Tahap 4: Mati
+  analogWrite(pinLED, 0);
+  Serial.println("Transisi Stage 4 - MATI (PWM: 0)");
+  delay(1000);
+}`,
+        },
+      };
+
+      let currentMissionKey = "4A";
+      let liveTimer = null;
+      let isUploading = false;
+
+      /* KONTROL ANIMASI HARDWARE LED VISUAL (GRADASI PWM ANALOG) */
+      function setLedAnalogValue(pwmVal) {
+        const glow = document.getElementById("svgGlow");
+        const body = document.getElementById("svgLedBody");
+        const badge = document.getElementById("ledStatusBadge");
+
+        const ratio = Math.min(Math.max(pwmVal / 255, 0), 1);
+        const percentage = Math.round(ratio * 100);
+
+        if (pwmVal > 0) {
+          glow.setAttribute("fill", "url(#ledGlowOn)");
+          glow.style.opacity = (ratio * 0.95).toFixed(2);
+
+          if (percentage > 70) {
+            body.setAttribute("fill", "#ef4444");
+          } else if (percentage > 30) {
+            body.setAttribute("fill", "#b91c1c");
+          } else {
+            body.setAttribute("fill", "#991b1b");
+          }
+
+          badge.className =
+            "z-10 mt-1 text-[11px] font-mono font-bold px-3 py-1 rounded-full bg-amber-500 text-white border border-amber-600 shadow-[0_0_10px_rgba(245,158,11,0.4)] transition-all duration-200";
+          badge.innerText = `STATUS: PWM ${pwmVal} (${percentage}%)`;
+        } else {
+          glow.setAttribute("fill", "url(#ledGlowOff)");
+          glow.style.opacity = "0";
+          body.setAttribute("fill", "#7f1d1d");
+          badge.className =
+            "z-10 mt-1 text-[11px] font-mono font-bold px-3 py-1 rounded-full bg-slate-200 text-slate-600 border border-slate-300 transition-all duration-200";
+          badge.innerText = "STATUS: MATI (PWM 0)";
+        }
+      }
+
+      function getRealtimeTimestamp() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const seconds = String(now.getSeconds()).padStart(2, "0");
+        return `[${hours}:${minutes}:${seconds}]`;
+      }
+
+      function escapeHtml(text) {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+
+      function renderArduinoSyntax(code) {
+        const lines = code.split("\n");
+        let htmlResult =
+          '<div class="table w-full border-collapse font-mono text-xs sm:text-sm">';
+
+        lines.forEach((line, index) => {
+          let comment = "";
+          let codePart = line;
+
+          const commentIdx = line.indexOf("//");
+          if (commentIdx !== -1) {
+            codePart = line.substring(0, commentIdx);
+            comment = `<span class="text-slate-400 italic font-normal">${escapeHtml(line.substring(commentIdx))}</span>`;
+          }
+
+          codePart = escapeHtml(codePart);
+
+          codePart = codePart
+            .replace(
+              /\b(int|void|float|boolean|bool|char|const|long|unsigned|for)\b/g,
+              '<span class="text-[#05797d] font-bold">$1</span>',
+            )
+            .replace(
+              /\b(setup|loop|pinMode|digitalWrite|analogWrite|delay|millis|Serial)\b/g,
+              '<span class="text-[#d97706] font-semibold">$1</span>',
+            )
+            .replace(
+              /\b(HIGH|LOW|OUTPUT|INPUT|INPUT_PULLUP)\b/g,
+              '<span class="text-[#0284c7] font-bold">$1</span>',
+            )
+            .replace(
+              /\b(\d+)\b/g,
+              '<span class="text-emerald-600 font-medium">$1</span>',
+            );
+
+          htmlResult += `
+            <div class="table-row hover:bg-slate-50">
+              <div class="table-cell text-right select-none pr-3.5 text-slate-300 font-mono text-xs w-7 border-r border-slate-100 py-0.5">${index + 1}</div>
+              <div class="table-cell pl-3.5 whitespace-pre font-mono text-slate-800 py-0.5">${codePart}${comment}</div>
+            </div>`;
+        });
+
+        htmlResult += "</div>";
+        return htmlResult;
+      }
+
+      function printLiveLog(logText) {
+        const monitor = document.getElementById("serialMonitorOutput");
+        const showTimestamp = document.getElementById("chkTimestamp").checked;
+        const autoScroll = document.getElementById("chkAutoscroll").checked;
+
+        const line = document.createElement("div");
+        line.className =
+          "flex items-center gap-2 text-xs font-mono text-slate-800 log-line";
+
+        const hideClass = showTimestamp ? "" : "hidden";
+        const timestampStr = getRealtimeTimestamp();
+
+        line.innerHTML = `
+          <span class="text-teal-600 font-semibold">&gt;</span>
+          <span class="timestamp-tag text-slate-400 text-[11px] font-mono ${hideClass}">${timestampStr}</span>
+          <span class="text-slate-800 font-mono">${escapeHtml(logText)}</span>
+        `;
+
+        monitor.appendChild(line);
+
+        if (autoScroll) {
+          monitor.scrollTop = monitor.scrollHeight;
+        }
+      }
+
+      function toggleTimestampVisibility() {
+        const showTimestamp = document.getElementById("chkTimestamp").checked;
+        const tags = document.querySelectorAll(".timestamp-tag");
+        tags.forEach((tag) => {
+          if (showTimestamp) {
+            tag.classList.remove("hidden");
+          } else {
+            tag.classList.add("hidden");
+          }
+        });
+      }
+
+      /* LOGIKA MENJALANKAN SIMULASI PWM */
+      function startContinuousOutput(key) {
+        stopProgramSilently();
+        const monitor = document.getElementById("serialMonitorOutput");
+        monitor.innerHTML = "";
+
+        if (key === "4A") {
+          printLiveLog("System Ready - Misi 4A Dimulai");
+          setLedAnalogValue(25);
+          liveTimer = setInterval(() => {
+            printLiveLog("Status LED: REDUP (PWM: 25 | 10%)");
+            setLedAnalogValue(25);
+          }, 1000);
+        } else if (key === "4B") {
+          printLiveLog("System Ready - Misi 4B Dimulai");
+          setLedAnalogValue(100);
+          liveTimer = setInterval(() => {
+            printLiveLog("Status LED: SEDANG (PWM: 100 | 39%)");
+            setLedAnalogValue(100);
+          }, 1000);
+        } else if (key === "4C") {
+          printLiveLog("System Ready - Misi 4C Dimulai");
+          setLedAnalogValue(255);
+          liveTimer = setInterval(() => {
+            printLiveLog("Status LED: TERANG (PWM: 255 | 100%)");
+            setLedAnalogValue(255);
+          }, 1000);
+        } else if (key === "4D") {
+          printLiveLog("System Ready - Misi 4D (Transisi Otomatis) Dimulai");
+
+          const stages = [
+            { pwm: 25, msg: "Transisi Stage 1 - REDUP (PWM: 25)" },
+            { pwm: 100, msg: "Transisi Stage 2 - SEDANG (PWM: 100)" },
+            { pwm: 255, msg: "Transisi Stage 3 - TERANG (PWM: 255)" },
+            { pwm: 0, msg: "Transisi Stage 4 - MATI (PWM: 0)" },
+          ];
+
+          let stepIndex = 0;
+          printLiveLog(stages[0].msg);
+          setLedAnalogValue(stages[0].pwm);
+
+          liveTimer = setInterval(() => {
+            stepIndex = (stepIndex + 1) % stages.length;
+            printLiveLog(stages[stepIndex].msg);
+            setLedAnalogValue(stages[stepIndex].pwm);
+          }, 1000);
+        }
+      }
+
+      /* FITUR UPLOAD & RUN */
+      function uploadAndRun() {
+        if (isUploading) return;
+        isUploading = true;
+
+        stopProgramSilently();
+        setLedAnalogValue(0);
+
+        const statusText = document.getElementById("ideStatusText");
+        const btnUpload = document.getElementById("btnUpload");
+
+        btnUpload.disabled = true;
+        btnUpload.classList.add("opacity-50", "cursor-not-allowed");
+
+        statusText.innerHTML = `<span class="text-amber-300 font-bold"><i class="fa-solid fa-spinner animate-spin mr-1"></i>Compiling sketch...</span>`;
+
+        setTimeout(() => {
+          statusText.innerHTML = `<span class="text-emerald-300 font-bold"><i class="fa-solid fa-upload mr-1"></i>Uploading to board...</span>`;
+          setTimeout(() => {
+            statusText.innerHTML = `<span class="text-emerald-300 font-bold"><i class="fa-solid fa-play mr-1"></i>Running Program...</span>`;
+            btnUpload.disabled = false;
+            btnUpload.classList.remove("opacity-50", "cursor-not-allowed");
+            isUploading = false;
+
+            startContinuousOutput(currentMissionKey);
+          }, 600);
+        }, 500);
+      }
+
+      /* MEMATIKAN TIMER SECARA INTERNAL */
+      function stopProgramSilently() {
+        if (liveTimer) {
+          clearInterval(liveTimer);
+          liveTimer = null;
+        }
+        isUploading = false;
+      }
+
+      /* FITUR STOP */
+      function stopProgram() {
+        stopProgramSilently();
+        setLedAnalogValue(0);
+
+        const btnUpload = document.getElementById("btnUpload");
+        btnUpload.disabled = false;
+        btnUpload.classList.remove("opacity-50", "cursor-not-allowed");
+
+        const statusText = document.getElementById("ideStatusText");
+        statusText.innerHTML = `<span class="text-rose-300 font-semibold"><i class="fa-solid fa-circle-stop mr-1"></i>Program Stopped</span>`;
+
+        const monitor = document.getElementById("serialMonitorOutput");
+        const line = document.createElement("div");
+        line.className = "text-rose-600 font-mono text-xs italic mt-1";
+        line.innerText = "[Program Dihentikan]";
+        monitor.appendChild(line);
+      }
+
+      function clearSerialMonitor() {
+        document.getElementById("serialMonitorOutput").innerHTML =
+          `<span class="text-slate-400 italic">[Serial Monitor Cleared]</span>`;
+      }
+
+      function switchMission(key) {
+        const keys = ["4A", "4B", "4C", "4D"];
+        keys.forEach((k) => {
+          const btn = document.getElementById(`sub-btn-${k.toLowerCase()}`);
+          if (btn) {
+            if (k === key) {
+              btn.className =
+                "px-4 py-2.5 rounded-2xl text-xs font-bold bg-teal-700 text-white shadow-xs transition cursor-pointer flex items-center gap-2";
+            } else {
+              btn.className =
+                "px-4 py-2.5 rounded-2xl text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition cursor-pointer flex items-center gap-2";
+            }
+          }
+        });
+
+        updateView(key);
+      }
+
+      function updateView(key) {
+        stopProgramSilently();
+        setLedAnalogValue(0);
+
+        currentMissionKey = key;
+        const data = missions[key];
+
+        document.getElementById("ideTitle").innerText = data.filename;
+        document.getElementById("codeDisplay").innerHTML = renderArduinoSyntax(
+          data.rawCode,
+        );
+        document.getElementById("mission-title").innerText = data.title;
+        document.getElementById("mission-goal").innerHTML = data.desc;
+        document.getElementById("mission-icon").className =
+          `fa-solid ${data.icon}`;
+
+        const monitor = document.getElementById("serialMonitorOutput");
+        monitor.innerHTML = `<span class="text-slate-400 italic">[Serial Monitor Siap. Klik "Upload & Run" untuk memulai]</span>`;
+      }
+
+      function copyCode() {
+        const rawCodeText = missions[currentMissionKey].rawCode;
+        navigator.clipboard.writeText(rawCodeText).then(() => {
+          const btnText = document.getElementById("btnCopyText");
+          const btnIcon = document.getElementById("btnCopyIcon");
+
+          btnText.innerText = "Tersalin!";
+          btnIcon.className = "fa-solid fa-check text-emerald-300";
+
+          setTimeout(() => {
+            btnText.innerText = "Salin Kode";
+            btnIcon.className = "fa-solid fa-copy";
+          }, 2000);
+        });
+      }
+
+      window.onload = function () {
+        switchMission("4A");
+      };
+    </script>
+  </body>
+</html>

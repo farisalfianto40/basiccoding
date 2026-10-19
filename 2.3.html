@@ -1,0 +1,1079 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sub 2.3 - Sakelar LED (Input & Output Digital)</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      body {
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 9999px;
+      }
+      .btn-press-active {
+        transform: translateY(2px) scale(0.96);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased pb-10"
+  >
+    <!-- HEADER APP -->
+    <header
+      class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3"
+      >
+        <div class="flex items-center gap-3">
+          <a
+            href="index.html"
+            class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-sm transition-colors"
+            title="Kembali"
+          >
+            <i class="fa-solid fa-home"></i>
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span
+                class="text-[10px] font-extrabold bg-teal-100 text-teal-800 px-2 py-0.5 rounded uppercase tracking-wider"
+              >
+                SUB 2.3
+              </span>
+            </div>
+            <h1
+              class="text-sm sm:text-base font-black text-slate-900 leading-tight mt-0.5"
+            >
+              Sakelar LED: Input Push Button & Output LED
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <!-- HERO BANNER RINGKAS -->
+      <section
+        class="bg-gradient-to-r from-teal-800 to-teal-700 text-white rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden"
+      >
+        <div
+          class="absolute -right-4 -bottom-6 opacity-15 pointer-events-none hidden sm:block select-none"
+        >
+          <i class="fa-solid fa-toggle-on text-[140px] text-teal-100"></i>
+        </div>
+        <div class="relative z-10 space-y-1.5 max-w-3xl">
+          <div
+            class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
+          >
+            <i class="fa-solid fa-microchip text-teal-200-300 text-xs"></i>
+            <span>Praktik Input & Output Digital Interaktif</span>
+          </div>
+          <h2
+            class="text-lg sm:text-xl font-extrabold text-white leading-tight display-font"
+          >
+            Pembacaan Sakelar Push Button & Pengendalian LED
+          </h2>
+          <p
+            class="text-xs sm:text-sm text-teal-50/90 leading-relaxed font-normal"
+          >
+            Pelajari integrasi input sakelar mekanis (<code
+              class="font-mono text-teal-200 font-bold"
+              >digitalRead(2)</code
+            >) dengan mode
+            <code class="font-mono text-teal-200 font-bold">INPUT_PULLUP</code>
+            internal untuk mengontrol output LED (<code
+              class="font-mono text-teal-200 font-bold"
+              >Pin 3</code
+            >) secara real-time.
+          </p>
+        </div>
+      </section>
+
+      <!-- SKEMA RANGKAIAN & VISUAL HARDWARE -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- GAMBAR RANGKAIAN (2 Kolom) -->
+        <div
+          class="md:col-span-2 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between"
+        >
+          <div
+            class="w-full flex items-center justify-between mb-3 border-b border-slate-100 pb-2.5"
+          >
+            <h2
+              class="text-sm sm:text-base font-extrabold text-slate-800 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-diagram-project text-teal-600"></i> Skema
+              Rangkaian
+            </h2>
+            <span
+              class="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md"
+            >
+              Button: PIN 2 | LED: PIN 3
+            </span>
+          </div>
+
+          <div
+            class="w-full bg-slate-50 p-3 sm:p-5 rounded-xl border border-slate-200 flex items-center justify-center min-h-[220px]"
+          >
+            <img
+              src="img/modul02/2.3.1.png"
+              alt="Skema Rangkaian Sakelar LED Arduino Pin 2 dan Pin 3"
+              class="max-h-[260px] w-auto max-w-full object-contain rounded-lg border border-slate-200 bg-white p-2 shadow-xs"
+              onerror="
+                this.onerror = null;
+                this.src = '2.3.1.png';
+              "
+            />
+          </div>
+        </div>
+
+        <!-- SIMULATOR VISUAL HARDWARE INTERAKTIF (1 Kolom) -->
+        <div
+          class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between items-center text-center overflow-hidden"
+        >
+          <div
+            class="w-full border-b border-slate-100 pb-2.5 flex items-center justify-between mb-2"
+          >
+            <h2
+              class="text-sm sm:text-base font-extrabold text-slate-800 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-microchip text-teal-600"></i> Visual
+              Hardware
+            </h2>
+            <span
+              class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded"
+              >INTERAKTIF</span
+            >
+          </div>
+
+          <!-- CONTAINER SVG SIMULATOR HARDWARE -->
+          <div
+            class="relative w-full h-full min-h-[220px] bg-slate-50 rounded-2xl p-4 flex flex-col items-center justify-center overflow-hidden border border-slate-200 shadow-xs my-auto"
+          >
+            <div
+              class="absolute inset-0 opacity-30 bg-[radial-gradient(#94a3b8_1px,transparent_1px)] [background-size:16px_16px]"
+            ></div>
+
+            <!-- SVG HARDWARE (PUSH BUTTON + LED) TANPA WIRING -->
+            <svg
+              viewBox="0 0 240 140"
+              class="w-56 h-36 z-10 filter drop-shadow-md select-none"
+            >
+              <defs>
+                <radialGradient id="ledGlowOff" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#ef4444" stop-opacity="0" />
+                  <stop offset="100%" stop-color="#ef4444" stop-opacity="0" />
+                </radialGradient>
+                <radialGradient id="ledGlowOn" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#ff4d4d" stop-opacity="0.9" />
+                  <stop offset="50%" stop-color="#ef4444" stop-opacity="0.5" />
+                  <stop offset="100%" stop-color="#ef4444" stop-opacity="0" />
+                </radialGradient>
+                <linearGradient
+                  id="lensReflect"
+                  x1="0%"
+                  y1="0%"
+                  x2="100%"
+                  y2="100%"
+                >
+                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6" />
+                  <stop offset="40%" stop-color="#ffffff" stop-opacity="0.1" />
+                  <stop offset="100%" stop-color="#000000" stop-opacity="0.3" />
+                </linearGradient>
+              </defs>
+
+              <!-- BAGIAN 1: PUSH BUTTON HARDWARE -->
+              <g id="svgBtnGroup" class="cursor-pointer">
+                <rect
+                  x="30"
+                  y="45"
+                  width="60"
+                  height="60"
+                  rx="6"
+                  fill="#334155"
+                  stroke="#1e293b"
+                  stroke-width="2"
+                />
+                <rect
+                  x="24"
+                  y="55"
+                  width="6"
+                  height="12"
+                  rx="1"
+                  fill="#94a3b8"
+                />
+                <rect
+                  x="24"
+                  y="83"
+                  width="6"
+                  height="12"
+                  rx="1"
+                  fill="#94a3b8"
+                />
+                <rect
+                  x="90"
+                  y="55"
+                  width="6"
+                  height="12"
+                  rx="1"
+                  fill="#94a3b8"
+                />
+                <rect
+                  x="90"
+                  y="83"
+                  width="6"
+                  height="12"
+                  rx="1"
+                  fill="#94a3b8"
+                />
+                <circle cx="60" cy="75" r="22" fill="#64748b" />
+                <circle
+                  id="svgBtnCap"
+                  cx="60"
+                  cy="75"
+                  r="17"
+                  fill="#0284c7"
+                  stroke="#0369a1"
+                  stroke-width="2"
+                  class="transition-all duration-100"
+                />
+              </g>
+
+              <!-- BAGIAN 2: LED HARDWARE -->
+              <g transform="translate(60,0)">
+                <rect
+                  x="111"
+                  y="75"
+                  width="4"
+                  height="45"
+                  fill="#64748b"
+                  rx="1"
+                />
+                <rect
+                  x="125"
+                  y="75"
+                  width="4"
+                  height="45"
+                  fill="#94a3b8"
+                  rx="1"
+                />
+                <circle
+                  id="svgGlow"
+                  cx="120"
+                  cy="50"
+                  r="38"
+                  fill="url(#ledGlowOff)"
+                  class="transition-all duration-300"
+                />
+                <path
+                  id="svgLedBody"
+                  d="M 100 50 A 20 20 0 0 1 140 50 L 140 70 A 2 2 0 0 1 138 72 L 102 72 A 2 2 0 0 1 100 70 Z"
+                  fill="#7f1d1d"
+                  class="transition-colors duration-300"
+                />
+                <path
+                  d="M 110 60 L 115 50 L 118 60 Z"
+                  fill="#f87171"
+                  opacity="0.7"
+                />
+                <path
+                  d="M 125 60 L 125 53 Z"
+                  stroke="#f87171"
+                  stroke-width="2"
+                  opacity="0.7"
+                />
+                <path
+                  d="M 100 50 A 20 20 0 0 1 140 50 L 140 70 A 2 2 0 0 1 138 72 L 102 72 A 2 2 0 0 1 100 70 Z"
+                  fill="url(#lensReflect)"
+                />
+              </g>
+            </svg>
+
+            <!-- SIMULATOR BUTTON CONTROL -->
+            <div class="z-10 mt-2 flex flex-col items-center gap-2 w-full">
+              <button
+                id="btnPhysicalSim"
+                onmousedown="pressSimButton()"
+                onmouseup="releaseSimButton()"
+                mouseleave="releaseSimButton()"
+                ontouchstart="pressSimButton()"
+                ontouchend="releaseSimButton()"
+                class="w-full py-2 px-4 bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white font-extrabold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-2 cursor-pointer select-none"
+              >
+                <i class="fa-solid fa-fingerprint text-base"></i>
+                <span id="btnPhysicalSimText">Tekan Push Button</span>
+              </button>
+
+              <div class="flex items-center gap-2 w-full text-[10px] font-mono">
+                <span
+                  id="btnStatusBadge"
+                  class="flex-1 py-1 rounded bg-slate-200 text-slate-600 font-bold border border-slate-300"
+                >
+                  BTN: HIGH (LEPAS)
+                </span>
+                <span
+                  id="ledStatusBadge"
+                  class="flex-1 py-1 rounded bg-slate-200 text-slate-600 font-bold border border-slate-300"
+                >
+                  LED: LOW (MATI)
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SELEKTOR MISI PRAKTIKUM -->
+      <section class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h3
+            class="text-base sm:text-lg font-extrabold text-slate-900 flex items-center gap-2"
+          >
+            <i class="fa-solid fa-gamepad text-teal-600"></i> Pilih Misi
+            Praktikum
+          </h3>
+          <span
+            class="text-xs font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-full"
+          >
+            2 Misi Sakelar
+          </span>
+        </div>
+
+        <!-- TABS MISI (2 MISI) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <button
+            onclick="selectMission(1)"
+            id="btn-misi-1"
+            class="mission-btn p-3.5 rounded-xl border-2 border-teal-600 bg-teal-50/60 text-left transition flex flex-col justify-between h-24 shadow-xs cursor-pointer"
+          >
+            <div class="flex justify-between items-center">
+              <span
+                class="text-[10px] font-black uppercase text-teal-700 tracking-wider"
+                >Misi 1</span
+              >
+              <i class="fa-solid fa-hand-pointer text-teal-600"></i>
+            </div>
+            <div class="font-bold text-xs sm:text-sm text-slate-800">
+              Sakelar Momentary
+            </div>
+            <div class="text-[11px] text-slate-500">
+              Tekan = Nyala, Lepas = Mati
+            </div>
+          </button>
+
+          <button
+            onclick="selectMission(2)"
+            id="btn-misi-2"
+            class="mission-btn p-3.5 rounded-xl border-2 border-slate-200 hover:border-slate-300 bg-white text-left transition flex flex-col justify-between h-24 cursor-pointer"
+          >
+            <div class="flex justify-between items-center">
+              <span
+                class="text-[10px] font-black uppercase text-slate-400 tracking-wider"
+                >Misi 2</span
+              >
+              <i class="fa-solid fa-toggle-on text-slate-400"></i>
+            </div>
+            <div class="font-bold text-xs sm:text-sm text-slate-800">
+              Sakelar Toggle (ON/OFF)
+            </div>
+            <div class="text-[11px] text-slate-500">
+              Setiap tekan ubah status LED
+            </div>
+          </button>
+        </div>
+
+        <!-- PANEL DESKRIPSI MISI -->
+        <div
+          id="mission-description-box"
+          class="bg-teal-50/80 border border-teal-200 rounded-xl p-3.5 text-xs sm:text-sm text-teal-950 flex items-start gap-3"
+        >
+          <div
+            class="w-8 h-8 rounded-lg bg-teal-600 text-white flex items-center justify-center shrink-0 font-bold text-sm"
+          >
+            <i id="mission-icon" class="fa-solid fa-hand-pointer"></i>
+          </div>
+          <div class="space-y-1">
+            <div id="mission-title" class="font-bold">
+              Misi 1: Sakelar Momentary (Tekan Nyala, Lepas Mati)
+            </div>
+            <p id="mission-goal" class="text-slate-600 text-xs">
+              <strong>Tugas Kamu:</strong> Klik <strong>Upload & Run</strong>,
+              lalu gunakan tombol interaktif
+              <strong>"Tekan Push Button"</strong> di atas untuk melihat LED
+              menyala saat ditekan dan mati saat dilepas.
+            </p>
+          </div>
+        </div>
+
+        <!-- EDITOR ARDUINO IDE -->
+        <div
+          class="rounded-xl overflow-hidden shadow-md border border-slate-300 bg-white font-sans"
+        >
+          <!-- ARDUINO IDE HEADER BAR -->
+          <div
+            class="bg-[#008184] px-3 py-2 flex items-center justify-between text-white select-none"
+          >
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-1.5">
+                <button
+                  title="Verify Sketch"
+                  class="w-7 h-7 rounded-full bg-[#006e71] hover:bg-[#005a5d] text-emerald-300 flex items-center justify-center transition"
+                >
+                  <i class="fa-solid fa-check text-xs"></i>
+                </button>
+              </div>
+
+              <div
+                class="bg-white text-slate-800 px-3 py-1 rounded-md text-xs font-medium flex items-center gap-2 border border-teal-700 shadow-xs"
+              >
+                <i class="fa-solid fa-microchip text-teal-600"></i>
+                <span id="boardName">Arduino Uno</span>
+                <i
+                  class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1"
+                ></i>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button
+                id="btnCopy"
+                onclick="copyCode()"
+                class="bg-[#006e71] hover:bg-[#005a5d] text-white text-xs font-semibold px-3 py-1 rounded-md flex items-center gap-1.5 transition border border-teal-600 cursor-pointer"
+              >
+                <i id="btnCopyIcon" class="fa-solid fa-copy"></i>
+                <span id="btnCopyText" class="hidden sm:inline"
+                  >Salin Kode</span
+                >
+              </button>
+            </div>
+          </div>
+
+          <!-- ARDUINO IDE SUB-HEADER -->
+          <div
+            class="bg-slate-100 border-b border-slate-200 px-3 py-1.5 flex items-center justify-between text-slate-600 text-xs select-none"
+          >
+            <div
+              class="flex items-center gap-2 font-mono font-medium text-slate-700"
+            >
+              <i class="fa-solid fa-file-code text-teal-600"></i>
+              <span id="ideTitle">sketch_misi1_momentary.ino</span>
+            </div>
+            <div class="flex items-center gap-3 text-slate-400 text-xs">
+              <i
+                class="fa-solid fa-terminal text-teal-600"
+                title="Serial Monitor Active"
+              ></i>
+            </div>
+          </div>
+
+          <!-- EDITOR WORKSPACE -->
+          <div class="flex min-h-[220px]">
+            <div
+              class="w-10 bg-slate-50 border-r border-slate-200 flex flex-col items-center py-3 gap-4 text-slate-400 text-xs select-none hidden sm:flex shrink-0"
+            >
+              <i class="fa-regular fa-copy text-teal-700 font-bold"></i>
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <i class="fa-solid fa-cubes"></i>
+              <i class="fa-solid fa-book"></i>
+            </div>
+
+            <div class="p-3 sm:p-4 overflow-x-auto w-full bg-white">
+              <div
+                id="codeDisplay"
+                class="font-mono text-xs sm:text-sm leading-relaxed"
+              ></div>
+            </div>
+          </div>
+
+          <!-- IDE STATUS BAR -->
+          <div
+            class="bg-[#005f63] px-3 py-1 text-[11px] text-teal-100 flex justify-between items-center font-sans border-t border-teal-800 select-none"
+          >
+            <span class="flex items-center gap-1.5" id="ideStatusContainer">
+              <span
+                class="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse"
+              ></span>
+              <span id="ideStatusText"
+                >Ready | Pin Button: 2 (Input Pullup) | Pin LED: 3
+                (Output)</span
+              >
+            </span>
+            <span class="font-mono text-[10px] text-teal-200"
+              >Arduino Uno on COM3</span
+            >
+          </div>
+        </div>
+
+        <!-- SERIAL MONITOR SECTION -->
+        <div
+          class="rounded-xl overflow-hidden shadow-sm border border-slate-300 bg-white font-sans mt-4"
+        >
+          <!-- SERIAL MONITOR HEADER -->
+          <div
+            class="bg-slate-200/90 border-b border-slate-300 px-3 py-2 flex flex-wrap items-center justify-between gap-2 text-slate-800 select-none"
+          >
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-terminal text-teal-700 text-xs"></i>
+              <span class="font-bold text-xs uppercase tracking-wide"
+                >Serial Monitor (Simulasi Input / Output)</span
+              >
+              <span
+                class="text-[10px] font-mono bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold hidden sm:inline-block"
+                >COM3: 9600 baud</span
+              >
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="flex items-center gap-1.5">
+              <button
+                id="btnUpload"
+                onclick="uploadAndRun()"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-2.5 py-1 rounded shadow-xs flex items-center gap-1.5 transition cursor-pointer"
+                title="Jalankan Simulasi"
+              >
+                <i class="fa-solid fa-play text-[10px]"></i>
+                <span>Upload & Run</span>
+              </button>
+
+              <button
+                id="btnStop"
+                onclick="stopProgram()"
+                class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold px-2.5 py-1 rounded shadow-xs flex items-center gap-1.5 transition cursor-pointer"
+                title="Hentikan Simulasi"
+              >
+                <i class="fa-solid fa-stop text-[10px]"></i>
+                <span>Stop</span>
+              </button>
+
+              <button
+                onclick="clearSerialMonitor()"
+                class="bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold px-2 py-1 rounded border border-slate-300 transition cursor-pointer"
+                title="Bersihkan Tampilan"
+              >
+                <i class="fa-solid fa-eraser text-slate-500 mr-1"></i>Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- SERIAL MONITOR DISPLAY AREA -->
+          <div
+            class="p-3 bg-white min-h-[150px] max-h-[200px] overflow-y-auto font-mono text-xs text-slate-800 space-y-1.5 border-b border-slate-200"
+            id="serialMonitorOutput"
+          >
+            <div class="text-slate-400 italic">
+              [Serial Monitor Siap. Klik "Upload & Run" untuk memulai program]
+            </div>
+          </div>
+
+          <!-- SERIAL MONITOR FOOTER / OPTIONS -->
+          <div
+            class="bg-slate-50 px-3 py-1.5 text-[11px] text-slate-600 flex justify-between items-center font-sans"
+          >
+            <div class="flex items-center gap-2 text-xs">
+              <span
+                class="w-2 h-2 rounded-full bg-emerald-500 inline-block"
+              ></span>
+              <span class="text-slate-500 font-mono text-[11px]"
+                >Status: Connected @ 9600 baud</span
+              >
+            </div>
+
+            <div class="flex items-center gap-3 text-[11px] text-slate-500">
+              <label
+                class="flex items-center gap-1.5 cursor-pointer select-none"
+              >
+                <input
+                  type="checkbox"
+                  id="chkTimestamp"
+                  onchange="toggleTimestampVisibility()"
+                  checked
+                  class="rounded text-teal-600 focus:ring-teal-500 cursor-pointer"
+                />
+                <span class="font-medium text-slate-600">Show Timestamp</span>
+              </label>
+
+              <label
+                class="flex items-center gap-1.5 cursor-pointer select-none"
+              >
+                <input
+                  type="checkbox"
+                  id="chkAutoscroll"
+                  checked
+                  class="rounded text-teal-600 focus:ring-teal-500 cursor-pointer"
+                />
+                <span class="font-medium text-slate-600">Autoscroll</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NAVIGATION FOOTER -->
+      <nav class="flex items-center justify-between pt-2">
+        <a
+          href="2.2.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs transition-colors shadow-2xs"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Sub 2.2: Output LED</span>
+        </a>
+        <a
+          href="2.4.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 font-bold text-xs transition-colors shadow-xs"
+        >
+          <span>Sub 2.4: Sensor Digital</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </nav>
+    </main>
+
+    <footer
+      class="max-w-6xl mx-auto w-full px-4 pt-4 text-center text-xs text-slate-400 font-medium"
+    >
+      <p>© MIKRO EDU - SMK SMTI Yogyakarta | Teknik Kimia Industri</p>
+    </footer>
+
+    <!-- SCRIPT LOGIKA PROGRAM & SIMULATOR -->
+    <script>
+      const missions = {
+        1: {
+          filename: "sketch_misi1_momentary.ino",
+          title: "Misi 1: Sakelar Momentary (Tekan Nyala, Lepas Mati)",
+          icon: "fa-hand-pointer",
+          desc: "<strong>Tugas 1:</strong> Gunakan mode <code class='font-mono font-bold text-teal-800'>INPUT_PULLUP</code> pada Pin 2. Saat sakelar ditekan, sinyal bernilai LOW (0V) dan LED pada Pin 3 akan menyala.",
+          rawCode: `// --- MISI 1: SAKELAR MOMENTARY (TEKAN NYALA) ---
+const int pinButton = 2;  // Tombol pada Pin 2
+const int pinLED = 3; // LED pada Pin 3
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(pinButton, INPUT_PULLUP); // Aktifkan resistor Pull-up internal
+  pinMode(pinLED, OUTPUT);
+}
+
+void loop() {
+  int statusTombol = digitalRead(pinButton);
+
+  if (statusTombol == LOW) {  // Tombol sedang ditekan (Aktif LOW)
+    digitalWrite(pinLED, HIGH);
+    Serial.println("Tombol: DITEKAN (LOW)  | LED: NYALA (HIGH)");
+  } else {
+    digitalWrite(pinLED, LOW);
+    Serial.println("Tombol: DILEPAS  (HIGH) | LED: MATI  (LOW)");
+  }
+  delay(300); // Jeda pembacaan
+}`,
+        },
+        2: {
+          filename: "sketch_misi2_toggle.ino",
+          title: "Misi 2: Sakelar Toggle (ON/OFF)",
+          icon: "fa-toggle-on",
+          desc: "<strong>Tugas 2:</strong> Buat sakelar pembuka/penutup. Setiap kali Push Button ditekan satu kali, status LED akan berganti antara NYALA dan MATI.",
+          rawCode: `// --- MISI 2: SAKELAR TOGGLE (ON / OFF) ---
+const int pinButton = 2;
+const int pinLED = 3;
+
+bool statusLED = false;
+int statusTombolLama = HIGH;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(pinButton, INPUT_PULLUP);
+  pinMode(pinLED, OUTPUT);
+}
+
+void loop() {
+  int statusTombolSekarang = digitalRead(pinButton);
+
+  // Deteksi perubahan dari DILEPAS (HIGH) menjadi DITEKAN (LOW)
+  if (statusTombolLama == HIGH && statusTombolSekarang == LOW) {
+
+    // Balik status LED
+    statusLED = !statusLED;
+
+    // Menentukan kondisi LED menggunakan if else
+    if (statusLED == true) {
+      digitalWrite(pinLED, HIGH);
+
+      Serial.print("Tombol Ditekan! Status LED Sekarang: ");
+      Serial.println("NYALA (HIGH)");
+    }
+    else {
+      digitalWrite(pinLED, LOW);
+
+      Serial.print("Tombol Ditekan! Status LED Sekarang: ");
+      Serial.println("MATI (LOW)");
+    }
+
+    delay(200); // Anti-bounce sederhana
+  }
+
+  statusTombolLama = statusTombolSekarang;
+}`,
+        },
+      };
+
+      let currentMissionKey = 1;
+      let isProgramRunning = false;
+      let isUploading = false;
+      let isButtonPressed = false; // State fisik tombol
+      let toggleLedState = false; // State LED untuk Misi 2
+      let liveTimer = null;
+
+      /* CONTROL VISUAL HARDWARE */
+      function setLedVisualState(isOn) {
+        const glow = document.getElementById("svgGlow");
+        const body = document.getElementById("svgLedBody");
+        const badge = document.getElementById("ledStatusBadge");
+
+        if (isOn) {
+          glow.setAttribute("fill", "url(#ledGlowOn)");
+          body.setAttribute("fill", "#ef4444");
+          badge.className =
+            "flex-1 py-1 rounded bg-red-600 text-white font-bold border border-red-700 shadow-[0_0_8px_rgba(239,68,68,0.4)]";
+          badge.innerText = "LED: HIGH (NYALA)";
+        } else {
+          glow.setAttribute("fill", "url(#ledGlowOff)");
+          body.setAttribute("fill", "#7f1d1d");
+          badge.className =
+            "flex-1 py-1 rounded bg-slate-200 text-slate-600 font-bold border border-slate-300";
+          badge.innerText = "LED: LOW (MATI)";
+        }
+      }
+
+      function setButtonVisualState(isPressed) {
+        const cap = document.getElementById("svgBtnCap");
+        const badge = document.getElementById("btnStatusBadge");
+        const simBtnText = document.getElementById("btnPhysicalSimText");
+
+        if (isPressed) {
+          cap.setAttribute("r", "14");
+          cap.setAttribute("fill", "#0369a1");
+          badge.className =
+            "flex-1 py-1 rounded bg-amber-500 text-white font-bold border border-amber-600 shadow-[0_0_8px_rgba(245,158,11,0.4)]";
+          badge.innerText = "BTN: LOW (TEKAN)";
+          simBtnText.innerText = "Sedang Ditekan...";
+        } else {
+          cap.setAttribute("r", "17");
+          cap.setAttribute("fill", "#0284c7");
+          badge.className =
+            "flex-1 py-1 rounded bg-slate-200 text-slate-600 font-bold border border-slate-300";
+          badge.innerText = "BTN: HIGH (LEPAS)";
+          simBtnText.innerText = "Tekan Push Button";
+        }
+      }
+
+      /* INTERAKSI TOMBOL PUSH BUTTON HARDWARE SIMULATOR */
+      function pressSimButton() {
+        isButtonPressed = true;
+        setButtonVisualState(true);
+
+        if (!isProgramRunning) return;
+
+        if (currentMissionKey === 2) {
+          toggleLedState = !toggleLedState;
+          setLedVisualState(toggleLedState);
+
+          // Output Serial Monitor disesuaikan persis dengan Serial.print + Serial.println
+          if (toggleLedState) {
+            printLiveLog("Tombol Ditekan! Status LED Sekarang: NYALA (HIGH)");
+          } else {
+            printLiveLog("Tombol Ditekan! Status LED Sekarang: MATI (LOW)");
+          }
+        }
+      }
+
+      function releaseSimButton() {
+        if (!isButtonPressed) return;
+        isButtonPressed = false;
+        setButtonVisualState(false);
+
+        if (!isProgramRunning) return;
+
+        if (currentMissionKey === 1) {
+          setLedVisualState(false);
+        }
+      }
+
+      function getRealtimeTimestamp() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const seconds = String(now.getSeconds()).padStart(2, "0");
+        return `[${hours}:${minutes}:${seconds}]`;
+      }
+
+      function escapeHtml(text) {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+
+      function renderArduinoSyntax(code) {
+        const lines = code.split("\n");
+        let htmlResult =
+          '<div class="table w-full border-collapse font-mono text-xs sm:text-sm">';
+
+        lines.forEach((line, index) => {
+          let comment = "";
+          let codePart = line;
+
+          const commentIdx = line.indexOf("//");
+          if (commentIdx !== -1) {
+            codePart = line.substring(0, commentIdx);
+            comment = `<span class="text-slate-400 italic font-normal">${escapeHtml(
+              line.substring(commentIdx),
+            )}</span>`;
+          }
+
+          codePart = escapeHtml(codePart);
+
+          codePart = codePart
+            .replace(
+              /\b(int|void|float|boolean|bool|char|const|long|unsigned)\b/g,
+              '<span class="text-[#05797d] font-bold">$1</span>',
+            )
+            .replace(
+              /\b(setup|loop|pinMode|digitalWrite|digitalRead|delay|millis|Serial)\b/g,
+              '<span class="text-[#d97706] font-semibold">$1</span>',
+            )
+            .replace(
+              /\b(HIGH|LOW|OUTPUT|INPUT|INPUT_PULLUP|true|false)\b/g,
+              '<span class="text-[#0284c7] font-bold">$1</span>',
+            )
+            .replace(
+              /\b(\d+)\b/g,
+              '<span class="text-emerald-600 font-medium">$1</span>',
+            );
+
+          htmlResult += `
+        <div class="table-row hover:bg-slate-50">
+          <div class="table-cell text-right select-none pr-3.5 text-slate-300 font-mono text-xs w-7 border-r border-slate-100 py-0.5">${
+            index + 1
+          }</div>
+          <div class="table-cell pl-3.5 whitespace-pre font-mono text-slate-800 py-0.5">${codePart}${comment}</div>
+        </div>`;
+        });
+
+        htmlResult += "</div>";
+        return htmlResult;
+      }
+
+      function printLiveLog(logText) {
+        const monitor = document.getElementById("serialMonitorOutput");
+        const showTimestamp = document.getElementById("chkTimestamp").checked;
+        const autoScroll = document.getElementById("chkAutoscroll").checked;
+
+        const line = document.createElement("div");
+        line.className =
+          "flex items-center gap-2 text-xs font-mono text-slate-800 log-line";
+
+        const hideClass = showTimestamp ? "" : "hidden";
+        const timestampStr = getRealtimeTimestamp();
+
+        line.innerHTML = `
+      <span class="text-teal-600 font-semibold">&gt;</span>
+      <span class="timestamp-tag text-slate-400 text-[11px] font-mono ${hideClass}">${timestampStr}</span>
+      <span class="text-slate-800 font-mono">${escapeHtml(logText)}</span>
+    `;
+
+        monitor.appendChild(line);
+
+        if (autoScroll) {
+          monitor.scrollTop = monitor.scrollHeight;
+        }
+      }
+
+      function toggleTimestampVisibility() {
+        const showTimestamp = document.getElementById("chkTimestamp").checked;
+        const tags = document.querySelectorAll(".timestamp-tag");
+        tags.forEach((tag) => {
+          if (showTimestamp) {
+            tag.classList.remove("hidden");
+          } else {
+            tag.classList.add("hidden");
+          }
+        });
+      }
+
+      /* LOGIKA EKSEKUSI PROGRAM SAMPLING */
+      function startSimulationLoop() {
+        isProgramRunning = true;
+        toggleLedState = false;
+
+        const monitor = document.getElementById("serialMonitorOutput");
+        monitor.innerHTML = "";
+
+        if (currentMissionKey === 1) {
+          liveTimer = setInterval(() => {
+            if (!isProgramRunning) return;
+            if (isButtonPressed) {
+              setLedVisualState(true);
+              printLiveLog("Tombol: DITEKAN (LOW)  | LED: NYALA (HIGH)");
+            } else {
+              setLedVisualState(false);
+              printLiveLog("Tombol: DILEPAS  (HIGH) | LED: MATI  (LOW)");
+            }
+          }, 300);
+        } else if (currentMissionKey === 2) {
+          printLiveLog(
+            "[Petunjuk: Klik tombol 'Tekan Push Button' untuk mengubah status LED]",
+          );
+        }
+      }
+
+      /* FITUR UPLOAD & RUN */
+      function uploadAndRun() {
+        if (isUploading) return;
+        isUploading = true;
+
+        stopProgramSilently();
+
+        const statusText = document.getElementById("ideStatusText");
+        const btnUpload = document.getElementById("btnUpload");
+
+        btnUpload.disabled = true;
+        btnUpload.classList.add("opacity-50", "cursor-not-allowed");
+
+        statusText.innerHTML = `<span class="text-amber-300 font-bold"><i class="fa-solid fa-spinner animate-spin mr-1"></i>Compiling sketch...</span>`;
+
+        setTimeout(() => {
+          statusText.innerHTML = `<span class="text-emerald-300 font-bold"><i class="fa-solid fa-upload mr-1"></i>Uploading to board...</span>`;
+          setTimeout(() => {
+            statusText.innerHTML = `<span class="text-emerald-300 font-bold"><i class="fa-solid fa-play mr-1"></i>Running Program...</span>`;
+            btnUpload.disabled = false;
+            btnUpload.classList.remove("opacity-50", "cursor-not-allowed");
+            isUploading = false;
+
+            startSimulationLoop();
+          }, 600);
+        }, 500);
+      }
+
+      function stopProgramSilently() {
+        isProgramRunning = false;
+        if (liveTimer) {
+          clearInterval(liveTimer);
+          liveTimer = null;
+        }
+        setLedVisualState(false);
+        setButtonVisualState(false);
+        isButtonPressed = false;
+        isUploading = false;
+      }
+
+      function stopProgram() {
+        stopProgramSilently();
+
+        const btnUpload = document.getElementById("btnUpload");
+        btnUpload.disabled = false;
+        btnUpload.classList.remove("opacity-50", "cursor-not-allowed");
+
+        const statusText = document.getElementById("ideStatusText");
+        statusText.innerHTML = `<span class="text-rose-300 font-semibold"><i class="fa-solid fa-circle-stop mr-1"></i>Program Stopped</span>`;
+
+        const monitor = document.getElementById("serialMonitorOutput");
+        const line = document.createElement("div");
+        line.className = "text-rose-600 font-mono text-xs italic mt-1";
+        line.innerText = "[Program Dihentikan]";
+        monitor.appendChild(line);
+      }
+
+      function clearSerialMonitor() {
+        document.getElementById("serialMonitorOutput").innerHTML =
+          `<span class="text-slate-400 italic">[Serial Monitor Cleared]</span>`;
+      }
+
+      function selectMission(num) {
+        document.querySelectorAll(".mission-btn").forEach((btn) => {
+          btn.className =
+            "mission-btn p-3.5 rounded-xl border-2 border-slate-200 hover:border-slate-300 bg-white text-left transition flex flex-col justify-between h-24 cursor-pointer";
+          btn.querySelector("span").className =
+            "text-[10px] font-black uppercase text-slate-400 tracking-wider";
+          btn.querySelector("i").className = btn
+            .querySelector("i")
+            .className.replace("text-teal-600", "text-slate-400");
+        });
+
+        const activeBtn = document.getElementById(`btn-misi-${num}`);
+        activeBtn.className =
+          "mission-btn p-3.5 rounded-xl border-2 border-teal-600 bg-teal-50/60 text-left transition flex flex-col justify-between h-24 shadow-xs cursor-pointer";
+        activeBtn.querySelector("span").className =
+          "text-[10px] font-black uppercase text-teal-700 tracking-wider";
+        activeBtn.querySelector("i").className = activeBtn
+          .querySelector("i")
+          .className.replace("text-slate-400", "text-teal-600");
+
+        updateView(num);
+      }
+
+      function updateView(num) {
+        stopProgramSilently();
+        currentMissionKey = num;
+
+        const data = missions[num];
+
+        document.getElementById("ideTitle").innerText = data.filename;
+        document.getElementById("codeDisplay").innerHTML = renderArduinoSyntax(
+          data.rawCode,
+        );
+        document.getElementById("mission-title").innerText = data.title;
+        document.getElementById("mission-goal").innerHTML = data.desc;
+        document.getElementById("mission-icon").className =
+          `fa-solid ${data.icon}`;
+
+        const monitor = document.getElementById("serialMonitorOutput");
+        monitor.innerHTML = `<span class="text-slate-400 italic">[Serial Monitor Siap. Klik "Upload & Run" untuk memulai program]</span>`;
+      }
+
+      function copyCode() {
+        const rawCodeText = missions[currentMissionKey].rawCode;
+        navigator.clipboard.writeText(rawCodeText).then(() => {
+          const btnText = document.getElementById("btnCopyText");
+          const btnIcon = document.getElementById("btnCopyIcon");
+
+          btnText.innerText = "Tersalin!";
+          btnIcon.className = "fa-solid fa-check text-emerald-300";
+
+          setTimeout(() => {
+            btnText.innerText = "Salin Kode";
+            btnIcon.className = "fa-solid fa-copy";
+          }, 2000);
+        });
+      }
+
+      window.onload = function () {
+        selectMission(1);
+
+        const svgBtn = document.getElementById("svgBtnGroup");
+        if (svgBtn) {
+          svgBtn.addEventListener("mousedown", pressSimButton);
+          svgBtn.addEventListener("mouseup", releaseSimButton);
+          svgBtn.addEventListener("mouseleave", releaseSimButton);
+          svgBtn.addEventListener("touchstart", pressSimButton);
+          svgBtn.addEventListener("touchend", releaseSimButton);
+        }
+      };
+    </script>
+  </body>
+</html>

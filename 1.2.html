@@ -1,0 +1,1648 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Sub 1.2 - Pemrograman Arduino</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      body {
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 9999px;
+      }
+
+      /* Animasi Kursor Terminal */
+      @keyframes blink-cursor {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+      .terminal-cursor {
+        animation: blink-cursor 0.8s infinite;
+      }
+
+      /* Dynamic Line Highlight */
+      .exec-line-active {
+        background-color: rgba(13, 148, 136, 0.12) !important;
+        border-left: 4px solid #0d9488 !important;
+        color: #0f766e !important;
+      }
+      .exec-line-active-setup {
+        background-color: rgba(217, 119, 6, 0.12) !important;
+        border-left: 4px solid #d97706 !important;
+        color: #b45309 !important;
+      }
+
+      /* Animasi Transfer Memori Tipe Data */
+      @keyframes dataPulse {
+        0% {
+          transform: scale(0.98);
+          opacity: 0.7;
+        }
+        50% {
+          transform: scale(1.02);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      .animate-data-transfer {
+        animation: dataPulse 0.3s ease-out forwards;
+      }
+
+      /* Animasi Putaran Kipas Terisolasi di Pusat Lokal (0,0) */
+      #svgFanBlades {
+        transform-origin: 0px 0px;
+      }
+
+      @keyframes spinFan {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .fan-spin-slow {
+        animation: spinFan 0.8s linear infinite;
+      }
+      .fan-spin-fast {
+        animation: spinFan 0.25s linear infinite;
+      }
+      .fan-off {
+        animation: none;
+      }
+
+      /* Arduino IDE Syntax Highlighting Style */
+      .ide-keyword {
+        color: #00979d;
+        font-weight: bold;
+      }
+      .ide-function {
+        color: #d35400;
+        font-weight: bold;
+      }
+      .ide-constant {
+        color: #00979d;
+        font-weight: bold;
+      }
+      .ide-comment {
+        color: #7f8c8d;
+        font-style: italic;
+      }
+      .ide-number {
+        color: #27ae60;
+        font-weight: bold;
+      }
+      .ide-string {
+        color: #27ae60;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased pb-10"
+  >
+    <!-- HEADER APP -->
+    <header
+      class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3"
+      >
+        <div class="flex items-center gap-3">
+          <a
+            href="index.html"
+            class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-sm transition-colors"
+            title="Kembali"
+          >
+            <i class="fa-solid fa-home"></i>
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span
+                class="text-[10px] font-extrabold bg-teal-100 text-teal-800 px-2 py-0.5 rounded uppercase tracking-wider"
+              >
+                SUB 1.2
+              </span>
+            </div>
+            <h1
+              class="text-sm sm:text-base font-black text-slate-900 leading-tight mt-0.5"
+            >
+              Pemrograman Arduino
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <!-- HERO BANNER RINGKAS -->
+      <section
+        class="bg-gradient-to-r from-teal-800 to-teal-700 text-white rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden"
+      >
+        <div
+          class="absolute -right-4 -bottom-6 opacity-15 pointer-events-none hidden sm:block select-none"
+        >
+          <i class="fa-solid fa-flask text-[140px] text-teal-100"></i>
+        </div>
+        <div class="relative z-10 space-y-1.5 max-w-3xl">
+          <div
+            class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
+          >
+            <i class="fa-solid fa-microchip text-teal-200-300 text-xs"></i>
+            <span>Simulasi Memori & Smart Home Interaktif</span>
+          </div>
+          <h2
+            class="text-lg sm:text-xl font-extrabold text-white leading-tight display-font"
+          >
+            Eksperimentasi Logika & Akses Hardware Arduino
+          </h2>
+          <p class="text-xs text-teal-50/90 leading-relaxed">
+            Visualisasikan alokasi tipe data di RAM mikrokontroler, analisis
+            perbandingan perintah input-output digital, serta uji coba simulasi
+            interaktif pengondisian smart home otomatis.
+          </p>
+        </div>
+      </section>
+
+      <!-- 1. SIMULATOR EKSEKUSI BARIS DEMI BARIS -->
+      <section
+        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4"
+      >
+        <div
+          class="border-b border-slate-100 pb-3 flex items-center justify-between flex-wrap gap-2"
+        >
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-code text-teal-600 text-lg"></i>
+            <h3 class="text-base sm:text-lg font-extrabold text-slate-800">
+              1. Visualisasi Eksekusi Kode (Deklarasi
+              <code class="text-teal-700">int pinLed</code>)
+            </h3>
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              onclick="startLineExecution()"
+              id="btnRunExec"
+              class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-extrabold px-3.5 py-1.5 rounded-lg transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+            >
+              <i class="fa-solid fa-play"></i> Jalankan Eksekusi
+            </button>
+            <button
+              onclick="stopLineExecution()"
+              class="bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-extrabold px-3 py-1.5 rounded-lg transition cursor-pointer"
+            >
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+          <div
+            class="lg:col-span-7 bg-slate-50 border border-slate-200 text-slate-800 rounded-xl p-3.5 font-mono text-xs shadow-2xs flex flex-col justify-between"
+          >
+            <div class="space-y-0.5">
+              <div class="text-slate-400 text-[11px] pb-1 italic font-sans">
+                // Jalur Eksekusi Mikrokontroler Arduino
+              </div>
+
+              <div
+                id="codeLine1"
+                class="px-2 py-1 rounded transition-all text-sky-800 font-bold"
+              >
+                <span class="text-slate-400 select-none mr-2">1</span
+                ><span class="ide-keyword">int</span> pinLed =
+                <span class="ide-number">13</span>;
+              </div>
+
+              <div class="py-0.5"></div>
+
+              <div
+                id="codeLine2"
+                class="px-2 py-1 rounded transition-all text-amber-700 font-bold"
+              >
+                <span class="text-slate-400 select-none mr-2">2</span
+                ><span class="ide-keyword">void</span>
+                <span class="ide-function">setup</span>() {
+              </div>
+              <div
+                id="codeLine3"
+                class="px-2 py-1 rounded transition-all pl-6 text-slate-700"
+              >
+                <span class="text-slate-400 select-none mr-2">3</span
+                ><span class="ide-function">Serial</span>.<span
+                  class="ide-function"
+                  >begin</span
+                >(<span class="ide-number">9600</span>);
+              </div>
+              <div
+                id="codeLine4"
+                class="px-2 py-1 rounded transition-all pl-6 text-slate-700"
+              >
+                <span class="text-slate-400 select-none mr-2">4</span
+                ><span class="ide-function">pinMode</span>(pinLed,
+                <span class="ide-constant">OUTPUT</span>);
+              </div>
+              <div
+                id="codeLine5"
+                class="px-2 py-1 rounded transition-all text-amber-700 font-bold"
+              >
+                <span class="text-slate-400 select-none mr-2">5</span>}
+              </div>
+
+              <div class="py-0.5"></div>
+
+              <div
+                id="codeLine6"
+                class="px-2 py-1 rounded transition-all text-teal-700 font-bold"
+              >
+                <span class="text-slate-400 select-none mr-2">6</span
+                ><span class="ide-keyword">void</span>
+                <span class="ide-function">loop</span>() {
+              </div>
+              <div
+                id="codeLine7"
+                class="px-2 py-1 rounded transition-all pl-6 text-slate-700"
+              >
+                <span class="text-slate-400 select-none mr-2">7</span
+                ><span class="ide-function">digitalWrite</span>(pinLed,
+                <span class="ide-constant">HIGH</span>);
+              </div>
+              <div
+                id="codeLine8"
+                class="px-2 py-1 rounded transition-all pl-6 text-slate-700"
+              >
+                <span class="text-slate-400 select-none mr-2">8</span
+                ><span class="ide-function">delay</span>(<span
+                  class="ide-number"
+                  >1000</span
+                >);
+              </div>
+              <div
+                id="codeLine9"
+                class="px-2 py-1 rounded transition-all pl-6 text-slate-700"
+              >
+                <span class="text-slate-400 select-none mr-2">9</span
+                ><span class="ide-function">digitalWrite</span>(pinLed,
+                <span class="ide-constant">LOW</span>);
+              </div>
+              <div
+                id="codeLine10"
+                class="px-2 py-1 rounded transition-all pl-6 text-slate-700"
+              >
+                <span class="text-slate-400 select-none mr-2">10</span
+                ><span class="ide-function">delay</span>(<span
+                  class="ide-number"
+                  >1000</span
+                >);
+              </div>
+              <div
+                id="codeLine11"
+                class="px-2 py-1 rounded transition-all text-teal-700 font-bold"
+              >
+                <span class="text-slate-400 select-none mr-2">11</span>}
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="lg:col-span-5 bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col justify-between space-y-3"
+          >
+            <div class="space-y-3">
+              <div
+                class="flex items-center justify-between border-b border-slate-200 pb-2"
+              >
+                <span
+                  class="text-xs font-extrabold text-slate-700 uppercase tracking-wider"
+                  >Status Board MCU</span
+                >
+                <span
+                  id="mcuStateBadge"
+                  class="text-[10px] font-mono bg-slate-200 text-slate-600 px-2 py-0.5 rounded font-bold"
+                  >STANDBY</span
+                >
+              </div>
+
+              <div
+                class="bg-white p-3 rounded-xl border border-slate-200 space-y-2 shadow-2xs"
+              >
+                <div class="text-[11px] font-bold text-slate-500">
+                  Keterangan Eksekusi Aktif:
+                </div>
+                <div
+                  id="mcuExecDesc"
+                  class="text-xs font-semibold text-slate-800 leading-relaxed min-h-[36px]"
+                >
+                  Klik "Jalankan Eksekusi" untuk mensimulasikan alur variabel
+                  dan fungsi program.
+                </div>
+              </div>
+
+              <div
+                class="bg-white border border-slate-200 p-3.5 rounded-xl flex items-center justify-between shadow-2xs"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    id="simBoardLed"
+                    class="w-8 h-8 rounded-full bg-slate-200 border-2 border-slate-300 transition-all duration-200 flex items-center justify-center"
+                  >
+                    <i class="fa-solid fa-lightbulb text-xs text-slate-400"></i>
+                  </div>
+                  <div>
+                    <div
+                      id="simBoardLedText"
+                      class="text-xs font-bold font-mono text-slate-600"
+                    >
+                      LED (Pin 13): OFF
+                    </div>
+                    <div class="text-[10px] text-slate-400">
+                      Variabel pinLed = 13
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-right">
+                  <div class="text-[10px] text-slate-400 font-mono">
+                    Counter Loop
+                  </div>
+                  <div
+                    id="loopCounterText"
+                    class="text-sm font-bold font-mono text-teal-700"
+                  >
+                    0x
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="text-[11px] bg-teal-50 border border-teal-200 text-teal-900 p-2.5 rounded-lg space-y-1"
+            >
+              <div class="font-bold">
+                <i class="fa-solid fa-lightbulb text-teal-600"></i> Kesimpulan
+                Penting:
+              </div>
+              <p class="leading-relaxed text-[10px]">
+                Mendeklarasikan
+                <code class="font-bold">int pinLed = 13</code> memudahkan
+                penggantian nomor pin di seluruh program cukup dari satu
+                variabel saja.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. LABORATORIUM INTERAKTIF TIPE DATA & MEMORI -->
+      <section
+        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-5"
+      >
+        <div
+          class="border-b border-slate-100 pb-3 flex items-center justify-between flex-wrap gap-2"
+        >
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-microchip text-teal-600 text-lg"></i>
+            <h3 class="text-base sm:text-lg font-extrabold text-slate-800">
+              2. Animasi Simulasi Tipe Data & Pembacaan Memori SRAM
+            </h3>
+          </div>
+          <span
+            class="text-xs text-teal-700 font-extrabold bg-teal-50 px-2.5 py-1 rounded-full border border-teal-200"
+          >
+            <i class="fa-solid fa-circle-play mr-1"></i> Mode Penulisan Kode
+            Live
+          </span>
+        </div>
+
+        <div
+          class="grid grid-cols-1 lg:grid-cols-12 gap-5 bg-slate-50 border border-slate-200 p-4 sm:p-5 rounded-2xl text-slate-800 shadow-2xs"
+        >
+          <!-- INPUT KODE PROGRAM EDITOR -->
+          <div class="lg:col-span-5 space-y-4">
+            <div
+              class="bg-white border border-slate-200 text-slate-800 rounded-xl p-4 shadow-xs font-mono space-y-3"
+            >
+              <div
+                class="flex items-center justify-between border-b border-slate-200 pb-2 text-[11px] text-slate-500"
+              >
+                <span
+                  ><i class="fa-solid fa-code text-teal-600 mr-1"></i> Editor
+                  Deklarasi Kode</span
+                >
+                <span class="text-teal-700 font-bold">Arduino C++</span>
+              </div>
+
+              <!-- FORM INPUT PENULISAN KODE -->
+              <div class="space-y-2.5 text-xs">
+                <div>
+                  <label
+                    class="block text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1"
+                    >1. Pilih Tipe Data:</label
+                  >
+                  <select
+                    id="simDataType"
+                    onchange="runDataAnimation()"
+                    class="w-full bg-slate-50 border border-slate-300 text-teal-800 font-bold rounded-lg px-3 py-2 outline-none focus:border-teal-600 cursor-pointer"
+                  >
+                    <option value="int">int (Integer Bilangan Bulat)</option>
+                    <option value="float">
+                      float (Desimal Presisi Sensor)
+                    </option>
+                    <option value="bool">bool (Boolean HIGH/LOW)</option>
+                    <option value="char">char (Karakter Tunggal Teks)</option>
+                    <option value="String">String (Objek Teks Komplit)</option>
+                  </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label
+                      class="block text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1"
+                      >2. Nama Variabel:</label
+                    >
+                    <input
+                      type="text"
+                      id="simVarName"
+                      value="x"
+                      oninput="runDataAnimation()"
+                      class="w-full bg-slate-50 border border-slate-300 text-amber-700 font-bold rounded-lg px-3 py-1.5 outline-none focus:border-teal-600"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      class="block text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-1"
+                      >3. Nilai Input:</label
+                    >
+                    <input
+                      type="text"
+                      id="simVarValue"
+                      value="4"
+                      oninput="runDataAnimation()"
+                      class="w-full bg-slate-50 border border-slate-300 text-emerald-700 font-bold rounded-lg px-3 py-1.5 outline-none focus:border-teal-600"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- REALTIME CODE PREVIEW -->
+              <div class="pt-2 border-t border-slate-200 text-[11px]">
+                <div class="text-slate-400 text-[10px] italic mb-1">
+                  // Kode Penulisan di IDE:
+                </div>
+                <div
+                  class="bg-slate-100 p-2.5 rounded-lg border border-slate-200 text-slate-800 font-bold"
+                >
+                  <span id="codePreviewType" class="ide-keyword">int</span>
+                  <span id="codePreviewName" class="text-amber-700">x</span> =
+                  <span id="codePreviewVal" class="ide-number">4</span>;
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-1.5">
+              <div class="text-[11px] font-bold text-slate-500">
+                Preset Variabel Industri Kimia:
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                <button
+                  onclick="setSimPreset('int', 'x', '4')"
+                  class="px-2.5 py-1 rounded bg-white border border-slate-300 text-[11px] hover:bg-slate-100 font-mono font-medium shadow-2xs cursor-pointer"
+                >
+                  x = 4 (int)
+                </button>
+                <button
+                  onclick="setSimPreset('float', 'suhuReaktor', '78.5')"
+                  class="px-2.5 py-1 rounded bg-sky-50 border border-sky-200 text-sky-800 text-[11px] hover:bg-sky-100 font-mono font-medium shadow-2xs cursor-pointer"
+                >
+                  suhuReaktor = 78.5 (float)
+                </button>
+                <button
+                  onclick="setSimPreset('bool', 'pompaAktif', 'HIGH')"
+                  class="px-2.5 py-1 rounded bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] hover:bg-emerald-100 font-mono font-medium shadow-2xs cursor-pointer"
+                >
+                  pompaAktif = HIGH (bool)
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ANIMASI INTERPRETER ARDUINO SRAM -->
+          <div class="lg:col-span-7 flex flex-col justify-between space-y-4">
+            <div
+              class="bg-white p-4.5 rounded-xl border border-slate-200 shadow-2xs space-y-3"
+            >
+              <div
+                class="flex items-center justify-between border-b border-slate-100 pb-2"
+              >
+                <div class="flex items-center gap-2">
+                  <span
+                    class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"
+                  ></span>
+                  <span
+                    class="text-xs font-black text-slate-800 uppercase tracking-wider"
+                    >Simulasi Pembacaan Mikrokontroler</span
+                  >
+                </div>
+                <span
+                  id="ramSizeTag"
+                  class="text-[10px] font-mono bg-teal-100 text-teal-800 px-2 py-0.5 rounded font-extrabold"
+                  >2 Byte (16 Bit)</span
+                >
+              </div>
+
+              <!-- VISUALISASI CHIP MEMORI -->
+              <div
+                class="bg-teal-50/60 rounded-xl p-4 text-slate-800 relative overflow-hidden border border-teal-200 shadow-inner"
+              >
+                <div
+                  class="text-[10px] font-mono text-slate-500 mb-2 flex justify-between"
+                >
+                  <span>SRAM MEMORY REGISTER [0x02FF]</span>
+                  <span id="animBusStatus" class="text-teal-700 font-bold"
+                    >PROSES MENULIS...</span
+                  >
+                </div>
+
+                <!-- ANIMATED REGISTER BOX -->
+                <div
+                  id="ramRegisterBox"
+                  class="bg-white border-2 border-teal-500 p-4 rounded-xl flex flex-col items-center justify-center min-h-[110px] shadow-xs transition-all"
+                >
+                  <div class="text-[10px] text-slate-500 font-mono mb-1">
+                    Arduino Membaca Nilai Sebagai:
+                  </div>
+                  <div
+                    id="ramDataDisplay"
+                    class="text-3xl font-mono font-black text-emerald-600 tracking-wider"
+                  >
+                    4
+                  </div>
+                  <div
+                    id="ramBinaryDisplay"
+                    class="text-[11px] font-mono text-teal-800 font-semibold mt-1"
+                  >
+                    Biner: 00000000 00000100
+                  </div>
+                </div>
+              </div>
+
+              <!-- METRICS & HARDWARE INTERPRETATION -->
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <div
+                  class="bg-slate-50 p-2.5 rounded-lg border border-slate-200"
+                >
+                  <div class="text-[10px] text-slate-500 font-bold uppercase">
+                    Format Pemrosesan CPU
+                  </div>
+                  <div
+                    id="cpuFormatDesc"
+                    class="font-mono font-bold text-slate-800 mt-0.5"
+                  >
+                    Bilangan Bulat Desimal
+                  </div>
+                </div>
+                <div
+                  class="bg-slate-50 p-2.5 rounded-lg border border-slate-200"
+                >
+                  <div class="text-[10px] text-slate-500 font-bold uppercase">
+                    Rentang Tampung Data
+                  </div>
+                  <div
+                    id="cpuRangeDesc"
+                    class="font-mono font-bold text-teal-700 mt-0.5"
+                  >
+                    -32,768 s.d 32,767
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PENJELASAN KONSTEKSUAL LOGIKA -->
+            <div
+              id="typeExplanationCard"
+              class="bg-teal-50 border border-teal-200 text-teal-950 p-3 rounded-xl text-xs space-y-1"
+            >
+              <div class="font-bold flex items-center gap-1.5 text-teal-900">
+                <i class="fa-solid fa-circle-info text-teal-600"></i> Cara
+                Arduino Memproses Kode Ini:
+              </div>
+              <p
+                id="typeExplanationText"
+                class="text-[11px] leading-relaxed text-slate-700"
+              >
+                Saat ditulis
+                <code class="font-bold text-teal-800">int x = 4;</code>, Arduino
+                mengalokasikan 2 Byte ruang RAM. Karakter desimal
+                <strong class="text-teal-900">4</strong> dikonversi langsung
+                menjadi kode biner mikrokontroler untuk perhitungan aritmatika
+                lanjutan.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. SERIAL CURSOR TERMINAL -->
+      <section
+        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4"
+      >
+        <div class="border-b border-slate-100 pb-3 flex items-center gap-2">
+          <i class="fa-solid fa-terminal text-teal-600 text-lg"></i>
+          <h3 class="text-base sm:text-lg font-extrabold text-slate-800">
+            3. Visualisasi Pergerakan Kursor Serial Monitor
+          </h3>
+        </div>
+
+        <div
+          class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3 shadow-2xs"
+        >
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <h4
+              class="text-xs font-bold text-slate-700 uppercase tracking-wider"
+            >
+              Perintah Pengiriman Sinyal Teks
+            </h4>
+            <button
+              onclick="resetCursorTerminal()"
+              class="text-[10px] text-slate-500 hover:text-slate-800 underline font-semibold cursor-pointer"
+            >
+              Clear Screen
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button
+              onclick="typeSerialText('print')"
+              class="bg-sky-600 hover:bg-sky-700 text-white text-xs font-extrabold py-2.5 px-3 rounded-lg transition cursor-pointer flex flex-col items-center shadow-xs"
+            >
+              <span>Serial.print("ABC")</span>
+              <span class="text-[9px] font-normal opacity-90"
+                >(Menulis Teks - Kursor Tetap di Baris Sama)</span
+              >
+            </button>
+            <button
+              onclick="typeSerialText('println')"
+              class="bg-teal-600 hover:bg-teal-700 text-white text-xs font-extrabold py-2.5 px-3 rounded-lg transition cursor-pointer flex flex-col items-center shadow-xs"
+            >
+              <span>Serial.println("XYZ")</span>
+              <span class="text-[9px] font-normal opacity-90"
+                >(Menulis Teks - Kursor Pindah Baris Baru)</span
+              >
+            </button>
+          </div>
+
+          <div
+            class="bg-white text-teal-900 border border-slate-300 p-4 rounded-xl font-mono text-xs min-h-[120px] max-h-[160px] overflow-y-auto shadow-inner"
+          >
+            <div
+              class="text-slate-400 text-[10px] mb-1 font-sans border-b border-slate-100 pb-1 font-medium"
+            >
+              // Tampilan Output Terminal Serial Monitor (Baud Rate: 9600)
+            </div>
+            <span
+              id="serialScreenText"
+              class="whitespace-pre-wrap font-bold"
+            ></span>
+            <span
+              id="blinkingCursor"
+              class="inline-block w-2 h-4 bg-teal-600 ml-0.5 align-middle terminal-cursor"
+            ></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. SIMULATOR LOGIKA IF - ELSE IF - ELSE (SMART HOME ARDUINO IDE) -->
+      <section
+        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4"
+      >
+        <div
+          class="border-b border-slate-100 pb-3 flex items-center justify-between flex-wrap gap-2"
+        >
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-code-branch text-teal-600 text-lg"></i>
+            <h3 class="text-base sm:text-lg font-extrabold text-slate-800">
+              4. Simulator Pengondisian Bertingkat (<code class="text-teal-700"
+                >if ... else if ... else</code
+              >)
+            </h3>
+          </div>
+          <div
+            id="coolingIndicator"
+            class="hidden items-center gap-1.5 text-xs font-bold text-sky-700 bg-sky-50 px-3 py-1 rounded-full border border-sky-200 animate-pulse"
+          >
+            <i class="fa-solid fa-snowflake text-sky-500"></i>
+            <span>Pendinginan Otomatis Berjalan Ke 27.0°C...</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-center">
+          <!-- ILUSTRASI SMART HOME DENGAN PERABOT LENGKAP (KIRI) -->
+          <div
+            class="lg:col-span-6 bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-4 shadow-2xs"
+          >
+            <div class="flex items-center justify-between">
+              <h4
+                class="text-xs font-bold text-slate-700 uppercase tracking-wider"
+              >
+                Ilustrasi Smart Home Interaktif
+              </h4>
+              <span
+                class="text-[10px] bg-teal-100 text-teal-800 px-2 py-0.5 rounded font-bold"
+              >
+                1 Ruang Standalone
+              </span>
+            </div>
+
+            <!-- SKEMA DENAH VEKTOR RUMAH SMART HOME -->
+            <div
+              class="relative w-full bg-white border border-slate-200 rounded-xl p-3 overflow-hidden shadow-inner"
+            >
+              <svg viewBox="0 0 500 250" class="w-full h-auto">
+                <!-- Atap Rumah -->
+                <polygon
+                  points="30,80 250,15 470,80"
+                  fill="none"
+                  stroke="#2563eb"
+                  stroke-width="8"
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                />
+
+                <!-- Dinding Luar Rumah -->
+                <rect
+                  x="45"
+                  y="80"
+                  width="410"
+                  height="140"
+                  fill="#f8fafc"
+                  stroke="#94a3b8"
+                  stroke-width="3"
+                  rx="4"
+                />
+
+                <!-- Garis Lantai -->
+                <line
+                  x1="45"
+                  y1="215"
+                  x2="455"
+                  y2="215"
+                  stroke="#cbd5e1"
+                  stroke-width="3"
+                />
+
+                <!-- 1. JENDELA RUMAH -->
+                <rect
+                  x="225"
+                  y="95"
+                  width="50"
+                  height="40"
+                  fill="#e0f2fe"
+                  stroke="#0284c7"
+                  stroke-width="2.5"
+                  rx="3"
+                />
+                <line
+                  x1="250"
+                  y1="95"
+                  x2="250"
+                  y2="135"
+                  stroke="#0284c7"
+                  stroke-width="1.5"
+                />
+                <line
+                  x1="225"
+                  y1="115"
+                  x2="275"
+                  y2="115"
+                  stroke="#0284c7"
+                  stroke-width="1.5"
+                />
+
+                <!-- 2. KARPET LINGKARAN DI LANTAI -->
+                <ellipse cx="250" cy="213" rx="75" ry="6" fill="#e2e8f0" />
+
+                <!-- 3. SOFA EMBUK -->
+                <rect
+                  x="200"
+                  y="160"
+                  width="100"
+                  height="28"
+                  rx="6"
+                  fill="#3b82f6"
+                />
+                <rect
+                  x="195"
+                  y="182"
+                  width="110"
+                  height="24"
+                  rx="6"
+                  fill="#2563eb"
+                />
+                <rect
+                  x="188"
+                  y="172"
+                  width="14"
+                  height="34"
+                  rx="4"
+                  fill="#1d4ed8"
+                />
+                <rect
+                  x="298"
+                  y="172"
+                  width="14"
+                  height="34"
+                  rx="4"
+                  fill="#1d4ed8"
+                />
+                <rect
+                  x="196"
+                  y="206"
+                  width="6"
+                  height="8"
+                  fill="#475569"
+                  rx="1"
+                />
+                <rect
+                  x="298"
+                  y="206"
+                  width="6"
+                  height="8"
+                  fill="#475569"
+                  rx="1"
+                />
+
+                <!-- 4. MEJA KOPI KAYU -->
+                <rect
+                  x="222"
+                  y="198"
+                  width="56"
+                  height="8"
+                  rx="2"
+                  fill="#b45309"
+                />
+                <line
+                  x1="230"
+                  y1="206"
+                  x2="230"
+                  y2="215"
+                  stroke="#78350f"
+                  stroke-width="2"
+                />
+                <line
+                  x1="270"
+                  y1="206"
+                  x2="270"
+                  y2="215"
+                  stroke="#78350f"
+                  stroke-width="2"
+                />
+                <rect
+                  x="246"
+                  y="192"
+                  width="8"
+                  height="6"
+                  rx="1"
+                  fill="#f8fafc"
+                  stroke="#cbd5e1"
+                  stroke-width="1"
+                />
+
+                <!-- 5. TANAMAN HIAS DALAM POT -->
+                <polygon
+                  points="152,215 168,215 165,195 155,195"
+                  fill="#d97706"
+                />
+                <circle cx="160" cy="182" r="10" fill="#16a34a" />
+                <circle cx="152" cy="188" r="7" fill="#22c55e" />
+                <circle cx="168" cy="188" r="7" fill="#22c55e" />
+
+                <!-- 6. SENSOR SUHU (Dinding Kiri) -->
+                <g transform="translate(95, 145)">
+                  <rect
+                    x="-35"
+                    y="-25"
+                    width="70"
+                    height="48"
+                    rx="8"
+                    fill="#ffffff"
+                    stroke="#64748b"
+                    stroke-width="2"
+                  />
+                  <rect
+                    x="-28"
+                    y="-17"
+                    width="56"
+                    height="20"
+                    rx="4"
+                    fill="#0f172a"
+                  />
+                  <text
+                    id="svgTempDisplay"
+                    x="0"
+                    y="-3"
+                    text-anchor="middle"
+                    fill="#22c55e"
+                    font-size="12"
+                    font-weight="bold"
+                    font-family="monospace"
+                  >
+                    25.0°C
+                  </text>
+                  <text
+                    x="0"
+                    y="14"
+                    text-anchor="middle"
+                    fill="#475569"
+                    font-size="8"
+                    font-weight="700"
+                    font-family="sans-serif"
+                  >
+                    Sensor Suhu
+                  </text>
+                </g>
+
+                <!-- 7. KIPAS ANGIN GANTUNG -->
+                <rect
+                  x="368"
+                  y="80"
+                  width="24"
+                  height="5"
+                  fill="#475569"
+                  rx="2"
+                />
+                <line
+                  x1="380"
+                  y1="85"
+                  x2="380"
+                  y2="125"
+                  stroke="#64748b"
+                  stroke-width="4"
+                />
+
+                <g transform="translate(380, 125)">
+                  <g id="svgFanBlades" class="fan-off">
+                    <circle
+                      cx="0"
+                      cy="0"
+                      r="10"
+                      fill="#0284c7"
+                      stroke="#0369a1"
+                      stroke-width="2"
+                    />
+                    <path
+                      d="M -5,0 C -15,-25 15,-25 5,0 Z"
+                      fill="#0ea5e9"
+                      opacity="0.9"
+                    />
+                    <path
+                      d="M 0,-5 C 25,-15 25,15 0,5 Z"
+                      fill="#0ea5e9"
+                      opacity="0.9"
+                    />
+                    <path
+                      d="M -5,0 C -15,25 15,25 5,0 Z"
+                      fill="#0ea5e9"
+                      opacity="0.9"
+                    />
+                    <path
+                      d="M 0,-5 C -25,-15 -25,15 0,5 Z"
+                      fill="#0ea5e9"
+                      opacity="0.9"
+                    />
+                    <circle cx="0" cy="0" r="4" fill="#ffffff" />
+                  </g>
+                </g>
+
+                <!-- Label Status Kipas -->
+                <rect
+                  x="325"
+                  y="155"
+                  width="110"
+                  height="22"
+                  rx="11"
+                  fill="#ffffff"
+                  stroke="#cbd5e1"
+                  stroke-width="1.5"
+                />
+                <text
+                  id="svgFanStatusText"
+                  x="380"
+                  y="170"
+                  text-anchor="middle"
+                  fill="#64748b"
+                  font-size="10"
+                  font-weight="bold"
+                  font-family="sans-serif"
+                >
+                  KIPAS OFF
+                </text>
+              </svg>
+            </div>
+
+            <!-- KONTROL SLIDER SUHU -->
+            <div class="space-y-1.5 pt-1">
+              <div class="flex justify-between text-xs font-semibold">
+                <span class="text-slate-600"
+                  ><i
+                    class="fa-solid fa-temperature-half text-teal-600 mr-1"
+                  ></i
+                  >Atur Suhu Ruangan (Geser ke &ge;28°C untuk aktifkan
+                  kipas):</span
+                >
+                <span
+                  id="tempValueDisplay"
+                  class="text-teal-700 font-bold font-mono text-sm bg-teal-50 px-2 py-0.5 rounded border border-teal-200"
+                  >25.0 °C</span
+                >
+              </div>
+              <input
+                type="range"
+                id="tempSlider"
+                min="20"
+                max="40"
+                step="0.1"
+                value="25.0"
+                oninput="onUserSliderInput()"
+                class="w-full accent-teal-600 cursor-pointer"
+              />
+              <div
+                class="flex justify-between text-[10px] text-slate-500 font-mono font-semibold"
+              >
+                <span>&lt; 28°C (OFF)</span>
+                <span>28°C - 34.9°C (Sedang)</span>
+                <span>&gt;= 35°C (Kuat)</span>
+              </div>
+            </div>
+
+            <!-- HARDWARE STATUS BOX -->
+            <div
+              id="hardwareStatusBox"
+              class="p-3 rounded-xl border flex items-center gap-3 bg-emerald-50 border-emerald-200 text-emerald-900"
+            >
+              <i
+                id="hardwareStatusIcon"
+                class="fa-solid fa-power-off text-xl text-emerald-600"
+              ></i>
+              <div>
+                <div id="hardwareStatusTitle" class="font-bold text-xs">
+                  STATUS: KIPAS OFF
+                </div>
+                <div id="hardwareStatusSub" class="text-[11px] opacity-90">
+                  Suhu &lt; 28.0°C. Kipas mati / standby (Blok ELSE aktif).
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- KODE ARDUINO IDE LENGKAP (KANAN) -->
+          <div
+            class="lg:col-span-6 bg-slate-50 border border-slate-200 text-slate-800 p-4 rounded-xl font-mono text-xs space-y-1 shadow-2xs"
+          >
+            <div class="text-slate-400 text-[11px] italic mb-1 font-sans">
+              // Program Smart Home: Kontrol Kipas Otomatis (Arduino IDE)
+            </div>
+            <div>
+              <span class="ide-keyword">#define</span> PIN_KIPAS
+              <span class="ide-number">9</span>
+            </div>
+            <div><span class="ide-keyword">#define</span> PIN_SENSOR A0</div>
+            <br />
+            <div>
+              <span class="ide-keyword">void</span>
+              <span class="ide-function">setup</span>() {
+            </div>
+            <div class="pl-4">
+              <span class="ide-function">pinMode</span>(PIN_KIPAS,
+              <span class="ide-constant">OUTPUT</span>);
+            </div>
+            <div class="pl-4">
+              <span class="ide-function">Serial</span>.<span
+                class="ide-function"
+                >begin</span
+              >(<span class="ide-number">9600</span>);
+            </div>
+            <div>}</div>
+            <br />
+            <div>
+              <span class="ide-keyword">void</span>
+              <span class="ide-function">loop</span>() {
+            </div>
+            <div class="pl-4">
+              <span class="ide-keyword">float</span> suhu =
+              <span id="codeTempVar" class="ide-number">25.0</span>;
+            </div>
+
+            <div
+              id="lineIf"
+              class="p-2 my-1 rounded transition-colors duration-200 ml-2 sm:ml-4"
+            >
+              <span class="ide-keyword">if</span> (suhu &gt;=
+              <span class="ide-number">35.0</span>) {
+              <div class="pl-4 text-rose-700 font-semibold">
+                // Suhu Panas: Kipas Nyala Kuat
+              </div>
+              <div class="pl-4 text-slate-700">
+                <span class="ide-function">analogWrite</span>(PIN_KIPAS,
+                <span class="ide-number">255</span>);
+                <span class="ide-comment">// PWM 100%</span>
+              </div>
+              }
+            </div>
+
+            <div
+              id="lineElseIf"
+              class="p-2 my-1 rounded transition-colors duration-200 ml-2 sm:ml-4"
+            >
+              <span class="ide-keyword">else if</span> (suhu &gt;=
+              <span class="ide-number">28.0</span>) {
+              <div class="pl-4 text-amber-700 font-semibold">
+                // Suhu Hangat: Kipas Nyala Sedang
+              </div>
+              <div class="pl-4 text-slate-700">
+                <span class="ide-function">analogWrite</span>(PIN_KIPAS,
+                <span class="ide-number">128</span>);
+                <span class="ide-comment">// PWM 50%</span>
+              </div>
+              }
+            </div>
+
+            <div
+              id="lineElse"
+              class="p-2 my-1 rounded transition-colors duration-200 ml-2 sm:ml-4"
+            >
+              <span class="ide-keyword">else</span> {
+              <div class="pl-4 text-emerald-700 font-semibold">
+                // Suhu Sejuk / Normal: Kipas Matikan (OFF)
+              </div>
+              <div class="pl-4 text-slate-700">
+                <span class="ide-function">analogWrite</span>(PIN_KIPAS,
+                <span class="ide-number">0</span>);
+                <span class="ide-comment">// PWM 0%</span>
+              </div>
+              }
+            </div>
+            <div>}</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NAVIGATION FOOTER -->
+      <nav class="flex items-center justify-between pt-2">
+        <a
+          href="1.1.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs transition-colors shadow-2xs"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Sub 1.1: Pengenalan Arduino</span>
+        </a>
+        <a
+          href="1.3.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 font-bold text-xs transition-colors shadow-xs"
+        >
+          <span>Sub 1.3: Praktikum Code & Output</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </nav>
+    </main>
+
+    <footer
+      class="max-w-6xl mx-auto w-full px-4 pt-4 text-center text-xs text-slate-400 font-medium"
+    >
+      <p>© MIKRO EDU - SMK SMTI Yogyakarta | Teknik Kimia Industri</p>
+    </footer>
+
+    <!-- SCRIPT LOGIKA SIMULASI -->
+    <script>
+      // 1. SIMULASI BARIS DEMI BARIS
+      let execTimer = null;
+      let loopCount = 0;
+
+      function clearExecHighlights() {
+        for (let i = 1; i <= 11; i++) {
+          const line = document.getElementById(`codeLine${i}`);
+          if (line)
+            line.className = line.className
+              .replace(/exec-line-active-setup|exec-line-active/g, "")
+              .trim();
+        }
+      }
+
+      function startLineExecution() {
+        stopLineExecution();
+        const mcuBadge = document.getElementById("mcuStateBadge");
+        const mcuDesc = document.getElementById("mcuExecDesc");
+        const boardLed = document.getElementById("simBoardLed");
+        const boardLedText = document.getElementById("simBoardLedText");
+        const counterText = document.getElementById("loopCounterText");
+
+        mcuBadge.innerText = "BOOTING & SETUP";
+        mcuBadge.className =
+          "text-[10px] font-mono bg-amber-500 text-white px-2 py-0.5 rounded font-bold";
+
+        const execSequence = [
+          {
+            line: 1,
+            desc: "Inisialisasi variabel memori int pinLed = 13...",
+            setup: true,
+          },
+          {
+            line: 2,
+            desc: "Masuk ke void setup() -> Persiapan hardware...",
+            setup: true,
+          },
+          {
+            line: 3,
+            desc: "Memulai komunikasi Serial pada kecepatan 9600 Baud...",
+            setup: true,
+          },
+          {
+            line: 4,
+            desc: "pinMode(pinLed, OUTPUT) -> Mengatur Pin 13 sebagai OUTPUT...",
+            setup: true,
+          },
+          { line: 5, desc: "Selesai void setup()!", setup: true },
+          {
+            line: 6,
+            desc: "Masuk ke void loop() -> Memulai eksekusi berulang...",
+            setup: false,
+          },
+          {
+            line: 7,
+            desc: "digitalWrite(pinLed, HIGH) -> Mengirim sinyal 5V. LED PIN 13 NYALA!",
+            setup: false,
+            led: true,
+          },
+          {
+            line: 8,
+            desc: "delay(1000) -> Menahan posisi LED NYALA 1 detik...",
+            setup: false,
+            led: true,
+          },
+          {
+            line: 9,
+            desc: "digitalWrite(pinLed, LOW) -> Sinyal 0V. LED PIN 13 MATI!",
+            setup: false,
+            led: false,
+          },
+          {
+            line: 10,
+            desc: "delay(1000) -> Menahan posisi LED MATI 1 detik...",
+            setup: false,
+            led: false,
+          },
+          {
+            line: 11,
+            desc: "Kembali lagi ke awal void loop()...",
+            setup: false,
+          },
+        ];
+
+        let idx = 0;
+        execTimer = setInterval(() => {
+          clearExecHighlights();
+          const step = execSequence[idx];
+          const lineElem = document.getElementById(`codeLine${step.line}`);
+
+          if (step.setup) {
+            if (lineElem) lineElem.classList.add("exec-line-active-setup");
+          } else {
+            if (lineElem) lineElem.classList.add("exec-line-active");
+            mcuBadge.innerText = "RUNNING LOOP";
+            mcuBadge.className =
+              "text-[10px] font-mono bg-teal-600 text-white px-2 py-0.5 rounded font-bold";
+          }
+
+          mcuDesc.innerText = step.desc;
+
+          if (step.led !== undefined) {
+            if (step.led) {
+              boardLed.className =
+                "w-8 h-8 rounded-full bg-emerald-500 border-2 border-emerald-300 shadow-md shadow-emerald-500/30 flex items-center justify-center";
+              boardLedText.innerText = "LED (Pin 13): ON (HIGH)";
+              boardLedText.className =
+                "text-xs font-bold font-mono text-emerald-700";
+            } else {
+              boardLed.className =
+                "w-8 h-8 rounded-full bg-slate-200 border-2 border-slate-300 flex items-center justify-center";
+              boardLedText.innerText = "LED (Pin 13): OFF (LOW)";
+              boardLedText.className =
+                "text-xs font-bold font-mono text-slate-500";
+            }
+          }
+
+          idx++;
+          if (idx >= execSequence.length) {
+            idx = 5;
+            loopCount++;
+            counterText.innerText = `${loopCount}x`;
+          }
+        }, 800);
+      }
+
+      function stopLineExecution() {
+        if (execTimer) {
+          clearInterval(execTimer);
+          execTimer = null;
+        }
+        clearExecHighlights();
+        loopCount = 0;
+        document.getElementById("mcuStateBadge").innerText = "STANDBY";
+        document.getElementById("mcuStateBadge").className =
+          "text-[10px] font-mono bg-slate-200 text-slate-600 px-2 py-0.5 rounded font-bold";
+        document.getElementById("mcuExecDesc").innerText =
+          'Klik "Jalankan Eksekusi" untuk mensimulasikan alur variabel dan fungsi program.';
+        document.getElementById("simBoardLed").className =
+          "w-8 h-8 rounded-full bg-slate-200 border-2 border-slate-300 flex items-center justify-center";
+        document.getElementById("simBoardLedText").innerText =
+          "LED (Pin 13): OFF";
+        document.getElementById("simBoardLedText").className =
+          "text-xs font-bold font-mono text-slate-500";
+        document.getElementById("loopCounterText").innerText = "0x";
+      }
+
+      // 2. SIMULASI TIPE DATA MEMORI
+      function setSimPreset(type, name, val) {
+        document.getElementById("simDataType").value = type;
+        document.getElementById("simVarName").value = name;
+        document.getElementById("simVarValue").value = val;
+        runDataAnimation();
+      }
+
+      function runDataAnimation() {
+        const type = document.getElementById("simDataType").value;
+        const name = document.getElementById("simVarName").value.trim() || "x";
+        const rawVal = document.getElementById("simVarValue").value.trim();
+
+        document.getElementById("codePreviewType").innerText = type;
+        document.getElementById("codePreviewName").innerText = name;
+        document.getElementById("codePreviewVal").innerText =
+          type === "String" || type === "char" ? `"${rawVal}"` : rawVal;
+
+        const regBox = document.getElementById("ramRegisterBox");
+        const ramData = document.getElementById("ramDataDisplay");
+        const ramBin = document.getElementById("ramBinaryDisplay");
+        const ramSize = document.getElementById("ramSizeTag");
+        const animStatus = document.getElementById("animBusStatus");
+        const formatDesc = document.getElementById("cpuFormatDesc");
+        const rangeDesc = document.getElementById("cpuRangeDesc");
+        const expText = document.getElementById("typeExplanationText");
+
+        regBox.classList.remove("animate-data-transfer");
+        void regBox.offsetWidth;
+        regBox.classList.add("animate-data-transfer");
+
+        animStatus.innerText = "PENULISAN MEMORI...";
+
+        setTimeout(() => {
+          animStatus.innerText = "TERSIMPAN DI SRAM";
+
+          if (type === "int") {
+            const numVal = parseInt(rawVal) || 0;
+            ramData.innerText = numVal;
+            ramBin.innerText = `Biner: ${(numVal >>> 0)
+              .toString(2)
+              .padStart(16, "0")
+              .match(/.{1,8}/g)
+              .join(" ")}`;
+            ramSize.innerText = "2 Byte (16 Bit)";
+            formatDesc.innerText = "Bilangan Bulat Desimal";
+            rangeDesc.innerText = "-32,768 s.d 32,767";
+            expText.innerHTML = `Mendeklarasikan <code class="font-bold text-teal-800">int ${name} = ${numVal};</code> membuat Arduino menyiapkan <strong>2 Byte</strong> memori. Sangat efisien untuk menyimpan variabel seperti nilai counter, angka pin, atau bacaan sensor analog.`;
+          } else if (type === "float") {
+            const floatVal = parseFloat(rawVal) || 0.0;
+            const formattedFloat = floatVal.toString().includes(".")
+              ? floatVal.toString()
+              : floatVal.toString() + ".0";
+            ramData.innerText = formattedFloat;
+            ramBin.innerText = "Format Presisi: IEEE 754 Floating Point";
+            ramSize.innerText = "4 Byte (32 Bit)";
+            formatDesc.innerText = "Bilangan Desimal Koma";
+            rangeDesc.innerText = "3.4028235E+38 Presisi Tinggi";
+            expText.innerHTML = `Deklarasi <code class="font-bold text-teal-800">float ${name} = ${formattedFloat};</code> mengalokasikan <strong>4 Byte</strong> memori RAM. Digunakan dalam sistem Teknik Kimia untuk mengukur parameter presisi seperti Suhu °C, pH, atau laju aliran fluida.`;
+          } else if (type === "bool") {
+            const isHigh =
+              rawVal === "1" ||
+              rawVal.toLowerCase() === "true" ||
+              rawVal.toUpperCase() === "HIGH";
+            ramData.innerText = isHigh ? "HIGH (1)" : "LOW (0)";
+            ramBin.innerText = isHigh
+              ? "Biner Sinyal: 00000001 (5 Volt)"
+              : "Biner Sinyal: 00000000 (0 Volt)";
+            ramSize.innerText = "1 Byte (8 Bit)";
+            formatDesc.innerText = "Logika Biner Switch";
+            rangeDesc.innerText = "TRUE (1) / FALSE (0)";
+            expText.innerHTML = `Deklarasi <code class="font-bold text-teal-800">bool ${name} = ${isHigh ? "HIGH" : "LOW"};</code> hanya memakan <strong>1 Byte</strong>. Ideal untuk menyimpan status sensor digital, status indikator relay, atau status nyala/mati mesin.`;
+          } else if (type === "char") {
+            const charVal = rawVal.length > 0 ? rawVal.charAt(0) : "A";
+            ramData.innerText = `'${charVal}'`;
+            ramBin.innerText = `Kode ASCII Hex: 0x${charVal.charCodeAt(0).toString(16).toUpperCase()} (${charVal.charCodeAt(0)})`;
+            ramSize.innerText = "1 Byte (8 Bit)";
+            formatDesc.innerText = "Karakter Tunggal ASCII";
+            rangeDesc.innerText = "1 Karakter Teks";
+            expText.innerHTML = `Deklarasi <code class="font-bold text-teal-800">char ${name} = '${charVal}';</code> menyimpan 1 simbol ASCII ke RAM. Biasa digunakan untuk menerima satu tombol perintah dari komunikasi Serial Komputer.`;
+          } else if (type === "String") {
+            ramData.innerText = `"${rawVal}"`;
+            ramBin.innerText = `Panjang Teks: ${rawVal.length} Karakter (+ Null Terminator)`;
+            ramSize.innerText = `~${rawVal.length + 6} Byte (Dinamis)`;
+            formatDesc.innerText = "Objek Kalimat Teks";
+            rangeDesc.innerText = "Alokasi Dinamis RAM";
+            expText.innerHTML = `Deklarasi <code class="font-bold text-teal-800">String ${name} = "${rawVal}";</code> membutuhkan konsumsi RAM terbesar. Gunakan dengan bijak pada tampilan layar LCD atau pengiriman notifikasi pesan teks.`;
+          }
+        }, 200);
+      }
+
+      // 3. CURSOR SERIAL
+      function typeSerialText(mode) {
+        const screen = document.getElementById("serialScreenText");
+        screen.innerText += mode === "print" ? "ABC" : "XYZ\n";
+      }
+
+      function resetCursorTerminal() {
+        document.getElementById("serialScreenText").innerText = "";
+      }
+
+      // 4. SIMULATOR LOGIKA IF - ELSE IF - ELSE (PENDINGINAN LEBIH TENANG & HALUS)
+      let autoCoolingTimer = null;
+
+      function onUserSliderInput() {
+        // Hentikan timer pendinginan saat pengguna sedang menggeser manual
+        stopAutoCoolingTimer();
+        updateIfElseSimulation();
+
+        const slider = document.getElementById("tempSlider");
+        let tempNow = parseFloat(slider.value);
+
+        // Jika suhu dinaikkan hingga kipas nyala (>= 28.0°C), picu pendinginan otomatis
+        if (tempNow >= 28.0) {
+          startAutoCoolingTimer();
+        }
+      }
+
+      function startAutoCoolingTimer() {
+        stopAutoCoolingTimer(); // Pastikan tidak ada timer ganda
+
+        autoCoolingTimer = setInterval(() => {
+          const slider = document.getElementById("tempSlider");
+          let tempNow = parseFloat(slider.value);
+
+          // Hentikan pendinginan secara presisi saat mencapai suhu stabil 27.0°C
+          if (tempNow <= 27.0) {
+            slider.value = "27.0";
+            updateIfElseSimulation();
+            stopAutoCoolingTimer();
+            return;
+          }
+
+          // Penurunan tenang & presisi: -0.1°C tiap 400 ms
+          let dropStep = 0.1;
+          let nextTemp = Math.max(27.0, tempNow - dropStep);
+
+          slider.value = nextTemp.toFixed(1);
+          updateIfElseSimulation();
+        }, 400); // Diperlambat ke 400 ms (sebelumnya 250 ms)
+      }
+
+      function stopAutoCoolingTimer() {
+        if (autoCoolingTimer) {
+          clearInterval(autoCoolingTimer);
+          autoCoolingTimer = null;
+        }
+      }
+
+      function updateIfElseSimulation() {
+        const temp = parseFloat(document.getElementById("tempSlider").value);
+
+        // Update Tampilan Angka Suhu di UI, Sensor SVG, dan Kode Program
+        document.getElementById("tempValueDisplay").innerText =
+          `${temp.toFixed(1)} °C`;
+        document.getElementById("codeTempVar").innerText = temp.toFixed(1);
+
+        const svgTemp = document.getElementById("svgTempDisplay");
+        if (svgTemp) svgTemp.textContent = `${temp.toFixed(1)}°C`;
+
+        const lineIf = document.getElementById("lineIf");
+        const lineElseIf = document.getElementById("lineElseIf");
+        const lineElse = document.getElementById("lineElse");
+
+        const fanBlades = document.getElementById("svgFanBlades");
+        const fanStatusText = document.getElementById("svgFanStatusText");
+        const hwBox = document.getElementById("hardwareStatusBox");
+        const hwTitle = document.getElementById("hardwareStatusTitle");
+        const hwSub = document.getElementById("hardwareStatusSub");
+        const hwIcon = document.getElementById("hardwareStatusIcon");
+        const indicator = document.getElementById("coolingIndicator");
+
+        // Pengondisian 3 Tingkat Suhu & Kipas
+        if (temp >= 35.0) {
+          // Condition 1: Suhu Panas (Kipas Nyala Kuat)
+          lineIf.className =
+            "p-2 my-1 rounded bg-rose-100 border border-rose-300 text-slate-800 font-bold ml-2 sm:ml-4";
+          lineElseIf.className = "p-2 my-1 rounded opacity-40 ml-2 sm:ml-4";
+          lineElse.className = "p-2 my-1 rounded opacity-40 ml-2 sm:ml-4";
+
+          if (fanBlades) fanBlades.setAttribute("class", "fan-spin-fast");
+          if (fanStatusText) {
+            fanStatusText.textContent = "NYALA KUAT";
+            fanStatusText.setAttribute("fill", "#e11d48");
+          }
+
+          hwBox.className =
+            "p-3 rounded-xl border flex items-center gap-3 bg-rose-50 border-rose-200 text-rose-900 shadow-2xs";
+          hwIcon.className =
+            "fa-solid fa-fan text-xl animate-spin text-rose-600";
+          hwTitle.innerText = "STATUS: KIPAS NYALA KUAT";
+          hwSub.innerText =
+            "Suhu >= 35.0°C! Kipas berputar cepat mendinginkan ruangan secara otomatis.";
+
+          if (indicator) {
+            indicator.classList.remove("hidden");
+            indicator.classList.add("flex");
+          }
+        } else if (temp >= 28.0) {
+          // Condition 2: Suhu Hangat (Kipas Nyala Sedang)
+          lineIf.className = "p-2 my-1 rounded opacity-40 ml-2 sm:ml-4";
+          lineElseIf.className =
+            "p-2 my-1 rounded bg-amber-100 border border-amber-300 text-slate-800 font-bold ml-2 sm:ml-4";
+          lineElse.className = "p-2 my-1 rounded opacity-40 ml-2 sm:ml-4";
+
+          if (fanBlades) fanBlades.setAttribute("class", "fan-spin-slow");
+          if (fanStatusText) {
+            fanStatusText.textContent = "NYALA SEDANG";
+            fanStatusText.setAttribute("fill", "#d97706");
+          }
+
+          hwBox.className =
+            "p-3 rounded-xl border flex items-center gap-3 bg-amber-50 border-amber-200 text-amber-900 shadow-2xs";
+          hwIcon.className =
+            "fa-solid fa-fan text-xl animate-spin text-amber-600";
+          hwTitle.innerText = "STATUS: KIPAS NYALA SEDANG";
+          hwSub.innerText =
+            "Suhu 28.0°C - 34.9°C. Kipas berputar sedang untuk menurunkan suhu ke target 27°C.";
+
+          if (indicator) {
+            indicator.classList.remove("hidden");
+            indicator.classList.add("flex");
+          }
+        } else {
+          // Condition 3: Suhu Sejuk / Normal (Kipas OFF)
+          lineIf.className = "p-2 my-1 rounded opacity-40 ml-2 sm:ml-4";
+          lineElseIf.className = "p-2 my-1 rounded opacity-40 ml-2 sm:ml-4";
+          lineElse.className =
+            "p-2 my-1 rounded bg-emerald-100 border border-emerald-300 text-slate-800 font-bold ml-2 sm:ml-4";
+
+          if (fanBlades) fanBlades.setAttribute("class", "fan-off");
+          if (fanStatusText) {
+            fanStatusText.textContent = "KIPAS OFF";
+            fanStatusText.setAttribute("fill", "#64748b");
+          }
+
+          hwBox.className =
+            "p-3 rounded-xl border flex items-center gap-3 bg-emerald-50 border-emerald-200 text-emerald-900 shadow-2xs";
+          hwIcon.className = "fa-solid fa-power-off text-xl text-emerald-600";
+          hwTitle.innerText = "STATUS: KIPAS OFF";
+          hwSub.innerText =
+            "Suhu < 28.0°C. Ruangan sejuk, kipas otomatis mati (Blok ELSE Aktif).";
+
+          if (indicator) {
+            indicator.classList.remove("flex");
+            indicator.classList.add("hidden");
+          }
+        }
+      }
+
+      window.onload = function () {
+        runDataAnimation();
+        updateIfElseSimulation();
+      };
+    </script>
+  </body>
+</html>

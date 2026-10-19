@@ -1,0 +1,843 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Sub 1.3 Pengenalan Serial Monitor & Setup Arduino IDE</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      body {
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      /* Mengizinkan seleksi teks khusus pada area kode agar bisa diblok/copas */
+      /* #codeDisplay {
+        user-select: text !important;
+        -webkit-user-select: text !important;
+      } */
+
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 9999px;
+      }
+
+      /* Animasi Kursor Terminal Terang */
+      @keyframes blink-cursor {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+      .terminal-cursor-light {
+        animation: blink-cursor 0.8s infinite;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased pb-10"
+  >
+    <!-- HEADER APP -->
+    <header
+      class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs"
+    >
+      <div
+        class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3"
+      >
+        <div class="flex items-center gap-3">
+          <a
+            href="1.2.html"
+            class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-sm transition-colors"
+            title="Kembali ke Sub 1.2"
+          >
+            <i class="fa-solid fa-arrow-left"></i>
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span
+                class="text-[10px] font-extrabold bg-teal-100 text-teal-800 px-2 py-0.5 rounded uppercase tracking-wider"
+              >
+                SUB 1.3
+              </span>
+            </div>
+            <h1
+              class="text-sm sm:text-base font-black text-slate-900 leading-tight mt-0.5"
+            >
+              Praktikum Kode & Output Serial Monitor Arduino
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main
+      class="flex-1 max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-5 space-y-6"
+    >
+      <!-- HERO BANNER -->
+      <section
+        class="bg-teal-700 text-white rounded-2xl p-6 sm:p-8 shadow-md relative overflow-hidden"
+      >
+        <div
+          class="absolute right-0 bottom-0 top-0 w-1/3 opacity-20 pointer-events-none hidden sm:flex items-center justify-end pr-6 select-none"
+        >
+          <i class="fa-solid fa-desktop text-9xl text-teal-100"></i>
+        </div>
+
+        <div class="relative z-10 space-y-3 max-w-3xl">
+          <div
+            class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-md"
+          >
+            <i class="fa-solid fa-microchip text-teal-200 text-xs"></i>
+            <span>Praktikum Pemrograman & Komunikasi Serial</span>
+          </div>
+          <h2
+            class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white leading-tight tracking-tight"
+          >
+            Setup Device Hardware & Interaksi Serial Monitor
+          </h2>
+          <p
+            class="text-xs sm:text-sm text-teal-50/90 leading-relaxed font-normal"
+          >
+            Pelajari tahapan menghubungkan papan Arduino Uno ke PC,
+            mengonfigurasi port & board pada Arduino IDE, serta menguji eksekusi
+            program Serial.print() dan Serial.println() dengan Simulator
+            Interaktif.
+          </p>
+        </div>
+      </section>
+
+      <!-- 2. LANGKAH PERSIAPAN & PEMILIHAN DEVICE -->
+      <section
+        class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-5"
+      >
+        <div
+          class="flex items-center justify-between border-b border-slate-100 pb-3"
+        >
+          <h3
+            class="text-base sm:text-lg font-extrabold text-slate-800 flex items-center gap-2"
+          >
+            <i class="fa-solid fa-gears text-teal-600"></i> Langkah-Langkah
+            Menghubungkan Device Arduino
+          </h3>
+          <span
+            class="text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full"
+          >
+            Wajib Dilakukan
+          </span>
+        </div>
+
+        <div class="space-y-5">
+          <!-- LANGKAH 1, 2, 3 -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs sm:text-sm">
+            <div
+              class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5"
+            >
+              <span
+                class="w-6 h-6 rounded-full bg-teal-600 text-white text-xs font-bold inline-flex items-center justify-center mr-1"
+                >1</span
+              >
+              <strong class="text-slate-800">Siapkan Alat & Bahan</strong>
+              <p class="text-slate-600 text-xs">
+                Siapkan kabel USB dan Board Arduino Uno milikmu.
+              </p>
+            </div>
+            <div
+              class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5"
+            >
+              <span
+                class="w-6 h-6 rounded-full bg-teal-600 text-white text-xs font-bold inline-flex items-center justify-center mr-1"
+                >2</span
+              >
+              <strong class="text-slate-800">Hubungkan Ke PC</strong>
+              <p class="text-slate-600 text-xs">
+                Hubungkan Arduino Board dengan kabel ke Serial Port USB pada
+                PC/Laptop.
+              </p>
+            </div>
+            <div
+              class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5"
+            >
+              <span
+                class="w-6 h-6 rounded-full bg-teal-600 text-white text-xs font-bold inline-flex items-center justify-center mr-1"
+                >3</span
+              >
+              <strong class="text-slate-800">Buka Arduino IDE</strong>
+              <p class="text-slate-600 text-xs">
+                Jalankan Software Arduino IDE pada komputer kamu.
+              </p>
+            </div>
+          </div>
+
+          <!-- LANGKAH 4: PILIH BOARD -->
+          <div
+            class="bg-slate-50 rounded-2xl p-4 sm:p-5 border border-slate-200 space-y-3"
+          >
+            <div class="space-y-1">
+              <div class="flex items-center gap-2.5">
+                <span
+                  class="w-7 h-7 rounded-full bg-teal-600 text-white text-xs font-bold flex items-center justify-center shrink-0"
+                  >4</span
+                >
+                <h4 class="font-bold text-sm sm:text-base text-slate-800">
+                  Memilih Board Arduino Uno
+                </h4>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed pl-9">
+                Pilih board yang terhubung ke papan Arduino melalui menu
+                <strong class="text-teal-700"
+                  >"Tools" &gt; "Board" &gt; "Arduino AVR Boards" &gt; "Arduino
+                  Uno"</strong
+                >.
+              </p>
+            </div>
+
+            <div
+              class="bg-white p-2 sm:p-3 rounded-xl border border-slate-200 shadow-xs max-w-3xl mx-auto overflow-hidden"
+            >
+              <img
+                src="img/modul01/1.3.1.png"
+                alt="Memilih Board Arduino Uno di Arduino IDE"
+                class="w-full h-auto rounded-lg object-contain"
+                onerror="
+                  this.onerror = null;
+                  this.src = 'device.png';
+                "
+              />
+            </div>
+          </div>
+
+          <!-- LANGKAH 5: PILIH PORT -->
+          <div
+            class="bg-slate-50 rounded-2xl p-4 sm:p-5 border border-slate-200 space-y-3"
+          >
+            <div class="space-y-1">
+              <div class="flex items-center gap-2.5">
+                <span
+                  class="w-7 h-7 rounded-full bg-teal-600 text-white text-xs font-bold flex items-center justify-center shrink-0"
+                  >5</span
+                >
+                <h4 class="font-bold text-sm sm:text-base text-slate-800">
+                  Memilih Port Serial Arduino
+                </h4>
+              </div>
+              <p class="text-xs sm:text-sm text-slate-600 leading-relaxed pl-9">
+                Pilih port serial yang terhubung ke papan Arduino Anda melalui
+                menu
+                <strong class="text-teal-700">"Tools" &gt; "Port"</strong>
+                (Contoh: COM11 atau port yang terdeteksi).
+              </p>
+            </div>
+
+            <div
+              class="bg-white p-2 sm:p-3 rounded-xl border border-slate-200 shadow-xs max-w-3xl mx-auto overflow-hidden"
+            >
+              <img
+                src="img/modul01/1.3.2.png"
+                alt="Memilih Port Serial di Arduino IDE"
+                class="w-full h-auto rounded-lg object-contain"
+                onerror="
+                  this.onerror = null;
+                  this.src = 'port.png';
+                "
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. EDITOR ARDUINO IDE -->
+      <section class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h3
+            class="text-base sm:text-lg font-extrabold text-slate-800 flex items-center gap-2"
+          >
+            <i class="fa-solid fa-code text-teal-600"></i> Code Editor & Penguji
+            Program
+          </h3>
+          <span
+            class="text-xs text-teal-700 bg-teal-50 border border-teal-200 font-bold px-2.5 py-1 rounded-full"
+          >
+            Interaktif & Live
+          </span>
+        </div>
+
+        <!-- FORM ATUR NAMA SISWA & KELAS DENGAN KODE REAKTIF -->
+        <div
+          class="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-3"
+        >
+          <div
+            class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-user-pen text-teal-600"></i> Kustomisasi Data
+            Identitas Siswa:
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1"
+                >Nama Siswa:</label
+              >
+              <input
+                type="text"
+                id="inputStudentName"
+                value="Budi Santoso"
+                oninput="updateCodeFromInput()"
+                class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-slate-800 font-semibold outline-none focus:border-teal-600"
+                placeholder="Masukkan Nama Kamu..."
+              />
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-600 mb-1"
+                >Kelas:</label
+              >
+              <select
+                id="inputStudentClass"
+                onchange="updateCodeFromInput()"
+                class="w-full bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-slate-800 font-semibold outline-none focus:border-teal-600 cursor-pointer"
+              >
+                <option value="XI TKI-A">XI TKI-A</option>
+                <option value="XI TKI-B">XI TKI-B</option>
+                <option value="XI TKI-C">XI TKI-C</option>
+                <option value="XI KTIB">XI KTIB</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="rounded-xl overflow-hidden shadow-md border border-slate-300 bg-white font-sans"
+        >
+          <!-- ARDUINO IDE HEADER BAR -->
+          <div
+            class="bg-[#008184] px-3 py-2 flex items-center justify-between text-white select-none flex-wrap gap-2"
+          >
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-1.5">
+                <button
+                  onclick="triggerVerify()"
+                  title="Verify / Verify Code"
+                  class="w-7 h-7 rounded-full bg-[#006e71] hover:bg-[#005a5d] text-emerald-300 flex items-center justify-center transition cursor-pointer"
+                >
+                  <i class="fa-solid fa-check text-xs"></i>
+                </button>
+                <button
+                  onclick="triggerUploadAndRun()"
+                  title="Upload to Board & Run"
+                  class="w-7 h-7 rounded-full bg-[#006e71] hover:bg-[#005a5d] text-emerald-300 flex items-center justify-center transition cursor-pointer"
+                >
+                  <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+              </div>
+
+              <div
+                class="bg-white text-slate-800 px-3 py-1 rounded-md text-xs font-medium flex items-center gap-2 border border-teal-700 shadow-xs"
+              >
+                <i class="fa-solid fa-microchip text-teal-600"></i>
+                <span>Arduino Uno</span>
+                <i
+                  class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1"
+                ></i>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button
+                onclick="triggerUploadAndRun()"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1 rounded-md flex items-center gap-1.5 transition shadow-2xs cursor-pointer"
+              >
+                <i class="fa-solid fa-play"></i>
+                <span>Upload & Run</span>
+              </button>
+              <button
+                id="btnCopy"
+                onclick="copyCode()"
+                class="bg-[#006e71] hover:bg-[#005a5d] text-white text-xs font-semibold px-3 py-1 rounded-md flex items-center gap-1.5 transition border border-teal-600 cursor-pointer"
+              >
+                <i id="btnCopyIcon" class="fa-solid fa-copy"></i>
+                <span id="btnCopyText" class="hidden sm:inline"
+                  >Salin Kode</span
+                >
+              </button>
+            </div>
+          </div>
+
+          <!-- ARDUINO IDE SUB-HEADER -->
+          <div
+            class="bg-slate-100 border-b border-slate-200 px-3 py-1.5 flex items-center justify-between text-slate-600 text-xs select-none"
+          >
+            <div
+              class="flex items-center gap-2 font-mono font-medium text-slate-700"
+            >
+              <i class="fa-solid fa-file-code text-teal-600"></i>
+              <span>sketch_serial_print_println.ino</span>
+            </div>
+            <div class="flex items-center gap-3 text-slate-400 text-xs">
+              <i
+                class="fa-solid fa-wave-square hover:text-slate-600 cursor-pointer"
+                title="Serial Plotter"
+              ></i>
+              <a
+                href="#serialMonitorSection"
+                class="fa-solid fa-terminal text-teal-600 hover:text-teal-700 cursor-pointer"
+                title="Ke Serial Monitor"
+              ></a>
+            </div>
+          </div>
+
+          <!-- EDITOR WORKSPACE -->
+          <div class="flex min-h-[260px]">
+            <div
+              class="w-10 bg-slate-50 border-r border-slate-200 flex flex-col items-center py-3 gap-4 text-slate-400 text-xs select-none hidden sm:flex shrink-0"
+            >
+              <i
+                class="fa-regular fa-copy text-teal-700 font-bold"
+                title="Sketchbook"
+              ></i>
+              <i
+                class="fa-solid fa-magnifying-glass hover:text-slate-600 cursor-pointer"
+              ></i>
+              <i
+                class="fa-solid fa-cubes hover:text-slate-600 cursor-pointer"
+                title="Board Manager"
+              ></i>
+              <i
+                class="fa-solid fa-book hover:text-slate-600 cursor-pointer"
+                title="Library Manager"
+              ></i>
+              <i
+                class="fa-solid fa-bug hover:text-slate-600 cursor-pointer"
+                title="Debug"
+              ></i>
+            </div>
+
+            <!-- AREA KODE PROGRAM -->
+            <div class="p-3 sm:p-4 overflow-x-auto w-full bg-white">
+              <div
+                id="codeDisplay"
+                class="font-mono text-xs sm:text-sm leading-relaxed"
+              ></div>
+            </div>
+          </div>
+
+          <!-- IDE STATUS BAR -->
+          <div
+            class="bg-[#005f63] px-3 py-1.5 text-[11px] text-teal-100 flex justify-between items-center font-sans border-t border-teal-800 select-none"
+          >
+            <span id="ideStatusText" class="flex items-center gap-1.5">
+              <span
+                id="ideStatusDot"
+                class="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse"
+              ></span>
+              <span id="ideStatusMsg">Ready | Serial Baud Rate: 9600</span>
+            </span>
+            <span class="font-mono text-[10px] text-teal-200"
+              >Ln 18, Col 1 | Arduino Uno on COM11</span
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. SIMULATOR SERIAL MONITOR (BG CERAH / LIGHT MODE) -->
+      <section
+        id="serialMonitorSection"
+        class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4"
+      >
+        <div
+          class="border-b border-slate-100 pb-3 flex items-center justify-between flex-wrap gap-2"
+        >
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-terminal text-teal-600 text-lg"></i>
+            <h3 class="text-base sm:text-lg font-extrabold text-slate-800">
+              4. Simulator Serial Monitor (Tampilan Cerah / Light Mode)
+            </h3>
+          </div>
+          <div class="flex items-center gap-2">
+            <span
+              class="text-[11px] font-mono font-bold bg-emerald-50 text-emerald-700 px-2.5 py-0.5 rounded-full border border-emerald-200"
+            >
+              COM11 (Connected)
+            </span>
+            <button
+              onclick="clearSerialMonitor()"
+              class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-lg transition font-semibold cursor-pointer border border-slate-300"
+            >
+              <i class="fa-solid fa-trash-can mr-1"></i> Clear Output
+            </button>
+          </div>
+        </div>
+
+        <!-- CONTAINER SERIAL MONITOR CERAH -->
+        <div
+          class="bg-slate-50 border border-slate-300 rounded-xl p-3 sm:p-4 space-y-3 shadow-inner"
+        >
+          <!-- TOP TOOLBAR SERIAL MONITOR -->
+          <div
+            class="flex items-center justify-between flex-wrap gap-2 text-xs border-b border-slate-200 pb-2.5"
+          >
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <input
+                type="text"
+                id="serialInput"
+                placeholder="Kirim perintah / masukan data ke Arduino..."
+                onkeypress="handleSerialKeyPress(event)"
+                class="flex-1 sm:w-72 bg-white border border-slate-300 text-slate-800 rounded-lg px-3 py-1.5 font-mono outline-none focus:border-teal-600 text-xs shadow-2xs"
+              />
+              <button
+                onclick="sendSerialInput()"
+                class="bg-teal-600 hover:bg-teal-700 text-white font-bold px-3.5 py-1.5 rounded-lg transition cursor-pointer shadow-2xs"
+              >
+                Send
+              </button>
+            </div>
+
+            <div
+              class="flex items-center gap-3 text-[11px] font-semibold text-slate-600"
+            >
+              <label
+                class="flex items-center gap-1.5 cursor-pointer select-none"
+              >
+                <input
+                  type="checkbox"
+                  id="chkAutoscroll"
+                  checked
+                  class="accent-teal-600 cursor-pointer"
+                />
+                <span>Autoscroll</span>
+              </label>
+              <label
+                class="flex items-center gap-1.5 cursor-pointer select-none"
+              >
+                <input
+                  type="checkbox"
+                  id="chkTimestamp"
+                  onchange="toggleTimestamps()"
+                  class="accent-teal-600 cursor-pointer"
+                />
+                <span>Show Timestamp</span>
+              </label>
+              <select
+                id="baudRateSelect"
+                class="bg-white border border-slate-300 text-slate-700 font-mono font-bold rounded-md px-2 py-1 outline-none text-[11px]"
+              >
+                <option value="9600">9600 baud</option>
+                <option value="115200">115200 baud</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- LAYAR OUTPUT TERMINAL CERAH (LIGHT MODE DISPLAY) -->
+          <div
+            id="serialMonitorDisplay"
+            class="bg-white border border-slate-200 rounded-lg p-3.5 font-mono text-xs sm:text-sm text-slate-800 min-h-[160px] max-h-[220px] overflow-y-auto shadow-2xs leading-relaxed"
+          >
+            <div class="text-slate-400 text-[11px] italic mb-1 font-sans">
+              // Output Serial Monitor akan muncul di bawah ini (Klik "Upload &
+              Run" di atas):
+            </div>
+            <span
+              id="serialLogContent"
+              class="whitespace-pre-wrap font-bold text-teal-900"
+            ></span>
+            <span
+              id="serialBlinkingCursor"
+              class="inline-block w-2 h-4 bg-teal-600 ml-0.5 align-middle terminal-cursor-light"
+            ></span>
+          </div>
+
+          <!-- FOOTER ACTION SIMULATOR -->
+          <div
+            class="flex items-center justify-between text-[11px] text-slate-500 pt-1"
+          >
+            <span
+              >Status Komunikasi:
+              <strong id="serialStatusBadge" class="text-emerald-600"
+                >IDLE (Siap Menerima Data)</strong
+              ></span
+            >
+            <button
+              onclick="triggerUploadAndRun()"
+              class="text-teal-700 hover:text-teal-900 font-extrabold underline cursor-pointer"
+            >
+              Simulasikan Jalankan Program
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- NAVIGATION FOOTER -->
+      <nav class="flex items-center justify-between pt-2">
+        <a
+          href="1.2.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs transition-colors shadow-2xs"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Sub 1.2: Pemrograman Arduino</span>
+        </a>
+        <a
+          href="index.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 font-bold text-xs transition-colors shadow-xs"
+        >
+          <span>Finish</span>
+          <i class="fa-solid fa-check"></i>
+        </a>
+      </nav>
+    </main>
+
+    <footer
+      class="max-w-6xl mx-auto w-full px-4 pt-4 text-center text-xs text-slate-400 font-medium"
+    >
+      <p>© MIKRO EDU - SMK SMTI Yogyakarta | Teknik Kimia Industri</p>
+    </footer>
+
+    <!-- SCRIPT LOGIKA PROGRAM -->
+    <script>
+      let currentRawCode = "";
+      let showTimestamp = false;
+
+      function updateCodeFromInput() {
+        const sName =
+          document.getElementById("inputStudentName").value || "....";
+        const sClass =
+          document.getElementById("inputStudentClass").value || "....";
+
+        currentRawCode = `// --- PRAKTIKUM SERIAL.PRINT & SERIAL.PRINTLN ---
+
+void setup() {
+  // Memulai komunikasi Serial 9600 baud rate
+  Serial.begin(9600);
+
+  // Menggunakan Serial.print() (Menyambung teks ke samping)
+  Serial.print("SMK ");
+  Serial.print("SMTI ");
+  
+  // Menggunakan Serial.println() (Mencetak teks lalu membuat baris baru)
+  Serial.println("Yogyakarta");
+
+  // Informasi Identitas Siswa
+  Serial.println("nama siswa: ${sName}");
+  Serial.println("kelas : ${sClass}");
+  Serial.println("Jurusan: Teknik kimia Industri");
+}
+
+void loop() {
+  // Kosong karena eksekusi cukup dilakukan sekali di setup()
+}`;
+
+        document.getElementById("codeDisplay").innerHTML =
+          renderArduinoSyntax(currentRawCode);
+      }
+
+      function renderArduinoSyntax(code) {
+        const lines = code.split("\n");
+        let htmlResult =
+          '<div class="table w-full border-collapse font-mono text-xs sm:text-sm">';
+
+        lines.forEach((line, index) => {
+          let comment = "";
+          let codePart = line;
+
+          const commentIdx = line.indexOf("//");
+          if (commentIdx !== -1) {
+            codePart = line.substring(0, commentIdx);
+            comment = `<span class="text-slate-400 italic font-normal">${escapeHtml(line.substring(commentIdx))}</span>`;
+          }
+
+          codePart = escapeHtml(codePart);
+
+          codePart = codePart
+            .replace(
+              /\b(int|void|float|boolean|bool|char|const|long|unsigned)\b/g,
+              '<span class="text-[#05797d] font-bold">$1</span>',
+            )
+            .replace(
+              /\b(setup|loop|pinMode|digitalWrite|analogWrite|digitalRead|delay|millis|begin|print|println)\b/g,
+              '<span class="text-[#d97706] font-semibold">$1</span>',
+            )
+            .replace(
+              /\b(HIGH|LOW|OUTPUT|INPUT|INPUT_PULLUP|Serial)\b/g,
+              '<span class="text-[#0284c7] font-bold">$1</span>',
+            )
+            .replace(
+              /\b(\d+)\b/g,
+              '<span class="text-emerald-600 font-medium">$1</span>',
+            );
+
+          htmlResult += `
+            <div class="table-row hover:bg-slate-50">
+              <div class="table-cell text-right select-none pr-3.5 text-slate-300 font-mono text-xs w-7 border-r border-slate-100 py-0.5">${index + 1}</div>
+              <div class="table-cell pl-3.5 whitespace-pre font-mono text-slate-800 py-0.5">${codePart}${comment}</div>
+            </div>`;
+        });
+
+        htmlResult += "</div>";
+        return htmlResult;
+      }
+
+      function escapeHtml(text) {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+
+      function copyCode() {
+        navigator.clipboard.writeText(currentRawCode).then(() => {
+          const btnText = document.getElementById("btnCopyText");
+          const btnIcon = document.getElementById("btnCopyIcon");
+
+          btnText.innerText = "Tersalin!";
+          btnIcon.className = "fa-solid fa-check text-emerald-300";
+
+          setTimeout(() => {
+            btnText.innerText = "Salin Kode";
+            btnIcon.className = "fa-solid fa-copy";
+          }, 2000);
+        });
+      }
+
+      function triggerVerify() {
+        const msg = document.getElementById("ideStatusMsg");
+        const dot = document.getElementById("ideStatusDot");
+        dot.className =
+          "w-2 h-2 rounded-full bg-amber-400 inline-block animate-ping";
+        msg.innerText = "Compiling sketch...";
+
+        setTimeout(() => {
+          dot.className =
+            "w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse";
+          msg.innerText = "Done compiling. | No syntax errors found.";
+        }, 1000);
+      }
+
+      function triggerUploadAndRun() {
+        const msg = document.getElementById("ideStatusMsg");
+        const dot = document.getElementById("ideStatusDot");
+        const badge = document.getElementById("serialStatusBadge");
+
+        dot.className =
+          "w-2 h-2 rounded-full bg-amber-400 inline-block animate-ping";
+        msg.innerText = "Uploading to Board COM11...";
+        badge.innerText = "UPLOADING PROGRAM...";
+        badge.className = "text-amber-600 font-bold";
+
+        setTimeout(() => {
+          dot.className =
+            "w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse";
+          msg.innerText = "Done uploading. | Program Running on Arduino Uno";
+          badge.innerText = "EXECUTING SERIAL OUTPUT";
+          badge.className = "text-teal-600 font-bold";
+
+          runSerialProgramOutput();
+        }, 1200);
+      }
+
+      function runSerialProgramOutput() {
+        clearSerialMonitor();
+        const sName =
+          document.getElementById("inputStudentName").value || "....";
+        const sClass =
+          document.getElementById("inputStudentClass").value || "....";
+
+        const steps = [
+          { text: "SMK ", isNewLine: false },
+          { text: "SMTI ", isNewLine: false },
+          { text: "Yogyakarta", isNewLine: true },
+          { text: `nama siswa: ${sName}`, isNewLine: true },
+          { text: `kelas : ${sClass}`, isNewLine: true },
+          { text: "Jurusan: Teknik kimia Industri", isNewLine: true },
+        ];
+
+        let step = 0;
+        const interval = setInterval(() => {
+          if (step < steps.length) {
+            const current = steps[step];
+            appendSerialText(current.text, current.isNewLine);
+            step++;
+          } else {
+            clearInterval(interval);
+            document.getElementById("serialStatusBadge").innerText =
+              "IDLE (Program Complete)";
+            document.getElementById("serialStatusBadge").className =
+              "text-emerald-600 font-bold";
+          }
+        }, 300);
+      }
+
+      function getTimePrefix() {
+        if (!showTimestamp) return "";
+        const now = new Date();
+        const hrs = String(now.getHours()).padStart(2, "0");
+        const mins = String(now.getMinutes()).padStart(2, "0");
+        const secs = String(now.getSeconds()).padStart(2, "0");
+        const ms = String(now.getMilliseconds()).padStart(3, "0");
+        return `[${hrs}:${mins}:${secs}.${ms}] -> `;
+      }
+
+      function appendSerialText(text, isNewLine = true) {
+        const logContent = document.getElementById("serialLogContent");
+        const prefix =
+          logContent.innerText === "" || logContent.innerText.endsWith("\n")
+            ? getTimePrefix()
+            : "";
+
+        logContent.innerText += prefix + text + (isNewLine ? "\n" : "");
+
+        const display = document.getElementById("serialMonitorDisplay");
+        if (document.getElementById("chkAutoscroll").checked) {
+          display.scrollTop = display.scrollHeight;
+        }
+      }
+
+      function sendSerialInput() {
+        const input = document.getElementById("serialInput");
+        const val = input.value.trim();
+        if (!val) return;
+
+        appendSerialText(`> Sent: ${val}`, true);
+        input.value = "";
+
+        setTimeout(() => {
+          appendSerialText(`[Arduino Response]: ${val}`, true);
+        }, 300);
+      }
+
+      function handleSerialKeyPress(e) {
+        if (e.key === "Enter") {
+          sendSerialInput();
+        }
+      }
+
+      function clearSerialMonitor() {
+        document.getElementById("serialLogContent").innerText = "";
+      }
+
+      function toggleTimestamps() {
+        showTimestamp = document.getElementById("chkTimestamp").checked;
+      }
+
+      window.onload = function () {
+        updateCodeFromInput();
+      };
+    </script>
+  </body>
+</html>

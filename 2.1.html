@@ -1,0 +1,1539 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>
+      Sub 2.1 - Pemrograman I/O Digital: digitalRead() & digitalWrite()
+    </title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      body {
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 9999px;
+      }
+
+      /* Animasi Sinyal Kabel / Wiring */
+      @keyframes wireFlow {
+        0% {
+          stroke-dashoffset: 20;
+        }
+        100% {
+          stroke-dashoffset: 0;
+        }
+      }
+      .wire-active {
+        stroke-dasharray: 6 4;
+        animation: wireFlow 0.4s linear infinite;
+      }
+
+      /* Animasi Alarm Sirine Flash */
+      @keyframes alarmFlash {
+        0%,
+        100% {
+          fill: #ef4444;
+          filter: drop-shadow(0 0 16px rgba(239, 68, 68, 0.95));
+        }
+        50% {
+          fill: #fca5a5;
+          filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.3));
+        }
+      }
+      .alarm-active {
+        animation: alarmFlash 0.3s infinite;
+      }
+
+      /* ANIMASI API MENYATU (UNIFIED FLAME ANIMATION) */
+      @keyframes flameSway {
+        0% {
+          transform: scaleX(1) scaleY(1) rotate(-1.5deg);
+        }
+        50% {
+          transform: scaleX(0.96) scaleY(1.06) rotate(2deg);
+        }
+        100% {
+          transform: scaleX(1.04) scaleY(0.95) rotate(-1deg);
+        }
+      }
+
+      @keyframes flameCoreFlicker {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.9;
+        }
+        50% {
+          transform: scale(1.08, 1.12);
+          opacity: 1;
+        }
+      }
+
+      @keyframes sparkFloat {
+        0% {
+          transform: translateY(0) scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-45px) scale(0.2);
+          opacity: 0;
+        }
+      }
+
+      /* Titik tumpu transformasi disetel presisi ke koordinat alas api (60px 140px) */
+      .flame-sway {
+        animation: flameSway 1.6s ease-in-out infinite alternate;
+        transform-origin: 60px 140px;
+      }
+
+      .flame-core {
+        animation: flameCoreFlicker 0.7s ease-in-out infinite alternate;
+        transform-origin: 60px 140px;
+      }
+
+      .spark-1 {
+        animation: sparkFloat 2.2s infinite linear;
+      }
+      .spark-2 {
+        animation: sparkFloat 1.8s infinite linear 0.4s;
+      }
+      .spark-3 {
+        animation: sparkFloat 2.5s infinite linear 0.8s;
+      }
+
+      /* Arduino IDE Syntax Highlighting Style */
+      .ide-keyword {
+        color: #00979d;
+        font-weight: 700;
+      }
+      .ide-function {
+        color: #d35400;
+        font-weight: 700;
+      }
+      .ide-constant {
+        color: #00979d;
+        font-weight: 700;
+      }
+      .ide-comment {
+        color: #7f8c8d;
+        font-style: italic;
+      }
+      .ide-number {
+        color: #27ae60;
+        font-weight: 700;
+      }
+      .ide-string {
+        color: #27ae60;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased pb-10"
+  >
+    <!-- HEADER APP -->
+    <header
+      class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3"
+      >
+        <div class="flex items-center gap-3">
+          <a
+            href="index.html"
+            class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-sm transition-colors"
+            title="Kembali"
+          >
+            <i class="fa-solid fa-home"></i>
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span
+                class="text-[10px] font-extrabold bg-teal-100 text-teal-800 px-2 py-0.5 rounded uppercase tracking-wider"
+              >
+                SUB 2.1
+              </span>
+            </div>
+            <h1
+              class="text-sm sm:text-base font-black text-slate-900 leading-tight mt-0.5"
+            >
+              Pemrograman I/O Digital: digitalRead() & digitalWrite()
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <!-- HERO BANNER RINGKAS -->
+      <section
+        class="bg-gradient-to-r from-teal-800 to-teal-700 text-white rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden"
+      >
+        <div
+          class="absolute -right-4 -bottom-6 opacity-15 pointer-events-none hidden sm:block select-none"
+        >
+          <i class="fa-solid fa-microchip text-[140px] text-teal-100"></i>
+        </div>
+        <div class="relative z-10 space-y-1.5 max-w-3xl">
+          <div
+            class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
+          >
+            <i class="fa-solid fa-microchip text-teal-200-300 text-xs"></i>
+            <span>Pemrograman I/O Digital Mikrokontroler</span>
+          </div>
+          <h2
+            class="text-lg sm:text-xl font-extrabold text-white leading-tight display-font"
+          >
+            Pemrograman I/O Digital: Implementasi digitalRead() & digitalWrite()
+          </h2>
+          <p
+            class="text-xs sm:text-sm text-teal-50/90 leading-relaxed font-normal"
+          >
+            Pelajari konsep dasar I/O digital melalui fungsi
+            <code class="font-mono text-teal-200 font-bold">digitalRead()</code>
+            untuk membaca sinyal input dari
+            <code class="font-mono text-teal-200 font-bold">Sensor Flame</code>
+            dan
+            <code class="font-mono text-teal-200 font-bold"
+              >digitalWrite()</code
+            >
+            untuk mengendalikan sinyal output pada
+            <code class="font-mono text-teal-200 font-bold">Alarm Sirine</code>.
+          </p>
+        </div>
+      </section>
+
+      <!-- MATERI PEMAHAMAN & TABEL KONSEP -->
+      <section
+        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-5"
+      >
+        <div
+          class="border-b border-slate-100 pb-3 flex items-center justify-between flex-wrap gap-2"
+        >
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-bolt text-teal-700 text-lg"></i>
+            <h3 class="text-base sm:text-lg font-extrabold text-slate-800">
+              Konsep Akses Digital:
+              <code class="text-teal-700">digitalWrite()</code> &
+              <code class="text-teal-700">digitalRead()</code>
+            </h3>
+          </div>
+          <span
+            class="text-xs font-bold text-teal-800 bg-teal-50 px-2.5 py-1 rounded-full border border-teal-200"
+            >Mode Input / Output Digital</span
+          >
+        </div>
+
+        <!-- TABEL PERBANDINGAN -->
+        <div
+          class="overflow-x-auto border border-slate-200 rounded-xl shadow-2xs"
+        >
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr
+                class="bg-teal-800 text-white font-bold uppercase tracking-wider text-[11px]"
+              >
+                <th class="p-3.5">Fungsi Utama</th>
+                <th class="p-3.5">
+                  Mode Pin (<code class="text-teal-200">pinMode</code>)
+                </th>
+                <th class="p-3.5">Arah Sinyal Hardware</th>
+                <th class="p-3.5">Nilai Tegangan Digital</th>
+              </tr>
+            </thead>
+            <tbody
+              class="divide-y divide-slate-200 font-normal text-slate-700 bg-white"
+            >
+              <tr class="hover:bg-teal-50/40 transition">
+                <td class="p-3.5 font-mono font-bold text-teal-800">
+                  digitalWrite(pin, nilai);
+                </td>
+                <td class="p-3.5 font-bold text-amber-700 font-mono">
+                  OUTPUT (Pin 2 Alarm)
+                </td>
+                <td class="p-3.5">Arduino &rarr; Actuator Alarm Sirine</td>
+                <td class="p-3.5 font-mono">
+                  <strong class="text-emerald-700">HIGH: 5V (ON)</strong> |
+                  <strong class="text-rose-600">LOW: 0V (OFF)</strong>
+                </td>
+              </tr>
+              <tr class="hover:bg-teal-50/40 transition">
+                <td class="p-3.5 font-mono font-bold text-teal-800">
+                  digitalRead(pin);
+                </td>
+                <td class="p-3.5 font-bold text-sky-700 font-mono">
+                  INPUT (Pin 5 Sensor Flame)
+                </td>
+                <td class="p-3.5">Sensor Flame &rarr; Arduino</td>
+                <td class="p-3.5 font-mono">
+                  <strong class="text-rose-600"
+                    >1 (HIGH): Api Terdeteksi</strong
+                  >
+                  |
+                  <strong class="text-emerald-700">0 (LOW): Aman</strong>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SIMULASI HARDWARE REAL MONITORING GUDANG -->
+        <div
+          class="bg-slate-50 text-slate-800 p-4 sm:p-5 rounded-2xl space-y-4 border border-slate-200 shadow-xs"
+        >
+          <div
+            class="flex items-center justify-between border-b border-slate-200 pb-3 flex-wrap gap-2"
+          >
+            <div
+              class="text-xs font-extrabold text-teal-900 uppercase tracking-wider flex items-center gap-2"
+            >
+              <i class="fa-solid fa-warehouse text-base text-teal-700"></i>
+              SIMULASI MONITORING KEBAKARAN GUDANG
+            </div>
+            <span
+              id="fireStatusBadge"
+              class="text-xs font-mono font-extrabold text-emerald-800 bg-emerald-100 border border-emerald-300 px-3 py-1 rounded-full shadow-2xs"
+            >
+              KONDISI AMAN (TIDAK ADA API)
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+            <!-- PANEL KIRI: TAMPILAN GUDANG + ARDUINO UNO REALISTIS -->
+            <div
+              class="lg:col-span-7 bg-white p-4 rounded-xl border border-slate-200 flex flex-col justify-between space-y-4 shadow-2xs"
+            >
+              <div
+                class="bg-slate-100 border border-slate-300 rounded-xl p-3 flex flex-col items-center justify-center relative overflow-hidden min-h-[480px]"
+              >
+                <!-- SVG DIAGRAM -->
+                <svg
+                  viewBox="0 0 540 520"
+                  class="w-full h-auto max-h-[520px] object-contain flex-1"
+                >
+                  <defs>
+                    <!-- Grid Dinding Gudang -->
+                    <pattern
+                      id="warehouseGrid"
+                      width="20"
+                      height="20"
+                      patternUnits="userSpaceOnUse"
+                    >
+                      <path
+                        d="M 20 0 L 0 0 0 20"
+                        fill="none"
+                        stroke="#e2e8f0"
+                        stroke-width="1"
+                      />
+                    </pattern>
+                    <!-- Gradient Pendaran Api -->
+                    <radialGradient id="fireGlowGrad" cx="50%" cy="50%" r="50%">
+                      <stop
+                        offset="0%"
+                        stop-color="#ef4444"
+                        stop-opacity="0.65"
+                      />
+                      <stop
+                        offset="60%"
+                        stop-color="#f97316"
+                        stop-opacity="0.3"
+                      />
+                      <stop
+                        offset="100%"
+                        stop-color="#f59e0b"
+                        stop-opacity="0"
+                      />
+                    </radialGradient>
+                  </defs>
+
+                  <!-- 1. DINDING & RUANG GUDANG -->
+                  <rect
+                    x="15"
+                    y="12"
+                    width="510"
+                    height="260"
+                    fill="#f8fafc"
+                    stroke="#475569"
+                    stroke-width="3.5"
+                    rx="4"
+                  />
+                  <rect
+                    x="15"
+                    y="12"
+                    width="510"
+                    height="260"
+                    fill="url(#warehouseGrid)"
+                    rx="4"
+                  />
+                  <rect x="15" y="12" width="510" height="14" fill="#334155" />
+                  <rect x="15" y="265" width="510" height="7" fill="#475569" />
+
+                  <!-- INTERIOR GUDANG -->
+                  <!-- Rolling Door -->
+                  <g id="rollingDoorGroup">
+                    <rect
+                      x="35"
+                      y="125"
+                      width="95"
+                      height="140"
+                      fill="#e2e8f0"
+                      stroke="#334155"
+                      stroke-width="2"
+                    />
+                    <line
+                      x1="35"
+                      y1="140"
+                      x2="130"
+                      y2="140"
+                      stroke="#64748b"
+                      stroke-width="1.5"
+                    />
+                    <line
+                      x1="35"
+                      y1="155"
+                      x2="130"
+                      y2="155"
+                      stroke="#64748b"
+                      stroke-width="1.5"
+                    />
+                    <line
+                      x1="35"
+                      y1="170"
+                      x2="130"
+                      y2="170"
+                      stroke="#64748b"
+                      stroke-width="1.5"
+                    />
+                    <line
+                      x1="35"
+                      y1="185"
+                      x2="130"
+                      y2="185"
+                      stroke="#64748b"
+                      stroke-width="1.5"
+                    />
+                    <line
+                      x1="35"
+                      y1="200"
+                      x2="130"
+                      y2="200"
+                      stroke="#64748b"
+                      stroke-width="1.5"
+                    />
+                    <line
+                      x1="35"
+                      y1="215"
+                      x2="130"
+                      y2="215"
+                      stroke="#64748b"
+                      stroke-width="1.5"
+                    />
+                    <line
+                      x1="35"
+                      y1="230"
+                      x2="130"
+                      y2="230"
+                      stroke="#64748b"
+                      stroke-width="1.5"
+                    />
+                    <line
+                      x1="35"
+                      y1="245"
+                      x2="130"
+                      y2="245"
+                      stroke="#64748b"
+                      stroke-width="1.5"
+                    />
+                    <rect
+                      x="30"
+                      y="112"
+                      width="105"
+                      height="14"
+                      fill="#1e293b"
+                      rx="2"
+                    />
+                  </g>
+
+                  <!-- SENSOR FLAME -->
+                  <g id="sensorFlameGroup">
+                    <rect
+                      x="145"
+                      y="50"
+                      width="30"
+                      height="50"
+                      rx="5"
+                      fill="#ffffff"
+                      stroke="#334155"
+                      stroke-width="2"
+                    />
+                    <rect
+                      x="150"
+                      y="55"
+                      width="20"
+                      height="10"
+                      rx="2"
+                      fill="#cbd5e1"
+                    />
+                    <path
+                      d="M 160 72 Q 153 82 160 92 Q 167 82 160 72 Z"
+                      fill="#dc2626"
+                    />
+                    <path
+                      d="M 160 77 Q 156 83 160 90 Q 164 83 160 77 Z"
+                      fill="#f59e0b"
+                    />
+                    <circle cx="160" cy="60" r="3" fill="#0f172a" />
+                    <text
+                      x="182"
+                      y="68"
+                      fill="#0f172a"
+                      font-family="sans-serif"
+                      font-size="9"
+                      font-weight="900"
+                    >
+                      SENSOR
+                    </text>
+                    <text
+                      x="182"
+                      y="79"
+                      fill="#0f172a"
+                      font-family="sans-serif"
+                      font-size="9"
+                      font-weight="900"
+                    >
+                      FLAME
+                    </text>
+                  </g>
+
+                  <!-- Rak Besi Kardus -->
+                  <g id="shelvesGroup">
+                    <rect
+                      x="175"
+                      y="150"
+                      width="135"
+                      height="115"
+                      fill="none"
+                      stroke="#1e3a8a"
+                      stroke-width="3"
+                    />
+                    <line
+                      x1="242"
+                      y1="150"
+                      x2="242"
+                      y2="265"
+                      stroke="#1e3a8a"
+                      stroke-width="2"
+                    />
+                    <line
+                      x1="175"
+                      y1="190"
+                      x2="310"
+                      y2="190"
+                      stroke="#1e3a8a"
+                      stroke-width="3"
+                    />
+                    <line
+                      x1="175"
+                      y1="230"
+                      x2="310"
+                      y2="230"
+                      stroke="#1e3a8a"
+                      stroke-width="3"
+                    />
+
+                    <!-- Kardus -->
+                    <rect
+                      x="182"
+                      y="160"
+                      width="22"
+                      height="28"
+                      fill="#d97706"
+                      stroke="#78350f"
+                      rx="1"
+                    />
+                    <rect
+                      x="206"
+                      y="168"
+                      width="16"
+                      height="20"
+                      fill="#b45309"
+                      stroke="#78350f"
+                      rx="1"
+                    />
+                    <rect
+                      x="250"
+                      y="164"
+                      width="22"
+                      height="24"
+                      fill="#d97706"
+                      stroke="#78350f"
+                      rx="1"
+                    />
+                    <rect
+                      x="274"
+                      y="160"
+                      width="26"
+                      height="28"
+                      fill="#b45309"
+                      stroke="#78350f"
+                      rx="1"
+                    />
+                    <rect
+                      x="182"
+                      y="200"
+                      width="24"
+                      height="28"
+                      fill="#b45309"
+                      stroke="#78350f"
+                      rx="1"
+                    />
+                    <rect
+                      x="274"
+                      y="200"
+                      width="26"
+                      height="28"
+                      fill="#b45309"
+                      stroke="#78350f"
+                      rx="1"
+                    />
+                  </g>
+
+                  <!-- Lemari & Palet -->
+                  <g id="cabinetsGroup">
+                    <rect
+                      x="320"
+                      y="145"
+                      width="45"
+                      height="120"
+                      fill="#64748b"
+                      stroke="#334155"
+                      stroke-width="2"
+                      rx="1"
+                    />
+                    <line
+                      x1="342"
+                      y1="145"
+                      x2="342"
+                      y2="265"
+                      stroke="#334155"
+                      stroke-width="1.5"
+                    />
+                    <rect
+                      x="370"
+                      y="160"
+                      width="38"
+                      height="105"
+                      fill="#64748b"
+                      stroke="#334155"
+                      stroke-width="2"
+                      rx="1"
+                    />
+                    <line
+                      x1="389"
+                      y1="160"
+                      x2="389"
+                      y2="265"
+                      stroke="#334155"
+                      stroke-width="1.5"
+                    />
+                    <rect
+                      x="415"
+                      y="253"
+                      width="68"
+                      height="12"
+                      fill="#b45309"
+                      stroke="#78350f"
+                    />
+                    <rect
+                      x="439"
+                      y="210"
+                      width="35"
+                      height="42"
+                      fill="#d97706"
+                      stroke="#78350f"
+                    />
+                  </g>
+
+                  <!-- ALARM SIRINE -->
+                  <g id="alarmGroup">
+                    <circle
+                      id="alarmGlowCircle"
+                      cx="435"
+                      cy="70"
+                      r="30"
+                      fill="#ef4444"
+                      opacity="0"
+                    />
+                    <rect
+                      x="425"
+                      y="85"
+                      width="20"
+                      height="8"
+                      fill="#1e293b"
+                      rx="1"
+                    />
+                    <path
+                      id="sirenDome"
+                      d="M 425 85 C 425 65, 445 65, 445 85 Z"
+                      fill="#ef4444"
+                      stroke="#991b1b"
+                      stroke-width="1.5"
+                    />
+                    <text
+                      x="435"
+                      y="107"
+                      fill="#0f172a"
+                      font-family="sans-serif"
+                      font-size="9"
+                      font-weight="900"
+                      text-anchor="middle"
+                    >
+                      ALARM
+                    </text>
+                  </g>
+
+                  <!-- REVISI ANIMASI API MENYATU KONSENTRIS -->
+                  <g
+                    id="flameVisualGroup"
+                    opacity="0"
+                    class="transition-opacity duration-500"
+                  >
+                    <!-- Glow Pendaran Api -->
+                    <circle
+                      cx="280"
+                      cy="200"
+                      r="90"
+                      fill="url(#fireGlowGrad)"
+                    />
+
+                    <!-- Group Utama Api Menyatu (Base Center = X:60, Y:140) -->
+                    <g transform="translate(220, 110)">
+                      <g class="flame-sway">
+                        <!-- Layer 1: Api Luar Merah -->
+                        <path
+                          d="M 30 140 C 15 95, 30 50, 60 10 C 90 50, 105 95, 90 140 Z"
+                          fill="#dc2626"
+                        />
+                        <path
+                          d="M 25 140 C 15 90, 25 45, 50 5 C 70 45, 85 90, 75 140 Z"
+                          fill="#ef4444"
+                          opacity="0.85"
+                        />
+
+                        <!-- Layer 2: Api Tengah Oranye -->
+                        <path
+                          d="M 38 140 C 30 105, 42 70, 60 35 C 78 70, 90 105, 82 140 Z"
+                          fill="#ea580c"
+                        />
+
+                        <!-- Layer 3: Api Dalam Kuning -->
+                        <path
+                          class="flame-core"
+                          d="M 45 140 C 40 115, 48 90, 60 62 C 72 90, 80 115, 75 140 Z"
+                          fill="#facc15"
+                        />
+
+                        <!-- Layer 4: Inti Api Putih Kebiruan -->
+                        <path
+                          class="flame-core"
+                          d="M 50 140 C 46 125, 52 105, 60 88 C 68 105, 74 125, 70 140 Z"
+                          fill="#ffffff"
+                          opacity="0.95"
+                        />
+                      </g>
+
+                      <!-- Percikan Bunga Api (Sparks) -->
+                      <circle
+                        cx="50"
+                        cy="40"
+                        r="2.5"
+                        fill="#fef08a"
+                        class="spark-1"
+                      />
+                      <circle
+                        cx="72"
+                        cy="20"
+                        r="3"
+                        fill="#f97316"
+                        class="spark-2"
+                      />
+                      <circle
+                        cx="60"
+                        cy="50"
+                        r="2"
+                        fill="#facc15"
+                        class="spark-3"
+                      />
+                    </g>
+                  </g>
+
+                  <!-- 2. ARDUINO UNO BOARD REVISE -->
+                  <g id="arduinoBoardGroup" transform="translate(130, 330)">
+                    <!-- Board PCB Teal Blue (#00838f) -->
+                    <rect
+                      x="0"
+                      y="0"
+                      width="280"
+                      height="150"
+                      rx="8"
+                      fill="#00838f"
+                      stroke="#005662"
+                      stroke-width="2.5"
+                    />
+
+                    <!-- Mounting Holes -->
+                    <circle
+                      cx="55"
+                      cy="15"
+                      r="4.5"
+                      fill="#ffffff"
+                      stroke="#64748b"
+                      stroke-width="1.2"
+                    />
+                    <circle
+                      cx="268"
+                      cy="42"
+                      r="4.5"
+                      fill="#ffffff"
+                      stroke="#64748b"
+                      stroke-width="1.2"
+                    />
+                    <circle
+                      cx="268"
+                      cy="138"
+                      r="4.5"
+                      fill="#ffffff"
+                      stroke="#64748b"
+                      stroke-width="1.2"
+                    />
+                    <circle
+                      cx="55"
+                      cy="138"
+                      r="4.5"
+                      fill="#ffffff"
+                      stroke="#64748b"
+                      stroke-width="1.2"
+                    />
+
+                    <!-- USB Port -->
+                    <rect
+                      x="-18"
+                      y="14"
+                      width="24"
+                      height="38"
+                      fill="#cbd5e1"
+                      stroke="#475569"
+                      stroke-width="1.5"
+                      rx="2"
+                    />
+                    <rect
+                      x="-18"
+                      y="20"
+                      width="6"
+                      height="26"
+                      fill="#94a3b8"
+                      rx="1"
+                    />
+                    <rect
+                      x="-8"
+                      y="24"
+                      width="12"
+                      height="18"
+                      fill="#334155"
+                      rx="1"
+                    />
+
+                    <!-- DC Barrel Jack -->
+                    <rect
+                      x="-18"
+                      y="92"
+                      width="28"
+                      height="38"
+                      fill="#1e293b"
+                      stroke="#0f172a"
+                      stroke-width="1.5"
+                      rx="3"
+                    />
+                    <rect x="-18" y="98" width="6" height="26" fill="#0f172a" />
+                    <circle cx="-3" cy="111" r="5" fill="#334155" />
+
+                    <!-- Reset Button -->
+                    <rect
+                      x="16"
+                      y="10"
+                      width="20"
+                      height="20"
+                      fill="#e2e8f0"
+                      stroke="#64748b"
+                      stroke-width="1"
+                      rx="2"
+                    />
+                    <circle
+                      cx="26"
+                      cy="20"
+                      r="6"
+                      fill="#b91c1c"
+                      stroke="#7f1d1d"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="26"
+                      y="37"
+                      fill="#ffffff"
+                      font-family="sans-serif"
+                      font-size="6"
+                      font-weight="bold"
+                      text-anchor="middle"
+                    >
+                      RESET
+                    </text>
+
+                    <!-- Capacitors -->
+                    <circle
+                      cx="65"
+                      cy="112"
+                      r="10"
+                      fill="#cbd5e1"
+                      stroke="#64748b"
+                      stroke-width="1"
+                    />
+                    <path d="M 55 112 A 10 10 0 0 0 75 112 Z" fill="#1e293b" />
+                    <circle
+                      cx="90"
+                      cy="112"
+                      r="10"
+                      fill="#cbd5e1"
+                      stroke="#64748b"
+                      stroke-width="1"
+                    />
+                    <path d="M 80 112 A 10 10 0 0 0 100 112 Z" fill="#1e293b" />
+
+                    <!-- ICSP Headers -->
+                    <rect
+                      x="72"
+                      y="20"
+                      width="14"
+                      height="20"
+                      fill="#1e293b"
+                      rx="1"
+                    />
+                    <circle cx="76" cy="24" r="1.5" fill="#eab308" />
+                    <circle cx="82" cy="24" r="1.5" fill="#eab308" />
+                    <circle cx="76" cy="30" r="1.5" fill="#eab308" />
+                    <circle cx="82" cy="30" r="1.5" fill="#eab308" />
+                    <circle cx="76" cy="36" r="1.5" fill="#eab308" />
+                    <circle cx="82" cy="36" r="1.5" fill="#eab308" />
+                    <text
+                      x="79"
+                      y="46"
+                      fill="#ffffff"
+                      font-family="sans-serif"
+                      font-size="5"
+                      text-anchor="middle"
+                    >
+                      ICSP2
+                    </text>
+
+                    <!-- ATmega328P IC -->
+                    <rect
+                      x="115"
+                      y="70"
+                      width="125"
+                      height="24"
+                      fill="#1e293b"
+                      stroke="#0f172a"
+                      stroke-width="1.5"
+                      rx="2"
+                    />
+                    <text
+                      x="177"
+                      y="85"
+                      fill="#cbd5e1"
+                      font-family="monospace"
+                      font-size="8.5"
+                      font-weight="bold"
+                      text-anchor="middle"
+                    >
+                      ATMEGA328P-PU
+                    </text>
+
+                    <!-- Indicator LEDs -->
+                    <rect
+                      x="225"
+                      y="45"
+                      width="6"
+                      height="4"
+                      fill="#22c55e"
+                      rx="1"
+                    />
+                    <text
+                      x="235"
+                      y="49"
+                      fill="#ffffff"
+                      font-family="sans-serif"
+                      font-size="6"
+                      font-weight="bold"
+                    >
+                      ON
+                    </text>
+
+                    <!-- SILKSCREEN ARDUINO LOGO -->
+                    <g transform="translate(142, 36)">
+                      <circle
+                        cx="12"
+                        cy="0"
+                        r="10"
+                        fill="none"
+                        stroke="#ffffff"
+                        stroke-width="1.8"
+                      />
+                      <text
+                        x="7"
+                        y="3"
+                        fill="#ffffff"
+                        font-family="sans-serif"
+                        font-size="8"
+                        font-weight="bold"
+                      >
+                        -
+                      </text>
+                      <text
+                        x="12"
+                        y="3"
+                        fill="#ffffff"
+                        font-family="sans-serif"
+                        font-size="8"
+                        font-weight="bold"
+                      >
+                        +
+                      </text>
+
+                      <rect
+                        x="26"
+                        y="-9"
+                        width="28"
+                        height="18"
+                        fill="none"
+                        stroke="#ffffff"
+                        stroke-width="1.5"
+                        rx="9"
+                      />
+                      <text
+                        x="40"
+                        y="3"
+                        fill="#ffffff"
+                        font-family="sans-serif"
+                        font-size="8.5"
+                        font-weight="bold"
+                        text-anchor="middle"
+                      >
+                        UNO
+                      </text>
+                      <text
+                        x="22"
+                        y="18"
+                        fill="#ffffff"
+                        font-family="sans-serif"
+                        font-size="8.5"
+                        font-weight="extrabold"
+                        text-anchor="middle"
+                      >
+                        Arduino™
+                      </text>
+                    </g>
+
+                    <text
+                      x="182"
+                      y="19"
+                      fill="#ffffff"
+                      font-family="sans-serif"
+                      font-size="6.5"
+                      font-weight="bold"
+                      text-anchor="middle"
+                    >
+                      DIGITAL (PWM~)
+                    </text>
+
+                    <!-- TOP FEMALE HEADER -->
+                    <rect
+                      x="98"
+                      y="2"
+                      width="170"
+                      height="12"
+                      fill="#1e293b"
+                      rx="1.5"
+                    />
+
+                    <!-- SOKET PIN 5 -->
+                    <rect
+                      id="pinSocket5"
+                      x="209"
+                      y="4"
+                      width="8"
+                      height="8"
+                      fill="#0284c7"
+                      rx="0.5"
+                    />
+
+                    <!-- SOKET PIN 2 -->
+                    <rect
+                      id="pinSocket2"
+                      x="245"
+                      y="4"
+                      width="8"
+                      height="8"
+                      fill="#ea580c"
+                      rx="0.5"
+                    />
+
+                    <text
+                      x="213"
+                      y="-3"
+                      fill="#0284c7"
+                      font-family="monospace"
+                      font-size="8"
+                      font-weight="900"
+                      text-anchor="middle"
+                    >
+                      ~5
+                    </text>
+                    <text
+                      x="249"
+                      y="-3"
+                      fill="#ea580c"
+                      font-family="monospace"
+                      font-size="8"
+                      font-weight="900"
+                      text-anchor="middle"
+                    >
+                      2
+                    </text>
+
+                    <!-- BOTTOM FEMALE HEADER -->
+                    <rect
+                      x="115"
+                      y="132"
+                      width="153"
+                      height="12"
+                      fill="#1e293b"
+                      rx="1.5"
+                    />
+                    <text
+                      x="161.5"
+                      y="149"
+                      fill="#1e293b"
+                      font-family="sans-serif"
+                      font-size="6"
+                      font-weight="bold"
+                      text-anchor="middle"
+                    >
+                      GND
+                    </text>
+                  </g>
+
+                  <!-- 3. LAYER WIRING KABEL -->
+                  <g id="wiringGroup">
+                    <!-- Kabel Sensor Flame (Pin 5 - Biru) -->
+                    <path
+                      id="wireFlameSensor"
+                      d="M 160 100 L 160 282 L 343 282 L 343 334"
+                      fill="none"
+                      stroke="#0284c7"
+                      stroke-width="3"
+                      stroke-dasharray="6,4"
+                      stroke-linejoin="round"
+                      stroke-linecap="round"
+                    />
+
+                    <!-- Kabel Alarm Sirine (Pin 2 - Oranye/Merah) -->
+                    <path
+                      id="wireAlarmSiren"
+                      d="M 435 93 L 435 282 L 379 282 L 379 334"
+                      fill="none"
+                      stroke="#ea580c"
+                      stroke-width="3"
+                      stroke-dasharray="6,4"
+                      stroke-linejoin="round"
+                      stroke-linecap="round"
+                    />
+
+                    <!-- Pin Terminal Dot Connectors -->
+                    <circle cx="160" cy="100" r="3.5" fill="#0284c7" />
+                    <circle cx="435" cy="93" r="3.5" fill="#ea580c" />
+                  </g>
+                </svg>
+              </div>
+
+              <!-- KONTROL PUSH BUTTON SIMULASI -->
+              <div
+                class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2 shadow-2xs"
+              >
+                <div class="flex items-center justify-between gap-2">
+                  <label
+                    for="btnToggleFire"
+                    class="text-xs font-extrabold text-slate-700 uppercase tracking-wider flex items-center gap-1.5"
+                  >
+                    <i
+                      class="fa-solid fa-fire-flame-curved text-teal-700 text-sm"
+                    ></i>
+                    <span>Kontrol Simulasi Flame Sensor:</span>
+                  </label>
+                  <span
+                    id="simStateLabel"
+                    class="text-xs font-mono font-extrabold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 rounded-md shadow-2xs"
+                  >
+                    KONDISI AMAN
+                  </span>
+                </div>
+
+                <button
+                  id="btnToggleFire"
+                  onclick="toggleFireSimulation()"
+                  class="w-full py-2.5 px-4 rounded-xl font-extrabold text-xs transition-all duration-200 flex items-center justify-center gap-2 bg-teal-700 hover:bg-teal-800 text-white shadow-xs cursor-pointer"
+                >
+                  <i class="fa-solid fa-dumpster-fire text-base"></i>
+                  <span id="btnToggleText"
+                    >Pemicu Kebakaran (Munculkan Api)</span
+                  >
+                </button>
+              </div>
+            </div>
+
+            <!-- PANEL KANAN: ARDUINO IDE EDITOR & SERIAL MONITOR -->
+            <div
+              class="lg:col-span-5 flex flex-col justify-between space-y-3 font-mono"
+            >
+              <!-- ARDUINO IDE EDITOR -->
+              <div
+                class="bg-white rounded-xl border border-slate-300 shadow-sm overflow-hidden flex flex-col"
+              >
+                <!-- IDE TOOLBAR -->
+                <div
+                  class="bg-teal-800 px-3 py-2 border-b border-teal-900 flex items-center justify-between text-xs text-white select-none"
+                >
+                  <div class="flex items-center gap-2">
+                    <button
+                      class="w-6 h-6 rounded-full bg-teal-700 hover:bg-teal-600 text-teal-100 flex items-center justify-center text-[11px] shadow-xs"
+                      title="Verify"
+                    >
+                      <i class="fa-solid fa-check"></i>
+                    </button>
+                    <button
+                      class="w-6 h-6 rounded-full bg-teal-700 hover:bg-teal-600 text-teal-100 flex items-center justify-center text-[11px] shadow-xs"
+                      title="Upload"
+                    >
+                      <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                    <div
+                      class="bg-teal-950/80 border border-teal-600 text-teal-100 px-2 py-0.5 rounded flex items-center gap-1.5 text-[10px] font-sans ml-1"
+                    >
+                      <i class="fa-solid fa-microchip text-teal-300"></i>
+                      <span class="font-bold">Arduino Uno</span>
+                      <span class="text-teal-400">COM3</span>
+                      <i class="fa-solid fa-chevron-down text-[8px] ml-1"></i>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TAB BAR -->
+                <div
+                  class="bg-slate-100 border-b border-slate-200 flex items-center px-2 pt-1 gap-1 select-none font-sans"
+                >
+                  <div
+                    class="bg-white border-t-2 border-teal-700 border-x border-slate-300 rounded-t-md px-3 py-1 text-[11px] font-bold text-slate-800 flex items-center gap-2 shadow-2xs"
+                  >
+                    <i class="fa-solid fa-code text-teal-700 text-[10px]"></i>
+                    <span>IO_Digital_Read_Write.ino</span>
+                  </div>
+                </div>
+
+                <!-- CODE EDITOR WITH LINE NUMBERS -->
+                <div
+                  class="p-2 text-[11px] leading-relaxed bg-white flex overflow-x-auto min-h-[320px]"
+                >
+                  <div
+                    class="text-slate-400 font-mono text-[11px] select-none text-right pr-2.5 border-r border-slate-200 bg-slate-50/50 flex flex-col space-y-0.5"
+                    style="min-width: 28px"
+                  >
+                    <span>1</span><span>2</span><span>3</span><span>4</span
+                    ><span>5</span><span>6</span><span>7</span><span>8</span
+                    ><span>9</span><span>10</span><span>11</span><span>12</span
+                    ><span>13</span><span>14</span><span>15</span><span>16</span
+                    ><span>17</span><span>18</span>
+                  </div>
+
+                  <div class="pl-3 flex-1 space-y-0.5 font-mono">
+                    <div>
+                      <span class="ide-keyword">int</span> pinFlame =
+                      <span class="ide-number">5</span>;
+                    </div>
+                    <div>
+                      <span class="ide-keyword">int</span> pinAlarm =
+                      <span class="ide-number">2</span>;
+                    </div>
+                    <div>&nbsp;</div>
+                    <div>
+                      <span class="ide-keyword">void</span>
+                      <span class="ide-function">setup</span>() {
+                    </div>
+                    <div class="pl-4">
+                      <span class="ide-function">Serial</span>.<span
+                        class="ide-function"
+                        >begin</span
+                      >(<span class="ide-number">9600</span>);
+                    </div>
+                    <div class="pl-4">
+                      <span class="ide-function">pinMode</span>(pinFlame,
+                      <span class="ide-constant">INPUT</span>);
+                    </div>
+                    <div class="pl-4">
+                      <span class="ide-function">pinMode</span>(pinAlarm,
+                      <span class="ide-constant">OUTPUT</span>);
+                    </div>
+                    <div>}</div>
+                    <div>&nbsp;</div>
+                    <div>
+                      <span class="ide-keyword">void</span>
+                      <span class="ide-function">loop</span>() {
+                    </div>
+                    <div
+                      id="ideReadActive"
+                      class="pl-4 py-0.5 rounded transition-colors duration-200"
+                    >
+                      <span class="ide-keyword">int</span> statusApi =
+                      <span class="ide-function">digitalRead</span>(pinFlame);
+                    </div>
+                    <div
+                      id="ideWriteActive"
+                      class="pl-4 py-0.5 rounded transition-colors duration-200"
+                    >
+                      <span class="ide-function">digitalWrite</span>(pinAlarm,
+                      statusApi);
+                    </div>
+                    <div class="pl-4">
+                      <span class="ide-keyword">if</span> (statusApi ==
+                      <span class="ide-constant">HIGH</span>) {
+                    </div>
+                    <div class="pl-8">
+                      <span class="ide-function">Serial</span>.<span
+                        class="ide-function"
+                        >println</span
+                      >(<span class="ide-string"
+                        >"API TERDETEKSI - Alarm ON"</span
+                      >);
+                    </div>
+                    <div class="pl-4">
+                      } <span class="ide-keyword">else</span> {
+                    </div>
+                    <div class="pl-8">
+                      <span class="ide-function">Serial</span>.<span
+                        class="ide-function"
+                        >println</span
+                      >(<span class="ide-string">"AMAN - Alarm OFF"</span>);
+                    </div>
+                    <div class="pl-4">}</div>
+                    <div class="pl-4">
+                      <span class="ide-function">delay</span>(<span
+                        class="ide-number"
+                        >500</span
+                      >);
+                    </div>
+                    <div>}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SERIAL MONITOR OUTPUT -->
+              <div
+                class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-2 text-xs flex-1 flex flex-col justify-between"
+              >
+                <div
+                  class="flex items-center justify-between border-b border-slate-100 pb-1.5"
+                >
+                  <span
+                    class="text-slate-800 font-bold flex items-center gap-1.5 font-sans"
+                  >
+                    <i class="fa-solid fa-desktop text-teal-700"></i> Serial
+                    Monitor Output
+                  </span>
+                  <span
+                    class="text-[10px] text-teal-800 font-bold bg-teal-50 border border-teal-200 px-2 py-0.5 rounded font-mono"
+                    >9600 baud</span
+                  >
+                </div>
+
+                <div
+                  id="warehouseSerialLogs"
+                  class="bg-slate-100 text-slate-800 p-3 rounded-lg border border-slate-300 font-mono text-[11px] min-h-[110px] max-h-[130px] overflow-y-auto leading-relaxed space-y-0.5 shadow-inner"
+                >
+                  <div class="text-teal-800 font-bold">
+                    [SYSTEM] Monitoring Ready.
+                  </div>
+                </div>
+
+                <button
+                  onclick="clearWarehouseSerialLogs()"
+                  class="text-[10px] text-slate-400 hover:text-slate-700 underline self-end font-sans cursor-pointer"
+                >
+                  Clear Logs
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NAVIGATION FOOTER -->
+      <nav class="flex items-center justify-between pt-2">
+        <a
+          href="index.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs transition-colors shadow-2xs"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Kembali</span>
+        </a>
+        <a
+          href="2.2.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 font-bold text-xs transition-colors shadow-xs"
+        >
+          <span>Sub 2.2: Output LED</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </nav>
+    </main>
+
+    <footer
+      class="max-w-6xl mx-auto w-full px-4 pt-4 text-center text-xs text-slate-400 font-medium"
+    >
+      <p>© MIKRO EDU - SMK SMTI Yogyakarta | Teknik Kimia Industri</p>
+    </footer>
+
+    <!-- SCRIPT SIMULASI -->
+    <script>
+      let isFireDetected = false;
+
+      function toggleFireSimulation() {
+        isFireDetected = !isFireDetected;
+        updateWarehouseSim();
+      }
+
+      function updateWarehouseSim() {
+        const statusBadge = document.getElementById("fireStatusBadge");
+        const simLabel = document.getElementById("simStateLabel");
+        const btnToggle = document.getElementById("btnToggleFire");
+        const btnText = document.getElementById("btnToggleText");
+
+        const flameVisual = document.getElementById("flameVisualGroup");
+        const sirenDome = document.getElementById("sirenDome");
+        const alarmGlow = document.getElementById("alarmGlowCircle");
+        const wireFlame = document.getElementById("wireFlameSensor");
+        const wireAlarm = document.getElementById("wireAlarmSiren");
+        const pinSocket5 = document.getElementById("pinSocket5");
+        const pinSocket2 = document.getElementById("pinSocket2");
+
+        const ideRead = document.getElementById("ideReadActive");
+        const ideWrite = document.getElementById("ideWriteActive");
+        const serialLogs = document.getElementById("warehouseSerialLogs");
+
+        if (isFireDetected) {
+          flameVisual.setAttribute("opacity", "1");
+          sirenDome.classList.add("alarm-active");
+          alarmGlow.setAttribute("opacity", "0.85");
+
+          wireFlame.setAttribute("stroke", "#0284c7");
+          wireAlarm.setAttribute("stroke", "#ea580c");
+          wireFlame.classList.add("wire-active");
+          wireAlarm.classList.add("wire-active");
+
+          pinSocket5.setAttribute("fill", "#0284c7");
+          pinSocket2.setAttribute("fill", "#ea580c");
+
+          statusBadge.innerText = "BAHAYA! API TERDETEKSI";
+          statusBadge.className =
+            "text-xs font-mono font-extrabold text-rose-700 bg-rose-50 border border-rose-300 px-3 py-1 rounded-full shadow-2xs animate-pulse";
+
+          simLabel.innerText = "FIRE DETECTED";
+          simLabel.className =
+            "text-xs font-mono font-extrabold text-rose-700 bg-rose-100 border border-rose-300 px-2.5 py-0.5 rounded-md shadow-2xs";
+
+          btnToggle.className =
+            "w-full py-2.5 px-4 rounded-xl font-extrabold text-xs transition-all duration-200 flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-700 text-white shadow-xs cursor-pointer";
+          btnText.innerText = "Padamkan Api (Reset Sistem)";
+
+          ideRead.className =
+            "pl-4 py-0.5 rounded bg-sky-100 font-bold border-l-2 border-sky-600";
+          ideWrite.className =
+            "pl-4 py-0.5 rounded bg-rose-100 font-bold border-l-2 border-rose-600";
+        } else {
+          flameVisual.setAttribute("opacity", "0");
+          sirenDome.classList.remove("alarm-active");
+          alarmGlow.setAttribute("opacity", "0");
+
+          wireFlame.setAttribute("stroke", "#475569");
+          wireAlarm.setAttribute("stroke", "#475569");
+          wireFlame.classList.remove("wire-active");
+          wireAlarm.classList.remove("wire-active");
+
+          pinSocket5.setAttribute("fill", "#0284c7");
+          pinSocket2.setAttribute("fill", "#ea580c");
+
+          statusBadge.innerText = "KONDISI AMAN (TIDAK ADA API)";
+          statusBadge.className =
+            "text-xs font-mono font-extrabold text-emerald-800 bg-emerald-100 border border-emerald-300 px-3 py-1 rounded-full shadow-2xs";
+
+          simLabel.innerText = "KONDISI AMAN";
+          simLabel.className =
+            "text-xs font-mono font-extrabold text-emerald-800 bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 rounded-md shadow-2xs";
+
+          btnToggle.className =
+            "w-full py-2.5 px-4 rounded-xl font-extrabold text-xs transition-all duration-200 flex items-center justify-center gap-2 bg-slate-500 hover:bg-slate-600 text-white shadow-xs cursor-pointer";
+          btnText.innerText = "Pemicu Kebakaran (Munculkan Api)";
+
+          ideRead.className = "pl-4 py-0.5 rounded bg-transparent";
+          ideWrite.className = "pl-4 py-0.5 rounded bg-transparent";
+        }
+
+        const newLogLine = document.createElement("div");
+        if (isFireDetected) {
+          newLogLine.className = "text-rose-600 font-bold";
+          newLogLine.innerText = `FIRE! Alarm ON`;
+        } else {
+          newLogLine.className = "text-emerald-700 font-bold";
+          newLogLine.innerText = `SAFE. Alarm OFF`;
+        }
+        serialLogs.appendChild(newLogLine);
+        serialLogs.scrollTop = serialLogs.scrollHeight;
+      }
+
+      function clearWarehouseSerialLogs() {
+        const serialLogs = document.getElementById("warehouseSerialLogs");
+        serialLogs.innerHTML = `<div class="text-teal-800 font-bold">[SYSTEM] Logs Cleared.</div>`;
+      }
+
+      window.onload = function () {
+        updateWarehouseSim();
+      };
+    </script>
+  </body>
+</html>

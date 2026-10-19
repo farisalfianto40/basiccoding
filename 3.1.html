@@ -1,0 +1,1372 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>
+      Sub 3.1 - Pemrograman I/O Analog: analogRead() & analogWrite()
+    </title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      body {
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 9999px;
+      }
+
+      /* Animasi Sinyal Kabel / Wiring */
+      @keyframes wireFlow {
+        0% {
+          stroke-dashoffset: 20;
+        }
+        100% {
+          stroke-dashoffset: 0;
+        }
+      }
+      .wire-active {
+        stroke-dasharray: 6 4;
+        animation: wireFlow 0.4s linear infinite;
+      }
+
+      /* Animasi Hembusan Angin AC */
+      @keyframes acWind {
+        0% {
+          transform: translateY(0) scaleY(0.8);
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 0.9;
+        }
+        100% {
+          transform: translateY(18px) scaleY(1.2);
+          opacity: 0.1;
+        }
+      }
+      .ac-wind-line {
+        animation: acWind 1s infinite linear;
+        transform-origin: top center;
+      }
+
+      /* Arduino IDE Syntax Highlighting Style */
+      .ide-keyword {
+        color: #00979d;
+        font-weight: bold;
+      }
+      .ide-function {
+        color: #d35400;
+        font-weight: bold;
+      }
+      .ide-constant {
+        color: #00979d;
+        font-weight: bold;
+      }
+      .ide-comment {
+        color: #7f8c8d;
+        font-style: italic;
+      }
+      .ide-number {
+        color: #27ae60;
+        font-weight: bold;
+      }
+      .ide-string {
+        color: #27ae60;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased pb-10"
+  >
+    <!-- HEADER APP -->
+    <header
+      class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3"
+      >
+        <div class="flex items-center gap-3">
+          <a
+            href="index.html"
+            class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-sm transition-colors"
+            title="Kembali"
+          >
+            <i class="fa-solid fa-home"></i>
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span
+                class="text-[10px] font-extrabold bg-teal-100 text-teal-800 px-2 py-0.5 rounded uppercase tracking-wider"
+              >
+                SUB 3.1
+              </span>
+            </div>
+            <h1
+              class="text-sm sm:text-base font-black text-slate-900 leading-tight mt-0.5"
+            >
+              Pemrograman I/O Analog: analogRead() & analogWrite()
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <!-- HERO BANNER RINGKAS -->
+      <section
+        class="bg-gradient-to-r from-teal-800 to-teal-700 text-white rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden"
+      >
+        <div
+          class="absolute -right-4 -bottom-6 opacity-15 pointer-events-none hidden sm:block select-none"
+        >
+          <i class="fa-solid fa-wave-square text-[140px] text-teal-100"></i>
+        </div>
+        <div class="relative z-10 space-y-1.5 max-w-3xl">
+          <div
+            class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
+          >
+            <i class="fa-solid fa-microchip text-teal-200-300 text-xs"></i>
+            <span>Pemrograman I/O Analog (ADC & PWM)</span>
+          </div>
+          <h2
+            class="text-lg sm:text-xl font-extrabold text-white leading-tight display-font"
+          >
+            Implementasi Kontrol Pemrograman analogRead() & analogWrite()
+          </h2>
+          <p
+            class="text-xs sm:text-sm text-teal-50/90 leading-relaxed font-normal"
+          >
+            Pelajari konsep dan alur pembacaan input analog variabel dengan
+            <code class="font-mono text-teal-200 font-bold"
+              >analogRead(A0)</code
+            >
+            (ADC 10-bit) serta pengaturan daya output sinyal PWM melalui
+            <code class="font-mono text-teal-200 font-bold"
+              >analogWrite(3, PWM)</code
+            >
+            (8-bit) pada studi kasus pendingin ruangan server.
+          </p>
+        </div>
+      </section>
+
+      <!-- TABEL KONSEP -->
+      <section
+        class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-5"
+      >
+        <div
+          class="border-b border-slate-100 pb-3 flex items-center justify-between flex-wrap gap-2"
+        >
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-teal-700 text-lg"></i>
+            <h3 class="text-base sm:text-lg font-extrabold text-slate-800">
+              Konsep Akses Analog:
+              <code class="text-teal-700">analogRead()</code> &
+              <code class="text-teal-700">analogWrite()</code>
+            </h3>
+          </div>
+          <span
+            class="text-xs font-bold text-teal-800 bg-teal-50 px-2.5 py-1 rounded-full border border-teal-200"
+            >Mode Pemrosesan Kontinu</span
+          >
+        </div>
+
+        <!-- TABEL PERBANDINGAN -->
+        <div
+          class="overflow-x-auto border border-slate-200 rounded-xl shadow-2xs"
+        >
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr
+                class="bg-teal-800 text-white font-bold uppercase tracking-wider text-[11px]"
+              >
+                <th class="p-3.5">Fungsi Utama</th>
+                <th class="p-3.5">Pin Hardware</th>
+                <th class="p-3.5">Resolusi & Nilai</th>
+                <th class="p-3.5">Arah & Tipe Sinyal</th>
+              </tr>
+            </thead>
+            <tbody
+              class="divide-y divide-slate-200 font-normal text-slate-700 bg-white"
+            >
+              <tr class="hover:bg-teal-50/40 transition">
+                <td class="p-3.5 font-mono font-bold text-teal-800">
+                  analogRead(pin);
+                </td>
+                <td class="p-3.5 font-bold text-sky-700 font-mono">
+                  ANALOG IN (Pin A0 Sensor Suhu)
+                </td>
+                <td class="p-3.5 font-mono">
+                  <strong class="text-emerald-700">10-Bit ADC</strong> (Nilai: 0
+                  – 1023)
+                </td>
+                <td class="p-3.5">
+                  Sensor Suhu Ruangan &rarr; ADC Mikrokontroler (15°C – 45°C)
+                </td>
+              </tr>
+              <tr class="hover:bg-teal-50/40 transition">
+                <td class="p-3.5 font-mono font-bold text-teal-800">
+                  analogWrite(pin, nilai);
+                </td>
+                <td class="p-3.5 font-bold text-amber-700 font-mono">
+                  PWM ~ (Pin 3 AC Pendingin)
+                </td>
+                <td class="p-3.5 font-mono">
+                  <strong class="text-teal-700">8-Bit PWM</strong> (Nilai: 0 –
+                  255)
+                </td>
+                <td class="p-3.5">
+                  Arduino &rarr; Modul Inverter AC (Kecepatan Fan & Cooling
+                  Power)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SIMULASI RUANG SERVER -->
+        <div
+          class="bg-slate-50 text-slate-800 p-4 sm:p-5 rounded-2xl space-y-4 border border-slate-200 shadow-xs"
+        >
+          <div
+            class="flex items-center justify-between border-b border-slate-200 pb-3 flex-wrap gap-2"
+          >
+            <div
+              class="text-xs font-extrabold text-teal-900 uppercase tracking-wider flex items-center gap-2"
+            >
+              <i class="fa-solid fa-server text-base text-teal-700"></i>
+              SIMULASI OTOMASI RUANG SERVER & PENDINGIN AC
+            </div>
+            <span
+              id="analogStatusBadge"
+              class="text-xs font-mono font-extrabold text-teal-800 bg-teal-100 border border-teal-300 px-3 py-1 rounded-full shadow-2xs"
+            >
+              SUHU: 25.0°C | ADC: 341 | PWM AC: 85 (33%)
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+            <!-- PANEL KIRI: DIAGRAM SVG RUANG SERVER -->
+            <div
+              class="lg:col-span-7 bg-white p-4 rounded-xl border border-slate-200 flex flex-col justify-between space-y-4 shadow-2xs"
+            >
+              <div
+                class="bg-slate-100 border border-slate-300 rounded-xl p-3 flex flex-col items-center justify-center relative overflow-hidden min-h-[460px]"
+              >
+                <!-- SVG DIAGRAM RUANG SERVER -->
+                <svg
+                  viewBox="0 0 520 470"
+                  class="w-full h-auto max-h-[480px] object-contain flex-1"
+                >
+                  <defs>
+                    <pattern
+                      id="serverRoomGrid"
+                      width="20"
+                      height="20"
+                      patternUnits="userSpaceOnUse"
+                    >
+                      <path
+                        d="M 20 0 L 0 0 0 20"
+                        fill="none"
+                        stroke="#e2e8f0"
+                        stroke-width="1"
+                      />
+                    </pattern>
+                  </defs>
+
+                  <!-- DINDING & RUANGAN SERVER -->
+                  <rect
+                    x="10"
+                    y="10"
+                    width="500"
+                    height="250"
+                    fill="#f1f5f9"
+                    stroke="#334155"
+                    stroke-width="3.5"
+                    rx="4"
+                  />
+                  <rect
+                    x="10"
+                    y="10"
+                    width="500"
+                    height="250"
+                    fill="url(#serverRoomGrid)"
+                    rx="4"
+                  />
+                  <rect x="10" y="250" width="500" height="10" fill="#475569" />
+
+                  <!-- WIRING KABEL SENSOR & ACTUATOR -->
+                  <g id="wiringGroup">
+                    <!-- Kabel Sensor Suhu A0 (Biru) -->
+                    <path
+                      id="wireSensor"
+                      d="M 65 105 L 65 118 L 16 118 L 16 445 L 297 445 L 297 432"
+                      fill="none"
+                      stroke="#0284c7"
+                      stroke-width="3"
+                      stroke-linejoin="round"
+                      stroke-linecap="round"
+                    />
+
+                    <!-- Kabel AC Pendingin PWM Pin ~3 (Oranye) -->
+                    <path
+                      id="wireAC"
+                      d="M 370 85 L 370 265 L 330 265 L 330 290"
+                      fill="none"
+                      stroke="#ea580c"
+                      stroke-width="3"
+                      stroke-linejoin="round"
+                      stroke-linecap="round"
+                    />
+
+                    <!-- Titik Terminal Kabel -->
+                    <circle cx="65" cy="105" r="3.5" fill="#0284c7" />
+                    <circle cx="297" cy="432" r="3" fill="#0284c7" />
+                    <circle cx="370" cy="85" r="3.5" fill="#ea580c" />
+                    <circle cx="330" cy="290" r="3" fill="#ea580c" />
+                  </g>
+
+                  <!-- 1. PINTU RUANG SERVER (KIRI) -->
+                  <g id="doorGroup">
+                    <rect
+                      x="25"
+                      y="130"
+                      width="50"
+                      height="120"
+                      fill="#cbd5e1"
+                      stroke="#334155"
+                      stroke-width="2"
+                    />
+                    <rect
+                      x="33"
+                      y="145"
+                      width="34"
+                      height="40"
+                      fill="#94a3b8"
+                      stroke="#475569"
+                      stroke-width="1.5"
+                      rx="2"
+                    />
+                    <circle cx="68" cy="200" r="3" fill="#1e293b" />
+                  </g>
+
+                  <!-- 2. SENSOR SUHU WALL MOUNT (KIRI ATAS) -->
+                  <g id="sensorGroup">
+                    <rect
+                      x="40"
+                      y="35"
+                      width="50"
+                      height="70"
+                      rx="6"
+                      fill="#ffffff"
+                      stroke="#334155"
+                      stroke-width="2"
+                    />
+                    <!-- Grille Sensor -->
+                    <line
+                      x1="50"
+                      y1="85"
+                      x2="55"
+                      y2="85"
+                      stroke="#64748b"
+                      stroke-width="2"
+                    />
+                    <line
+                      x1="60"
+                      y1="85"
+                      x2="65"
+                      y2="85"
+                      stroke="#64748b"
+                      stroke-width="2"
+                    />
+                    <line
+                      x1="70"
+                      y1="85"
+                      x2="75"
+                      y2="85"
+                      stroke="#64748b"
+                      stroke-width="2"
+                    />
+                    <line
+                      x1="55"
+                      y1="90"
+                      x2="60"
+                      y2="90"
+                      stroke="#64748b"
+                      stroke-width="2"
+                    />
+                    <line
+                      x1="65"
+                      y1="90"
+                      x2="70"
+                      y2="90"
+                      stroke="#64748b"
+                      stroke-width="2"
+                    />
+
+                    <!-- Tabung Thermometer Icon -->
+                    <rect
+                      x="62"
+                      y="45"
+                      width="6"
+                      height="25"
+                      rx="3"
+                      fill="#e2e8f0"
+                      stroke="#475569"
+                      stroke-width="1"
+                    />
+                    <circle cx="65" cy="70" r="6" fill="#ef4444" />
+                    <rect
+                      id="svgThermoBar"
+                      x="63"
+                      y="55"
+                      width="4"
+                      height="15"
+                      fill="#ef4444"
+                      rx="1"
+                    />
+
+                    <text
+                      x="65"
+                      y="27"
+                      fill="#0f172a"
+                      font-family="sans-serif"
+                      font-size="8.5"
+                      font-weight="900"
+                      text-anchor="middle"
+                    >
+                      SENSOR SUHU
+                    </text>
+                  </g>
+
+                  <!-- 3. RAK SERVER RACK (TENGAH) -->
+                  <g id="serverRacksGroup">
+                    <!-- Rack 1 -->
+                    <rect
+                      x="100"
+                      y="130"
+                      width="55"
+                      height="120"
+                      fill="#1e293b"
+                      stroke="#0f172a"
+                      stroke-width="2"
+                      rx="2"
+                    />
+                    <!-- Rack 2 -->
+                    <rect
+                      x="165"
+                      y="130"
+                      width="55"
+                      height="120"
+                      fill="#1e293b"
+                      stroke="#0f172a"
+                      stroke-width="2"
+                      rx="2"
+                    />
+                    <!-- Rack 3 -->
+                    <rect
+                      x="230"
+                      y="130"
+                      width="55"
+                      height="120"
+                      fill="#1e293b"
+                      stroke="#0f172a"
+                      stroke-width="2"
+                      rx="2"
+                    />
+
+                    <!-- Server Units Lines & LED Indicators -->
+                    <line
+                      x1="100"
+                      y1="150"
+                      x2="155"
+                      y2="150"
+                      stroke="#334155"
+                      stroke-width="1.5"
+                    />
+                    <line
+                      x1="100"
+                      y1="170"
+                      x2="155"
+                      y2="170"
+                      stroke="#334155"
+                      stroke-width="1.5"
+                    />
+                    <line
+                      x1="100"
+                      y1="190"
+                      x2="155"
+                      y2="190"
+                      stroke="#334155"
+                      stroke-width="1.5"
+                    />
+                    <line
+                      x1="100"
+                      y1="210"
+                      x2="155"
+                      y2="210"
+                      stroke="#334155"
+                      stroke-width="1.5"
+                    />
+
+                    <circle cx="108" cy="140" r="1.5" fill="#22c55e" />
+                    <circle cx="113" cy="140" r="1.5" fill="#38bdf8" />
+                    <circle cx="108" cy="160" r="1.5" fill="#22c55e" />
+                    <circle cx="113" cy="160" r="1.5" fill="#38bdf8" />
+
+                    <line
+                      x1="165"
+                      y1="150"
+                      x2="220"
+                      y2="150"
+                      stroke="#334155"
+                      stroke-width="1.5"
+                    />
+                    <line
+                      x1="165"
+                      y1="170"
+                      x2="220"
+                      y2="170"
+                      stroke="#334155"
+                      stroke-width="1.5"
+                    />
+                    <line
+                      x1="165"
+                      y1="190"
+                      x2="220"
+                      y2="190"
+                      stroke="#334155"
+                      stroke-width="1.5"
+                    />
+                    <line
+                      x1="165"
+                      y1="210"
+                      x2="220"
+                      y2="210"
+                      stroke="#334155"
+                      stroke-width="1.5"
+                    />
+
+                    <circle cx="173" cy="140" r="1.5" fill="#22c55e" />
+                    <circle cx="178" cy="140" r="1.5" fill="#38bdf8" />
+
+                    <line
+                      x1="230"
+                      y1="150"
+                      x2="285"
+                      y2="150"
+                      stroke="#334155"
+                      stroke-width="1.5"
+                    />
+                    <line
+                      x1="230"
+                      y1="170"
+                      x2="285"
+                      y2="170"
+                      stroke="#334155"
+                      stroke-width="1.5"
+                    />
+                    <line
+                      x1="230"
+                      y1="190"
+                      x2="285"
+                      y2="190"
+                      stroke="#334155"
+                      stroke-width="1.5"
+                    />
+
+                    <circle cx="238" cy="140" r="1.5" fill="#22c55e" />
+                    <circle cx="243" cy="140" r="1.5" fill="#38bdf8" />
+                  </g>
+
+                  <!-- 4. PENDINGIN AC (KANAN ATAS) -->
+                  <g id="acGroup">
+                    <rect
+                      x="300"
+                      y="35"
+                      width="140"
+                      height="50"
+                      rx="6"
+                      fill="#ffffff"
+                      stroke="#334155"
+                      stroke-width="2.5"
+                    />
+                    <!-- Grill Louver Bottom -->
+                    <rect
+                      x="310"
+                      y="75"
+                      width="120"
+                      height="6"
+                      fill="#cbd5e1"
+                      rx="2"
+                    />
+                    <circle cx="425" cy="48" r="3" fill="#38bdf8" />
+
+                    <text
+                      x="370"
+                      y="27"
+                      fill="#0f172a"
+                      font-family="sans-serif"
+                      font-size="8.5"
+                      font-weight="900"
+                      text-anchor="middle"
+                    >
+                      PENDINGIN (AC PWM)
+                    </text>
+
+                    <!-- ANIMASI ANGIN HEMBUSAN AC -->
+                    <g id="svgWindGroup" opacity="0.8">
+                      <path
+                        d="M 320 83 Q 320 100 310 120"
+                        fill="none"
+                        stroke="#38bdf8"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        class="ac-wind-line"
+                      />
+                      <path
+                        d="M 340 83 Q 340 100 335 125"
+                        fill="none"
+                        stroke="#38bdf8"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        class="ac-wind-line"
+                      />
+                      <path
+                        d="M 370 83 Q 370 105 370 130"
+                        fill="none"
+                        stroke="#0284c7"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                        class="ac-wind-line"
+                      />
+                      <path
+                        d="M 400 83 Q 400 100 405 125"
+                        fill="none"
+                        stroke="#38bdf8"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        class="ac-wind-line"
+                      />
+                      <path
+                        d="M 420 83 Q 420 100 430 120"
+                        fill="none"
+                        stroke="#38bdf8"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                        class="ac-wind-line"
+                      />
+                    </g>
+                  </g>
+
+                  <!-- 5. ARDUINO UNO BOARD -->
+                  <g id="arduinoBoardGroup" transform="translate(100, 290)">
+                    <!-- Board Body Teal -->
+                    <rect
+                      x="0"
+                      y="0"
+                      width="300"
+                      height="150"
+                      rx="14"
+                      fill="#008080"
+                      stroke="#005662"
+                      stroke-width="3"
+                    />
+
+                    <!-- Mounting Holes -->
+                    <circle
+                      cx="18"
+                      cy="18"
+                      r="5"
+                      fill="#ffffff"
+                      stroke="#94a3b8"
+                      stroke-width="1.5"
+                    />
+                    <circle
+                      cx="18"
+                      cy="132"
+                      r="5"
+                      fill="#ffffff"
+                      stroke="#94a3b8"
+                      stroke-width="1.5"
+                    />
+                    <circle
+                      cx="282"
+                      cy="35"
+                      r="5"
+                      fill="#ffffff"
+                      stroke="#94a3b8"
+                      stroke-width="1.5"
+                    />
+                    <circle
+                      cx="282"
+                      cy="132"
+                      r="5"
+                      fill="#ffffff"
+                      stroke="#94a3b8"
+                      stroke-width="1.5"
+                    />
+
+                    <!-- USB Connector (Kiri Atas) -->
+                    <rect
+                      x="-18"
+                      y="12"
+                      width="24"
+                      height="38"
+                      fill="#cbd5e1"
+                      stroke="#475569"
+                      stroke-width="2"
+                      rx="3"
+                    />
+                    <rect
+                      x="-12"
+                      y="20"
+                      width="12"
+                      height="22"
+                      fill="#64748b"
+                      rx="1"
+                    />
+
+                    <!-- DC Jack Power (Kiri Bawah) -->
+                    <rect
+                      x="-18"
+                      y="95"
+                      width="26"
+                      height="38"
+                      fill="#1e293b"
+                      stroke="#0f172a"
+                      stroke-width="2"
+                      rx="3"
+                    />
+                    <circle cx="-5" cy="114" r="5" fill="#000000" />
+
+                    <!-- Reset Button Red -->
+                    <rect
+                      x="22"
+                      y="10"
+                      width="22"
+                      height="22"
+                      fill="#ffffff"
+                      stroke="#cbd5e1"
+                      stroke-width="1.5"
+                      rx="2"
+                    />
+                    <circle cx="33" cy="21" r="6" fill="#dc2626" />
+                    <text
+                      x="33"
+                      y="42"
+                      fill="#ffffff"
+                      font-family="sans-serif"
+                      font-size="7"
+                      font-weight="bold"
+                      text-anchor="middle"
+                    >
+                      RESET
+                    </text>
+
+                    <!-- ICSP Header -->
+                    <rect
+                      x="92"
+                      y="20"
+                      width="16"
+                      height="22"
+                      fill="#1e293b"
+                      rx="1"
+                    />
+                    <circle cx="96" cy="25" r="1.5" fill="#eab308" />
+                    <circle cx="104" cy="25" r="1.5" fill="#eab308" />
+                    <circle cx="96" cy="31" r="1.5" fill="#eab308" />
+                    <circle cx="104" cy="31" r="1.5" fill="#eab308" />
+                    <circle cx="96" cy="37" r="1.5" fill="#eab308" />
+                    <circle cx="104" cy="37" r="1.5" fill="#eab308" />
+                    <text
+                      x="100"
+                      y="48"
+                      fill="#ffffff"
+                      font-family="sans-serif"
+                      font-size="6"
+                      font-weight="bold"
+                      text-anchor="middle"
+                    >
+                      ICSP2
+                    </text>
+
+                    <!-- Capacitors -->
+                    <circle
+                      cx="75"
+                      cy="102"
+                      r="10"
+                      fill="#475569"
+                      stroke="#94a3b8"
+                      stroke-width="1.5"
+                    />
+                    <path d="M 65 102 A 10 10 0 0 1 85 102 Z" fill="#cbd5e1" />
+                    <circle
+                      cx="102"
+                      cy="102"
+                      r="10"
+                      fill="#475569"
+                      stroke="#94a3b8"
+                      stroke-width="1.5"
+                    />
+                    <path d="M 92 102 A 10 10 0 0 1 112 102 Z" fill="#cbd5e1" />
+
+                    <!-- Arduino Brand Logo -->
+                    <circle
+                      cx="180"
+                      cy="35"
+                      r="12"
+                      fill="none"
+                      stroke="#ffffff"
+                      stroke-width="1.8"
+                    />
+                    <text
+                      x="180"
+                      y="38"
+                      fill="#ffffff"
+                      font-family="sans-serif"
+                      font-size="9"
+                      font-weight="900"
+                      text-anchor="middle"
+                    >
+                      - +
+                    </text>
+
+                    <rect
+                      x="198"
+                      y="23"
+                      width="30"
+                      height="24"
+                      rx="12"
+                      fill="none"
+                      stroke="#ffffff"
+                      stroke-width="1.8"
+                    />
+                    <text
+                      x="213"
+                      y="38"
+                      fill="#ffffff"
+                      font-family="sans-serif"
+                      font-size="8"
+                      font-weight="900"
+                      text-anchor="middle"
+                    >
+                      UNO
+                    </text>
+
+                    <text
+                      x="196"
+                      y="58"
+                      fill="#ffffff"
+                      font-family="sans-serif"
+                      font-size="11"
+                      font-weight="bold"
+                      text-anchor="middle"
+                    >
+                      Arduino™
+                    </text>
+
+                    <!-- Power LED Green -->
+                    <rect x="252" y="48" width="6" height="6" fill="#22c55e" />
+                    <text
+                      x="268"
+                      y="54"
+                      fill="#ffffff"
+                      font-family="sans-serif"
+                      font-size="8"
+                      font-weight="bold"
+                    >
+                      ON
+                    </text>
+
+                    <!-- ATmega328P Chip -->
+                    <rect
+                      x="130"
+                      y="70"
+                      width="135"
+                      height="28"
+                      fill="#1e293b"
+                      stroke="#0f172a"
+                      stroke-width="2"
+                      rx="3"
+                    />
+                    <text
+                      x="197"
+                      y="88"
+                      fill="#cbd5e1"
+                      font-family="monospace"
+                      font-size="9"
+                      font-weight="bold"
+                      text-anchor="middle"
+                    >
+                      ATMEGA328P-PU
+                    </text>
+
+                    <!-- HEADER TOP: DIGITAL (PWM~) -->
+                    <rect
+                      x="115"
+                      y="0"
+                      width="170"
+                      height="12"
+                      fill="#1e293b"
+                      rx="1"
+                    />
+                    <text
+                      x="180"
+                      y="-4"
+                      fill="#ffffff"
+                      font-family="sans-serif"
+                      font-size="8"
+                      font-weight="bold"
+                      text-anchor="middle"
+                    >
+                      DIGITAL (PWM~)
+                    </text>
+
+                    <!-- HEADER BOTTOM: POWER & ANALOG IN -->
+                    <rect
+                      x="115"
+                      y="138"
+                      width="70"
+                      height="12"
+                      fill="#1e293b"
+                      rx="1"
+                    />
+                    <text
+                      x="150"
+                      y="133"
+                      fill="#ffffff"
+                      font-family="sans-serif"
+                      font-size="7"
+                      font-weight="bold"
+                      text-anchor="middle"
+                    >
+                      POWER
+                    </text>
+
+                    <rect
+                      x="195"
+                      y="138"
+                      width="90"
+                      height="12"
+                      fill="#1e293b"
+                      rx="1"
+                    />
+                    <text
+                      x="250"
+                      y="133"
+                      fill="#ffffff"
+                      font-family="sans-serif"
+                      font-size="7.5"
+                      font-weight="bold"
+                      text-anchor="middle"
+                    >
+                      ANALOG IN
+                    </text>
+
+                    <!-- PIN CALLOUT TAGS -->
+                    <!-- Tag Pin ~3 PWM (Oranye) di Header Digital -->
+                    <g id="pinTag3">
+                      <rect
+                        x="223"
+                        y="1"
+                        width="14"
+                        height="13"
+                        fill="#ea580c"
+                        rx="2"
+                      />
+                      <text
+                        x="230"
+                        y="10"
+                        fill="#ffffff"
+                        font-family="sans-serif"
+                        font-size="7.5"
+                        font-weight="900"
+                        text-anchor="middle"
+                      >
+                        ~3
+                      </text>
+                    </g>
+
+                    <!-- Tag Pin A0 Analog (Biru) di Header Analog In -->
+                    <g id="pinTagA0">
+                      <rect
+                        x="190"
+                        y="138"
+                        width="14"
+                        height="12"
+                        fill="#0284c7"
+                        rx="1.5"
+                      />
+                      <text
+                        x="197"
+                        y="147"
+                        fill="#ffffff"
+                        font-family="sans-serif"
+                        font-size="7.5"
+                        font-weight="900"
+                        text-anchor="middle"
+                      >
+                        A0
+                      </text>
+                    </g>
+                  </g>
+                </svg>
+              </div>
+
+              <!-- SLIDER KONTROL SUHU RUANGAN -->
+              <div
+                class="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2 shadow-2xs"
+              >
+                <div class="flex items-center justify-between gap-2">
+                  <label
+                    for="tempAnalogSlider"
+                    class="text-xs font-extrabold text-slate-700 uppercase tracking-wider flex items-center gap-1.5"
+                  >
+                    <i
+                      class="fa-solid fa-temperature-three-quarters text-teal-700 text-sm"
+                    ></i>
+                    <span>Simulasi Suhu Ruang Server (°C):</span>
+                  </label>
+                  <span
+                    id="sliderValLabel"
+                    class="text-xs font-mono font-extrabold text-teal-800 bg-teal-100 border border-teal-300 px-2.5 py-0.5 rounded-md shadow-2xs"
+                  >
+                    25.0°C
+                  </span>
+                </div>
+                <input
+                  type="range"
+                  id="tempAnalogSlider"
+                  min="15"
+                  max="45"
+                  step="0.5"
+                  value="25"
+                  oninput="updateServerTempSim()"
+                  class="w-full accent-teal-700 cursor-pointer h-2 bg-slate-200 rounded-lg appearance-none"
+                />
+                <div
+                  class="flex justify-between text-[10px] text-slate-400 font-mono font-medium"
+                >
+                  <span>15°C (AC Min / PWM 0)</span>
+                  <span>30°C (Daya AC 50% / PWM 128)</span>
+                  <span>45°C (AC Max / PWM 255)</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANEL KANAN: CODE IDE & SERIAL MONITOR -->
+            <div
+              class="lg:col-span-5 flex flex-col justify-between space-y-3 font-mono"
+            >
+              <!-- ARDUINO IDE EDITOR -->
+              <div
+                class="bg-white rounded-xl border border-slate-300 shadow-sm overflow-hidden flex flex-col"
+              >
+                <!-- IDE TOOLBAR -->
+                <div
+                  class="bg-teal-800 px-3 py-2 border-b border-teal-900 flex items-center justify-between text-xs text-white select-none"
+                >
+                  <div class="flex items-center gap-2">
+                    <button
+                      class="w-6 h-6 rounded-full bg-teal-700 hover:bg-teal-600 text-teal-100 flex items-center justify-center text-[11px] shadow-xs"
+                      title="Verify"
+                    >
+                      <i class="fa-solid fa-check"></i>
+                    </button>
+                    <button
+                      class="w-6 h-6 rounded-full bg-teal-700 hover:bg-teal-600 text-teal-100 flex items-center justify-center text-[11px] shadow-xs"
+                      title="Upload"
+                    >
+                      <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                    <div
+                      class="bg-teal-950/80 border border-teal-600 text-teal-100 px-2 py-0.5 rounded flex items-center gap-1.5 text-[10px] font-sans ml-1"
+                    >
+                      <i class="fa-solid fa-microchip text-teal-300"></i>
+                      <span class="font-bold">Arduino Uno</span>
+                      <span class="text-teal-400">COM3</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- TAB BAR -->
+                <div
+                  class="bg-slate-100 border-b border-slate-200 flex items-center px-2 pt-1 gap-1 select-none font-sans"
+                >
+                  <div
+                    class="bg-white border-t-2 border-teal-700 border-x border-slate-300 rounded-t-md px-3 py-1 text-[11px] font-bold text-slate-800 flex items-center gap-2 shadow-2xs"
+                  >
+                    <i class="fa-solid fa-code text-teal-700 text-[10px]"></i>
+                    <span>AnalogRead_AnalogWrite_AC.ino</span>
+                  </div>
+                </div>
+
+                <!-- CODE EDITOR WITH LINE NUMBERS -->
+                <div
+                  class="p-2 text-[11px] leading-relaxed bg-white flex overflow-x-auto min-h-[320px]"
+                >
+                  <div
+                    class="text-slate-400 font-mono text-[11px] select-none text-right pr-2.5 border-r border-slate-200 bg-slate-50/50 flex flex-col space-y-0.5"
+                    style="min-width: 28px"
+                  >
+                    <span>1</span><span>2</span><span>3</span><span>4</span
+                    ><span>5</span><span>6</span><span>7</span><span>8</span
+                    ><span>9</span><span>10</span><span>11</span><span>12</span
+                    ><span>13</span><span>14</span><span>15</span><span>16</span
+                    ><span>17</span>
+                  </div>
+
+                  <div class="pl-3 flex-1 space-y-0.5 font-mono">
+                    <div>
+                      <span class="ide-comment"
+                        >// Pin A0: analogRead | Pin 3: analogWrite (PWM)</span
+                      >
+                    </div>
+                    <div>
+                      <span class="ide-keyword">int</span> pinSuhu =
+                      <span class="ide-constant">A0</span>;
+                    </div>
+                    <div>
+                      <span class="ide-keyword">int</span> pinAC =
+                      <span class="ide-number">3</span>;
+                    </div>
+                    <div>&nbsp;</div>
+                    <div>
+                      <span class="ide-keyword">void</span>
+                      <span class="ide-function">setup</span>() {
+                    </div>
+                    <div class="pl-4">
+                      <span class="ide-function">Serial</span>.<span
+                        class="ide-function"
+                        >begin</span
+                      >(<span class="ide-number">9600</span>);
+                    </div>
+                    <div class="pl-4">
+                      <span class="ide-function">pinMode</span>(pinAC,
+                      <span class="ide-constant">OUTPUT</span>);
+                    </div>
+                    <div>}</div>
+                    <div>&nbsp;</div>
+                    <div>
+                      <span class="ide-keyword">void</span>
+                      <span class="ide-function">loop</span>() {
+                    </div>
+                    <div
+                      id="ideReadActive"
+                      class="pl-4 py-0.5 rounded transition-colors duration-150"
+                    >
+                      <span class="ide-keyword">int</span> adcVal =
+                      <span class="ide-function">analogRead</span>(pinSuhu);
+                    </div>
+                    <div
+                      id="ideMapActive"
+                      class="pl-4 py-0.5 rounded transition-colors duration-150"
+                    >
+                      <span class="ide-keyword">int</span> pwmVal =
+                      <span class="ide-function">map</span>(adcVal,
+                      <span class="ide-number">0</span>,
+                      <span class="ide-number">1023</span>,
+                      <span class="ide-number">0</span>,
+                      <span class="ide-number">255</span>);
+                    </div>
+                    <div
+                      id="ideWriteActive"
+                      class="pl-4 py-0.5 rounded transition-colors duration-150"
+                    >
+                      <span class="ide-function">analogWrite</span>(pinAC,
+                      pwmVal);
+                    </div>
+                    <div class="pl-4">
+                      <span class="ide-function">Serial</span>.<span
+                        class="ide-function"
+                        >print</span
+                      >(<span class="ide-string">"[analogRead A0]: "</span>);
+                      <span class="ide-function">Serial</span>.<span
+                        class="ide-function"
+                        >print</span
+                      >(adcVal);
+                    </div>
+                    <div class="pl-4">
+                      <span class="ide-function">Serial</span>.<span
+                        class="ide-function"
+                        >print</span
+                      >(<span class="ide-string">" | [analogWrite PWM]: "</span
+                      >); <span class="ide-function">Serial</span>.<span
+                        class="ide-function"
+                        >println</span
+                      >(pwmVal);
+                    </div>
+                    <div class="pl-4">
+                      <span class="ide-function">delay</span>(<span
+                        class="ide-number"
+                        >300</span
+                      >);
+                    </div>
+                    <div>}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TERMINAL SERIAL MONITOR -->
+              <div
+                class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-2xs space-y-2 text-xs flex-1 flex flex-col justify-between"
+              >
+                <div
+                  class="flex items-center justify-between border-b border-slate-100 pb-1.5"
+                >
+                  <span
+                    class="text-slate-800 font-bold flex items-center gap-1.5 font-sans"
+                  >
+                    <i class="fa-solid fa-desktop text-teal-700"></i> Serial
+                    Monitor Output
+                  </span>
+                  <span
+                    class="text-[10px] text-teal-800 font-bold bg-teal-50 border border-teal-200 px-2 py-0.5 rounded font-mono"
+                    >9600 baud</span
+                  >
+                </div>
+
+                <div
+                  id="serverSerialLogs"
+                  class="bg-slate-100 text-slate-800 p-3 rounded-lg border border-slate-300 font-mono text-[11px] min-h-[110px] max-h-[130px] overflow-y-auto leading-relaxed space-y-0.5 shadow-inner"
+                >
+                  <div class="text-teal-800 font-bold">
+                    [SYSTEM] System Ready. Monitoring analogRead() &
+                    analogWrite()...
+                  </div>
+                </div>
+
+                <button
+                  onclick="clearServerSerialLogs()"
+                  class="text-[10px] text-slate-400 hover:text-slate-700 underline self-end font-sans cursor-pointer"
+                >
+                  Clear Logs
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NAVIGATION FOOTER -->
+      <nav class="flex items-center justify-between pt-2">
+        <a
+          href="index.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs transition-colors shadow-2xs"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Kembali</span>
+        </a>
+        <a
+          href="3.2.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 font-bold text-xs transition-colors shadow-xs"
+        >
+          <span>Sub 3.2: PWM Lanjutan</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </nav>
+    </main>
+
+    <footer
+      class="max-w-6xl mx-auto w-full px-4 pt-4 text-center text-xs text-slate-400 font-medium"
+    >
+      <p>© MIKRO EDU - SMK SMTI Yogyakarta | Pemrograman I/O Analog</p>
+    </footer>
+
+    <!-- SCRIPT LOGIKA SIMULASI SUHU & PWM AC -->
+    <script>
+      function updateServerTempSim() {
+        const tempC = parseFloat(
+          document.getElementById("tempAnalogSlider").value,
+        );
+        document.getElementById("sliderValLabel").innerText =
+          `${tempC.toFixed(1)}°C`;
+
+        // Pemetaan Matematis: Suhu 15°C - 45°C -> ADC 0 - 1023 -> PWM 0 - 255
+        const adcVal = Math.round(((tempC - 15) / 30) * 1023);
+        const pwmVal = Math.round(((tempC - 15) / 30) * 255);
+        const acSpeedPercent = Math.round((pwmVal / 255) * 100);
+
+        const badge = document.getElementById("analogStatusBadge");
+        const thermoBar = document.getElementById("svgThermoBar");
+        const windGroup = document.getElementById("svgWindGroup");
+
+        const wireSensor = document.getElementById("wireSensor");
+        const wireAC = document.getElementById("wireAC");
+
+        const ideRead = document.getElementById("ideReadActive");
+        const ideMap = document.getElementById("ideMapActive");
+        const ideWrite = document.getElementById("ideWriteActive");
+        const serialLogs = document.getElementById("serverSerialLogs");
+
+        // Dynamic Thermo Bar Height
+        const barHeight = Math.min(20, Math.max(2, ((tempC - 15) / 30) * 20));
+        thermoBar.setAttribute("height", barHeight);
+        thermoBar.setAttribute("y", 70 - barHeight);
+
+        // Update Badge Text
+        badge.innerText = `SUHU: ${tempC.toFixed(1)}°C | ADC: ${adcVal} | PWM AC: ${pwmVal} (${acSpeedPercent}%)`;
+
+        // Kecepatan Animasi Angin AC berdasarkan PWM
+        if (pwmVal > 0) {
+          windGroup.style.display = "block";
+          const speedDuration = (1.8 - (pwmVal / 255) * 1.5).toFixed(2);
+          const windLines = windGroup.querySelectorAll(".ac-wind-line");
+          windLines.forEach((line) => {
+            line.style.animationDuration = `${speedDuration}s`;
+          });
+          wireSensor.classList.add("wire-active");
+          wireAC.classList.add("wire-active");
+        } else {
+          windGroup.style.display = "none";
+          wireSensor.classList.remove("wire-active");
+          wireAC.classList.remove("wire-active");
+        }
+
+        // Highlight Active IDE Lines
+        ideRead.className =
+          "pl-4 py-0.5 rounded bg-sky-100 font-bold border-l-2 border-sky-600";
+        ideMap.className =
+          "pl-4 py-0.5 rounded bg-teal-100 font-bold border-l-2 border-teal-600";
+        ideWrite.className =
+          "pl-4 py-0.5 rounded bg-amber-100 font-bold border-l-2 border-amber-600";
+
+        // Serial Log Output
+        const newLogLine = document.createElement("div");
+        newLogLine.className = "text-slate-800 font-mono";
+        newLogLine.innerText = `[analogRead A0]: ${adcVal} (${tempC.toFixed(1)}°C) | [analogWrite PWM]: ${pwmVal} (Daya AC: ${acSpeedPercent}%)`;
+        serialLogs.appendChild(newLogLine);
+        serialLogs.scrollTop = serialLogs.scrollHeight;
+      }
+
+      function clearServerSerialLogs() {
+        const serialLogs = document.getElementById("serverSerialLogs");
+        serialLogs.innerHTML = `<div class="text-teal-800 font-bold">[SYSTEM] Serial Logs Cleared. Active Monitoring...</div>`;
+      }
+
+      window.onload = function () {
+        updateServerTempSim();
+      };
+    </script>
+  </body>
+</html>

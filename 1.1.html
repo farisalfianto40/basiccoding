@@ -1,0 +1,1531 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Sub 1.1 - Anatomi & Spesifikasi Hardware Arduino Uno R3</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      body {
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      ::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 9999px;
+      }
+
+      /* Hover & Seleksi Komponen Board - Arduino IDE Teal Theme */
+      .board-part {
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+      }
+      .board-part:hover {
+        filter: brightness(1.15) drop-shadow(0 0 6px rgba(0, 151, 157, 0.7));
+      }
+      .board-part-active path,
+      .board-part-active rect,
+      .board-part-active circle,
+      .board-part-active polygon {
+        stroke: #00979d !important;
+        stroke-width: 2.5px !important;
+      }
+      .board-part-active text {
+        fill: #00979d !important;
+      }
+
+      /* Animasi Blink & Efek Daya */
+      @keyframes ledBlink {
+        0%,
+        100% {
+          opacity: 0.3;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      .led-glow {
+        animation: ledBlink 1.5s infinite ease-in-out;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased pb-8"
+  >
+    <!-- HEADER APP -->
+    <header
+      class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3"
+      >
+        <div class="flex items-center gap-3">
+          <a
+            href="index.html"
+            class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-sm transition-colors"
+            title="Kembali"
+          >
+            <i class="fa-solid fa-home"></i>
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span
+                class="text-[10px] font-extrabold bg-teal-100 text-teal-800 px-2 py-0.5 rounded uppercase tracking-wider"
+              >
+                SUB 1.1
+              </span>
+            </div>
+            <h1
+              class="text-sm sm:text-base font-black text-slate-900 leading-tight mt-0.5"
+            >
+              Anatomi & Spesifikasi Hardware Arduino Uno R3
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <!-- HERO BANNER RINGKAS -->
+      <section
+        class="bg-gradient-to-r from-teal-800 to-teal-700 text-white rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden"
+      >
+        <div
+          class="absolute -right-4 -bottom-6 opacity-15 pointer-events-none hidden sm:block select-none"
+        >
+          <i class="fa-solid fa-microchip text-[140px] text-teal-100"></i>
+        </div>
+        <div class="relative z-10 space-y-1.5 max-w-3xl">
+          <div
+            class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
+          >
+            <i class="fa-solid fa-microchip text-teal-200-300 text-xs"></i>
+            <span>Arsitektur Perangkat Keras 8-Bit & AVR</span>
+          </div>
+          <h2
+            class="text-lg sm:text-xl font-extrabold text-white leading-tight display-font"
+          >
+            Sistem Mikrokontroler AVR & Arsitektur Referensi Pembelajaran
+          </h2>
+          <p class="text-xs text-teal-50/90 leading-relaxed">
+            Pelajari anatomi chip ATmega328P, pemetaan pin I/O (Digital GPIO,
+            PWM, Analog ADC), jalur catu daya (VIN, 5V, 3.3V, GND, Regulator),
+            komponen pasif (resistor/kapasitor), serta proteksi hardware.
+          </p>
+        </div>
+      </section>
+
+      <!-- BAGIAN 1: SPESIFIKASI UTAMA -->
+      <section
+        class="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-5"
+      >
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+          <div
+            class="w-8 h-8 rounded-lg bg-teal-100 text-teal-800 flex items-center justify-center font-bold text-sm shrink-0"
+          >
+            1
+          </div>
+          <h3 class="text-base sm:text-lg font-extrabold text-slate-900">
+            Chip ATmega328P, Clock 16 MHz, Flash, SRAM & EEPROM
+          </h3>
+        </div>
+
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          Arduino Uno R3 ditenagai oleh mikrokontroler 8-bit AVR
+          <strong>ATmega328P</strong> dari Microchip (Atmel). Papan ini memiliki
+          arsitektur Harvard yang memisahkan memori program dan memori data
+          untuk eksekusi instruksi berkecepatan tinggi.
+        </p>
+
+        <!-- GRID SPESIFIKASI UTAMA -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+          <div
+            class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 text-center space-y-1"
+          >
+            <div class="text-teal-600 font-extrabold text-lg">16 MHz</div>
+            <div class="text-xs font-bold text-slate-800">
+              Crystal Oscillator
+            </div>
+            <p class="text-[11px] text-slate-500 leading-tight">
+              Pewaktu eksternal presisi tinggi untuk eksekusi instruksi CPU.
+            </p>
+          </div>
+
+          <div
+            class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 text-center space-y-1"
+          >
+            <div class="text-teal-600 font-extrabold text-lg">32 KB</div>
+            <div class="text-xs font-bold text-slate-800">Flash Memory</div>
+            <p class="text-[11px] text-slate-500 leading-tight">
+              Penyimpanan kode program (0.5 KB terpakai untuk Bootloader).
+            </p>
+          </div>
+
+          <div
+            class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 text-center space-y-1"
+          >
+            <div class="text-teal-600 font-extrabold text-lg">2 KB</div>
+            <div class="text-xs font-bold text-slate-800">SRAM Internal</div>
+            <p class="text-[11px] text-slate-500 leading-tight">
+              Memori volatile untuk menyimpan variabel sementara saat runtime.
+            </p>
+          </div>
+
+          <div
+            class="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 text-center space-y-1"
+          >
+            <div class="text-teal-600 font-extrabold text-lg">1 KB</div>
+            <div class="text-xs font-bold text-slate-800">EEPROM</div>
+            <p class="text-[11px] text-slate-500 leading-tight">
+              Memori non-volatile untuk menyimpan data permanen (konfigurasi).
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- BAGIAN INSPECTOR BOARD ARDUINO UNO R3 -->
+      <section
+        class="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-5"
+      >
+        <div
+          class="flex items-center justify-between border-b border-slate-100 pb-3 flex-wrap gap-2"
+        >
+          <div class="flex items-center gap-3">
+            <div
+              class="w-8 h-8 rounded-lg bg-teal-100 text-teal-800 flex items-center justify-center font-bold text-sm shrink-0"
+            >
+              <i class="fa-solid fa-microchip text-xs"></i>
+            </div>
+            <h3 class="text-base sm:text-lg font-extrabold text-slate-900">
+              Anatomi Komponen Board Arduino Uno R3 Interaktif
+            </h3>
+          </div>
+          <span
+            class="text-[10px] bg-amber-100 text-amber-800 font-extrabold px-2.5 py-1 rounded-full flex items-center gap-1"
+          >
+            <i class="fa-solid fa-hand-pointer text-[9px]"></i> Klik Komponen
+            Pada Papan
+          </span>
+        </div>
+
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          Papan pengembangan Arduino Uno R3 memuat komponen aktif dan pasif.
+          <strong>Klik komponen mana saja pada gambar vektor</strong> (seperti
+          Resistor, Kapasitor, Fuse, Crystal, Chip, LED, dll.) untuk melihat
+          rincian teknis lengkapnya.
+        </p>
+
+        <!-- BOARD INTERACTIVE GRAPHIC & PANEL -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <div
+            class="lg:col-span-7 bg-slate-50 p-3 sm:p-5 rounded-2xl border border-slate-200 shadow-xs flex flex-col items-center justify-center relative overflow-hidden"
+          >
+            <div class="w-full flex items-center justify-between mb-3">
+              <span
+                class="text-[10px] font-mono text-teal-700 font-bold flex items-center gap-1.5"
+              >
+                <span
+                  class="w-2 h-2 rounded-full bg-teal-600 animate-ping inline-block"
+                ></span>
+                Arduino Uno R3 Layout (Simulasi Presisi Sempurna)
+              </span>
+              <span class="text-[9px] text-slate-500 font-mono"
+                >ATmega328P DIP Rev3</span
+              >
+            </div>
+
+            <!-- VEKTOR ARDUINO UNO R3 DENGAN WARNA TEAL KHAS ARDUINO (#00979D) -->
+            <svg
+              viewBox="0 0 500 375"
+              class="w-full max-w-md h-auto select-none rounded-lg drop-shadow-md"
+            >
+              <!-- PCB BASE (Arduino Official Teal #00979D) -->
+              <path
+                d="M 30,10 
+                   L 452,10 
+                   L 468,26 
+                   L 468,82 
+                   L 488,102 
+                   L 488,268 
+                   L 468,288 
+                   L 468,339 
+                   L 452,355 
+                   L 30,355 
+                   C 20,355 12,345 12,335 
+                   L 12,30 
+                   C 12,20 20,10 30,10 Z"
+                fill="#00979d"
+                stroke="#006468"
+                stroke-width="2.5"
+              />
+
+              <!-- LUBANG BAUT (MOUNTING HOLES) -->
+              <g fill="#006468" stroke="#00979d" stroke-width="1.5">
+                <circle cx="120" cy="22" r="6" fill="#2b3038" />
+                <circle cx="468" cy="115" r="6" fill="#2b3038" />
+                <circle cx="120" cy="345" r="6" fill="#2b3038" />
+                <circle cx="450" cy="300" r="6" fill="#2b3038" />
+              </g>
+
+              <!-- 1. PORT USB TYPE-B -->
+              <g
+                class="board-part"
+                id="comp-usb"
+                onclick="clickBoardPart('usb')"
+              >
+                <rect
+                  x="0"
+                  y="50"
+                  width="92"
+                  height="75"
+                  rx="3"
+                  fill="#b0b0b0"
+                  stroke="#606060"
+                  stroke-width="2"
+                />
+                <rect
+                  x="4"
+                  y="62"
+                  width="80"
+                  height="51"
+                  rx="2"
+                  fill="#353535"
+                />
+                <rect
+                  x="18"
+                  y="74"
+                  width="52"
+                  height="27"
+                  rx="1"
+                  fill="#202020"
+                />
+              </g>
+
+              <!-- 2. POWER JACK DC -->
+              <g
+                class="board-part"
+                id="comp-dcjack"
+                onclick="clickBoardPart('dcjack')"
+              >
+                <rect
+                  x="0"
+                  y="245"
+                  width="90"
+                  height="65"
+                  rx="3"
+                  fill="#181818"
+                  stroke="#000000"
+                  stroke-width="2"
+                />
+                <rect x="0" y="255" width="28" height="45" fill="#000000" />
+                <circle cx="46" cy="277.5" r="13" fill="#000000" />
+                <circle cx="46" cy="277.5" r="5" fill="#888888" />
+              </g>
+
+              <!-- 3. TOMBOL RESET -->
+              <g
+                class="board-part"
+                id="comp-btnreset"
+                onclick="clickBoardPart('btnreset')"
+              >
+                <rect
+                  x="102"
+                  y="48"
+                  width="34"
+                  height="34"
+                  rx="3"
+                  fill="#383838"
+                  stroke="#888888"
+                  stroke-width="1.5"
+                />
+                <circle cx="119" cy="65" r="9" fill="#dc2626" />
+              </g>
+
+              <!-- 4. PTC RESETTABLE FUSE -->
+              <g
+                class="board-part"
+                id="comp-fuse"
+                onclick="clickBoardPart('fuse')"
+              >
+                <rect
+                  x="102"
+                  y="90"
+                  width="22"
+                  height="16"
+                  rx="2"
+                  fill="#d97706"
+                  stroke="#b45309"
+                  stroke-width="1"
+                />
+                <text
+                  x="113"
+                  y="102"
+                  fill="#ffffff"
+                  font-size="8"
+                  font-weight="bold"
+                  text-anchor="middle"
+                >
+                  F
+                </text>
+              </g>
+
+              <!-- 5. REGULATOR TEGANGAN (5V LDO) -->
+              <g
+                class="board-part"
+                id="comp-regulator"
+                onclick="clickBoardPart('regulator')"
+              >
+                <rect
+                  x="102"
+                  y="118"
+                  width="32"
+                  height="30"
+                  rx="2"
+                  fill="#222222"
+                  stroke="#555555"
+                  stroke-width="1"
+                />
+                <rect
+                  x="108"
+                  y="114"
+                  width="20"
+                  height="4"
+                  fill="#888888"
+                  rx="1"
+                />
+                <text
+                  x="118"
+                  y="136"
+                  fill="#a1a1aa"
+                  font-size="6.5"
+                  font-weight="bold"
+                  text-anchor="middle"
+                >
+                  5.0V
+                </text>
+              </g>
+
+              <!-- 6. KAPASITOR ELEKTROLIT -->
+              <g
+                class="board-part"
+                id="comp-capacitor"
+                onclick="clickBoardPart('capacitor')"
+              >
+                <circle
+                  cx="118"
+                  cy="183"
+                  r="13"
+                  fill="#27272a"
+                  stroke="#a1a1aa"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M 108 173 L 128 193"
+                  stroke="#a1a1aa"
+                  stroke-width="2"
+                />
+                <circle
+                  cx="118"
+                  cy="217"
+                  r="13"
+                  fill="#27272a"
+                  stroke="#a1a1aa"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M 108 207 L 128 227"
+                  stroke="#a1a1aa"
+                  stroke-width="2"
+                />
+              </g>
+
+              <!-- 7. CHIP ATMEGA16U2 -->
+              <g
+                class="board-part"
+                id="comp-atmega16u2"
+                onclick="clickBoardPart('atmega16u2')"
+              >
+                <rect
+                  x="148"
+                  y="85"
+                  width="32"
+                  height="32"
+                  rx="2"
+                  fill="#262626"
+                  stroke="#525252"
+                  stroke-width="1"
+                />
+                <circle cx="153" cy="90" r="2" fill="#888888" />
+                <text
+                  x="164"
+                  y="104"
+                  fill="#d4d4d8"
+                  font-size="6"
+                  font-weight="bold"
+                  text-anchor="middle"
+                >
+                  16U2
+                </text>
+              </g>
+
+              <!-- 8. RESISTOR SMD & RESISTOR PACK -->
+              <g
+                class="board-part"
+                id="comp-resistor"
+                onclick="clickBoardPart('resistor')"
+              >
+                <rect
+                  x="152"
+                  y="128"
+                  width="28"
+                  height="40"
+                  rx="3"
+                  fill="#1e293b"
+                  stroke="#00979d"
+                  stroke-width="1"
+                  stroke-dasharray="2,2"
+                />
+                <rect
+                  x="156"
+                  y="132"
+                  width="8"
+                  height="4"
+                  fill="#000"
+                  stroke="#ccc"
+                  stroke-width="0.5"
+                />
+                <rect
+                  x="168"
+                  y="132"
+                  width="8"
+                  height="4"
+                  fill="#000"
+                  stroke="#ccc"
+                  stroke-width="0.5"
+                />
+                <rect
+                  x="156"
+                  y="142"
+                  width="8"
+                  height="4"
+                  fill="#000"
+                  stroke="#ccc"
+                  stroke-width="0.5"
+                />
+                <rect
+                  x="168"
+                  y="142"
+                  width="8"
+                  height="4"
+                  fill="#000"
+                  stroke="#ccc"
+                  stroke-width="0.5"
+                />
+                <rect
+                  x="156"
+                  y="152"
+                  width="20"
+                  height="6"
+                  rx="1"
+                  fill="#334155"
+                />
+                <text
+                  x="166"
+                  y="157"
+                  fill="#ffffff"
+                  font-size="5"
+                  font-weight="bold"
+                  text-anchor="middle"
+                >
+                  103
+                </text>
+                <text
+                  x="166"
+                  y="165"
+                  fill="#94a3b8"
+                  font-size="5"
+                  font-weight="bold"
+                  text-anchor="middle"
+                >
+                  RES
+                </text>
+              </g>
+
+              <!-- 9. CRYSTAL OSCILLATOR -->
+              <g
+                class="board-part"
+                id="comp-crystal"
+                onclick="clickBoardPart('crystal')"
+              >
+                <rect
+                  x="195"
+                  y="128"
+                  width="22"
+                  height="42"
+                  rx="10"
+                  fill="#e2e8f0"
+                  stroke="#64748b"
+                  stroke-width="1.5"
+                />
+                <text
+                  x="206"
+                  y="153"
+                  fill="#334155"
+                  font-size="6.5"
+                  font-weight="900"
+                  font-family="sans-serif"
+                  text-anchor="middle"
+                  transform="rotate(-90, 206, 150)"
+                >
+                  16.000
+                </text>
+              </g>
+
+              <!-- 10. INDIKATOR LED ON-BOARD -->
+              <g
+                class="board-part"
+                id="comp-leds"
+                onclick="clickBoardPart('leds')"
+              >
+                <rect
+                  x="230"
+                  y="82"
+                  width="50"
+                  height="45"
+                  rx="3"
+                  fill="#0f172a"
+                  stroke="#00979d"
+                  stroke-width="1"
+                  stroke-dasharray="2,2"
+                />
+                <rect
+                  x="236"
+                  y="88"
+                  width="6"
+                  height="4"
+                  fill="#facc15"
+                  class="led-glow"
+                />
+                <text
+                  x="248"
+                  y="92"
+                  fill="#ffffff"
+                  font-size="6"
+                  font-weight="bold"
+                >
+                  L
+                </text>
+                <rect
+                  x="236"
+                  y="98"
+                  width="6"
+                  height="4"
+                  fill="#facc15"
+                  class="led-glow"
+                />
+                <text
+                  x="248"
+                  y="102"
+                  fill="#ffffff"
+                  font-size="6"
+                  font-weight="bold"
+                >
+                  TX
+                </text>
+                <rect
+                  x="236"
+                  y="108"
+                  width="6"
+                  height="4"
+                  fill="#facc15"
+                  class="led-glow"
+                />
+                <text
+                  x="248"
+                  y="112"
+                  fill="#ffffff"
+                  font-size="6"
+                  font-weight="bold"
+                >
+                  RX
+                </text>
+                <rect x="262" y="108" width="6" height="4" fill="#22c55e" />
+                <text
+                  x="261"
+                  y="102"
+                  fill="#ffffff"
+                  font-size="5.5"
+                  font-weight="bold"
+                >
+                  ON
+                </text>
+              </g>
+
+              <!-- 11. CHIP ATMEGA328P DIP-28 -->
+              <g
+                class="board-part"
+                id="comp-atmega328"
+                onclick="clickBoardPart('atmega328')"
+              >
+                <rect
+                  x="200"
+                  y="210"
+                  width="225"
+                  height="55"
+                  rx="3"
+                  fill="#1c1917"
+                  stroke="#44403c"
+                  stroke-width="1.5"
+                />
+                <path
+                  d="M 200 232 A 6 6 0 0 1 200 244"
+                  fill="none"
+                  stroke="#78716c"
+                  stroke-width="2"
+                />
+                <text
+                  x="312"
+                  y="243"
+                  fill="#e7e5e4"
+                  font-size="11"
+                  font-weight="900"
+                  font-family="sans-serif"
+                  text-anchor="middle"
+                  letter-spacing="0.5"
+                >
+                  ATMEGA328P-PU
+                </text>
+
+                <g fill="#d6d3d1">
+                  <rect x="208" y="203" width="5" height="7" rx="1" />
+                  <rect x="222" y="203" width="5" height="7" rx="1" />
+                  <rect x="236" y="203" width="5" height="7" rx="1" />
+                  <rect x="250" y="203" width="5" height="7" rx="1" />
+                  <rect x="264" y="203" width="5" height="7" rx="1" />
+                  <rect x="278" y="203" width="5" height="7" rx="1" />
+                  <rect x="292" y="203" width="5" height="7" rx="1" />
+                  <rect x="306" y="203" width="5" height="7" rx="1" />
+                  <rect x="320" y="203" width="5" height="7" rx="1" />
+                  <rect x="334" y="203" width="5" height="7" rx="1" />
+                  <rect x="348" y="203" width="5" height="7" rx="1" />
+                  <rect x="362" y="203" width="5" height="7" rx="1" />
+                  <rect x="376" y="203" width="5" height="7" rx="1" />
+                  <rect x="390" y="203" width="5" height="7" rx="1" />
+                  <rect x="208" y="265" width="5" height="7" rx="1" />
+                  <rect x="222" y="265" width="5" height="7" rx="1" />
+                  <rect x="236" y="265" width="5" height="7" rx="1" />
+                  <rect x="250" y="265" width="5" height="7" rx="1" />
+                  <rect x="264" y="265" width="5" height="7" rx="1" />
+                  <rect x="278" y="265" width="5" height="7" rx="1" />
+                  <rect x="292" y="265" width="5" height="7" rx="1" />
+                  <rect x="306" y="265" width="5" height="7" rx="1" />
+                  <rect x="320" y="265" width="5" height="7" rx="1" />
+                  <rect x="334" y="265" width="5" height="7" rx="1" />
+                  <rect x="348" y="265" width="5" height="7" rx="1" />
+                  <rect x="362" y="265" width="5" height="7" rx="1" />
+                  <rect x="376" y="265" width="5" height="7" rx="1" />
+                  <rect x="390" y="265" width="5" height="7" rx="1" />
+                </g>
+              </g>
+
+              <!-- 12. HEADER PIN ICSP -->
+              <g
+                class="board-part"
+                id="comp-icsp"
+                onclick="clickBoardPart('icsp')"
+              >
+                <rect
+                  x="442"
+                  y="155"
+                  width="22"
+                  height="32"
+                  rx="2"
+                  fill="#1f2937"
+                />
+                <g fill="#f59e0b">
+                  <circle cx="448" cy="162" r="2" />
+                  <circle cx="458" cy="162" r="2" />
+                  <circle cx="448" cy="171" r="2" />
+                  <circle cx="458" cy="171" r="2" />
+                  <circle cx="448" cy="180" r="2" />
+                  <circle cx="458" cy="180" r="2" />
+                </g>
+                <text
+                  x="453"
+                  y="194"
+                  fill="#ffffff"
+                  font-size="6"
+                  font-weight="bold"
+                  text-anchor="middle"
+                >
+                  ICSP
+                </text>
+              </g>
+
+              <!-- 13. HEADER DIGITAL GPIO -->
+              <g
+                class="board-part"
+                id="comp-pindigital"
+                onclick="clickBoardPart('pindigital')"
+              >
+                <rect
+                  x="145"
+                  y="15"
+                  width="300"
+                  height="22"
+                  rx="2"
+                  fill="#1f2937"
+                />
+                <g fill="#000" stroke="#d97706" stroke-width="1.2">
+                  <circle cx="156" cy="26" r="2.8" />
+                  <circle cx="171" cy="26" r="2.8" />
+                  <circle cx="186" cy="26" r="2.8" />
+                  <circle cx="201" cy="26" r="2.8" />
+                  <circle cx="216" cy="26" r="2.8" />
+                  <circle cx="231" cy="26" r="2.8" />
+                  <circle cx="246" cy="26" r="2.8" />
+                  <circle cx="261" cy="26" r="2.8" />
+                  <circle cx="281" cy="26" r="2.8" />
+                  <circle cx="296" cy="26" r="2.8" />
+                  <circle cx="311" cy="26" r="2.8" />
+                  <circle cx="326" cy="26" r="2.8" />
+                  <circle cx="341" cy="26" r="2.8" />
+                  <circle cx="356" cy="26" r="2.8" />
+                  <circle cx="371" cy="26" r="2.8" />
+                  <circle cx="386" cy="26" r="2.8" />
+                  <circle cx="401" cy="26" r="2.8" />
+                  <circle cx="416" cy="26" r="2.8" />
+                  <circle cx="431" cy="26" r="2.8" />
+                </g>
+              </g>
+
+              <!-- LABELS PIN DIGITAL -->
+              <g
+                font-size="6.5"
+                font-weight="bold"
+                fill="#ffffff"
+                text-anchor="middle"
+                font-family="sans-serif"
+              >
+                <text x="156" y="48">SCL</text>
+                <text x="171" y="48">SDA</text>
+                <text x="186" y="48">AREF</text>
+                <text x="201" y="48">GND</text>
+                <text x="216" y="48">13</text>
+                <text x="231" y="48">12</text>
+                <text x="246" y="48">~11</text>
+                <text x="261" y="48">~10</text>
+                <text x="281" y="48">~9</text>
+                <text x="296" y="48">8</text>
+                <text x="311" y="48">7</text>
+                <text x="326" y="48">~6</text>
+                <text x="341" y="48">~5</text>
+                <text x="356" y="48">4</text>
+                <text x="371" y="48">~3</text>
+                <text x="386" y="48">2</text>
+                <text x="401" y="48">TX1</text>
+                <text x="416" y="48">RX0</text>
+                <text
+                  x="295"
+                  y="62"
+                  font-size="9.5"
+                  fill="#ffffff"
+                  font-weight="900"
+                >
+                  DIGITAL (PWM ~)
+                </text>
+              </g>
+
+              <!-- 14. HEADER POWER -->
+              <g
+                class="board-part"
+                id="comp-pinpower"
+                onclick="clickBoardPart('pinpower')"
+              >
+                <rect
+                  x="195"
+                  y="328"
+                  width="130"
+                  height="22"
+                  rx="2"
+                  fill="#1f2937"
+                />
+                <g fill="#000" stroke="#d97706" stroke-width="1.2">
+                  <circle cx="206" cy="339" r="2.8" />
+                  <circle cx="221" cy="339" r="2.8" />
+                  <circle cx="236" cy="339" r="2.8" />
+                  <circle cx="251" cy="339" r="2.8" />
+                  <circle cx="266" cy="339" r="2.8" />
+                  <circle cx="281" cy="339" r="2.8" />
+                  <circle cx="296" cy="339" r="2.8" />
+                  <circle cx="311" cy="339" r="2.8" />
+                </g>
+              </g>
+
+              <!-- LABELS PIN POWER -->
+              <g
+                font-size="6.5"
+                font-weight="bold"
+                fill="#ffffff"
+                text-anchor="middle"
+                font-family="sans-serif"
+              >
+                <text x="258" y="304" font-size="8.5" font-weight="900">
+                  POWER
+                </text>
+                <text x="221" y="318">IOREF</text>
+                <text x="236" y="318">RST</text>
+                <text x="251" y="318">3.3V</text>
+                <text x="266" y="318">5V</text>
+                <text x="281" y="318">GND</text>
+                <text x="296" y="318">GND</text>
+                <text x="311" y="318">VIN</text>
+              </g>
+
+              <!-- 15. HEADER ANALOG IN -->
+              <g
+                class="board-part"
+                id="comp-pinanalog"
+                onclick="clickBoardPart('pinanalog')"
+              >
+                <rect
+                  x="338"
+                  y="328"
+                  width="100"
+                  height="22"
+                  rx="2"
+                  fill="#1f2937"
+                />
+                <g fill="#000" stroke="#d97706" stroke-width="1.2">
+                  <circle cx="349" cy="339" r="2.8" />
+                  <circle cx="364" cy="339" r="2.8" />
+                  <circle cx="379" cy="339" r="2.8" />
+                  <circle cx="394" cy="339" r="2.8" />
+                  <circle cx="409" cy="339" r="2.8" />
+                  <circle cx="424" cy="339" r="2.8" />
+                </g>
+              </g>
+
+              <!-- LABELS PIN ANALOG -->
+              <g
+                font-size="6.5"
+                font-weight="bold"
+                fill="#ffffff"
+                text-anchor="middle"
+                font-family="sans-serif"
+              >
+                <text x="386" y="304" font-size="8.5" font-weight="900">
+                  ANALOG IN
+                </text>
+                <text x="349" y="318">A0</text>
+                <text x="364" y="318">A1</text>
+                <text x="379" y="318">A2</text>
+                <text x="394" y="318">A3</text>
+                <text x="409" y="318">A4</text>
+                <text x="424" y="318">A5</text>
+              </g>
+
+              <!-- LOGO & BRANDING ARDUINO UNO -->
+              <g fill="#ffffff">
+                <circle
+                  cx="310"
+                  cy="125"
+                  r="20"
+                  fill="none"
+                  stroke="#ffffff"
+                  stroke-width="2.5"
+                />
+                <text
+                  x="301"
+                  y="131"
+                  font-size="15"
+                  font-weight="bold"
+                  text-anchor="middle"
+                >
+                  -
+                </text>
+                <text
+                  x="319"
+                  y="130"
+                  font-size="13"
+                  font-weight="bold"
+                  text-anchor="middle"
+                >
+                  +
+                </text>
+                <text
+                  x="310"
+                  y="160"
+                  font-size="12"
+                  font-weight="900"
+                  font-family="sans-serif"
+                  text-anchor="middle"
+                  letter-spacing="1"
+                >
+                  ARDUINO
+                </text>
+                <rect
+                  x="350"
+                  y="110"
+                  width="60"
+                  height="30"
+                  rx="7"
+                  fill="none"
+                  stroke="#ffffff"
+                  stroke-width="2"
+                />
+                <text
+                  x="380"
+                  y="131"
+                  font-size="15"
+                  font-weight="900"
+                  font-family="sans-serif"
+                  text-anchor="middle"
+                >
+                  UNO
+                </text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- DYNAMIC DETAILS PANEL -->
+          <div
+            class="lg:col-span-5 bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 space-y-3"
+          >
+            <div
+              class="flex items-center gap-2 text-xs font-bold text-teal-800 bg-teal-50 px-2.5 py-1 rounded-lg border border-teal-200 w-fit"
+            >
+              <i class="fa-solid fa-circle-info"></i>
+              <span id="part-badge">Info Komponen</span>
+            </div>
+
+            <h4
+              id="part-title"
+              class="text-base sm:text-lg font-black text-slate-900"
+            >
+              Klik Komponen Arduino Uno R3
+            </h4>
+
+            <p id="part-desc" class="text-xs text-slate-600 leading-relaxed">
+              Silakan klik komponen mana saja pada gambar papan di sebelah kiri
+              (termasuk Resistor, Kapasitor, Fuse, Chip ATmega328P, Crystal,
+              Regulator, LED, atau Header Pin) untuk membuka rincian spesifikasi
+              teknisnya.
+            </p>
+
+            <div
+              id="part-specs"
+              class="bg-white border border-slate-200/80 rounded-xl p-3 space-y-2 text-xs text-slate-700 shadow-2xs"
+            >
+              <div
+                class="font-bold text-slate-800 border-b border-slate-100 pb-1 flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-list-check text-teal-600"></i> Ringkasan
+                Teknis:
+              </div>
+              <ul
+                class="space-y-1 text-[11px] text-slate-500 list-disc list-inside"
+              >
+                <li>
+                  Pilih salah satu komponen pada vektor untuk menampilkan data
+                  spesifikasi.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- BAGIAN 2: PEMETAAN PINOUT & INSPECTOR -->
+      <section
+        class="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-5"
+      >
+        <div
+          class="flex items-center justify-between border-b border-slate-100 pb-3 flex-wrap gap-2"
+        >
+          <div class="flex items-center gap-3">
+            <div
+              class="w-8 h-8 rounded-lg bg-teal-100 text-teal-800 flex items-center justify-center font-bold text-sm shrink-0"
+            >
+              2
+            </div>
+            <h3 class="text-base sm:text-lg font-extrabold text-slate-900">
+              Pemetaan Pinout Arduino Uno R3 (Digital GPIO, PWM, ADC & Power)
+            </h3>
+          </div>
+          <span
+            class="text-[10px] bg-teal-100 text-teal-800 font-extrabold px-2.5 py-1 rounded-full"
+          >
+            Konfigurasi Pin Hardware
+          </span>
+        </div>
+
+        <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          Pinout Arduino Uno R3 terbagi menjadi beberapa kelompok utama: Digital
+          GPIO (0-13), Output PWM (~3, ~5, ~6, ~9, ~10, ~11), Analog Input ADC
+          (A0-A5), serta Jalur Catu Daya (5V, 3.3V, VIN, GND, RESET).
+        </p>
+
+        <!-- CONTAINER GAMBAR DIAGRAM PINOUT LENGKAP -->
+        <div
+          class="my-4 bg-slate-50 border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-xs text-center space-y-3"
+        >
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <span
+              class="text-xs font-bold text-slate-800 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-map text-teal-600"></i> Diagram Pinout
+              Referensi Arduino Uno R3
+            </span>
+            <span
+              class="text-[10px] bg-teal-100 text-teal-800 font-extrabold px-2.5 py-0.5 rounded-full"
+            >
+              img/pinout-arduino.png
+            </span>
+          </div>
+          <div
+            class="overflow-hidden rounded-xl border border-slate-200 bg-white p-2"
+          >
+            <img
+              src="img/pinout-arduino.png"
+              alt="Diagram Pinout Arduino Uno R3"
+              class="w-full h-auto object-contain max-h-[380px] mx-auto hover:scale-[1.01] transition-transform duration-300"
+            />
+          </div>
+          <p class="text-[11px] text-slate-500 italic">
+            Gambar: Pemetaan lengkap fungsi pin Arduino Uno R3 meliputi
+            komunikasi I2C, SPI, Interrupt, dan fungsi alternatif ADC.
+          </p>
+        </div>
+
+        <!-- INTERACTIVE PIN INSPECTOR TOOL -->
+        <div
+          class="bg-slate-50 text-slate-800 rounded-2xl p-4 sm:p-5 border border-slate-200 space-y-4"
+        >
+          <div
+            class="flex items-center justify-between border-b border-slate-200 pb-2 flex-wrap gap-2"
+          >
+            <h4
+              class="text-xs sm:text-sm font-extrabold text-teal-800 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-sliders"></i> Inspector Kelompok Pin Arduino
+              Uno R3
+            </h4>
+            <span class="text-[10px] text-slate-500"
+              >Pilih kategori fungsi pin di bawah untuk detailnya</span
+            >
+          </div>
+
+          <div class="flex flex-wrap gap-2">
+            <button
+              onclick="filterPinUno('digital')"
+              id="btn-uno-digital"
+              class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all bg-teal-600 text-white"
+            >
+              Digital GPIO & PWM
+            </button>
+            <button
+              onclick="filterPinUno('adc')"
+              id="btn-uno-adc"
+              class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all bg-slate-200 text-slate-700 hover:bg-slate-300"
+            >
+              Analog Input (ADC 10-bit)
+            </button>
+            <button
+              onclick="filterPinUno('power')"
+              id="btn-uno-power"
+              class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all bg-slate-200 text-slate-700 hover:bg-slate-300"
+            >
+              Power & Ground Pins
+            </button>
+            <button
+              onclick="filterPinUno('comm')"
+              id="btn-uno-comm"
+              class="px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all bg-slate-200 text-slate-700 hover:bg-slate-300"
+            >
+              Komunikasi (UART, I2C, SPI)
+            </button>
+          </div>
+
+          <div
+            id="uno-pin-detail-box"
+            class="bg-white rounded-xl p-3.5 border border-slate-200 text-xs text-slate-700 space-y-1.5 leading-relaxed shadow-2xs"
+          >
+            <div class="font-bold text-teal-700 text-sm">
+              Digital GPIO (Pin 0 - 13) & PWM (Pulse Width Modulation)
+            </div>
+            <p>
+              Arduino Uno R3 memiliki 14 pin I/O digital. Pin yang ditandai
+              dengan simbol tilde (<strong>~3, ~5, ~6, ~9, ~10, ~11</strong>)
+              mendukung fungsi PWM 8-bit (nilai 0-255) untuk kontrol kecerahan
+              LED atau kecepatan motor DC. Pin 0 (RX) dan Pin 1 (TX) digunakan
+              untuk komunikasi serial hardware.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- BAGIAN 3: TABEL SPESIFIKASI POWER & PIN LIMITS -->
+      <section
+        class="bg-white rounded-2xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-5"
+      >
+        <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+          <div
+            class="w-8 h-8 rounded-lg bg-teal-100 text-teal-800 flex items-center justify-center font-bold text-sm shrink-0"
+          >
+            3
+          </div>
+          <h3 class="text-base sm:text-lg font-extrabold text-slate-900">
+            Tabel Parameter Batas Teknis Arduino Uno R3
+          </h3>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr class="bg-teal-50 text-teal-900 border-b border-teal-200">
+                <th class="p-2.5 font-bold">Parameter / Pin</th>
+                <th class="p-2.5 font-bold">Spesifikasi Operasional</th>
+                <th class="p-2.5 font-bold">Keterangan Teknis & Batasan</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 text-slate-700">
+              <tr>
+                <td class="p-2.5 font-semibold bg-slate-50">
+                  Port USB (Type-B)
+                </td>
+                <td class="p-2.5">5V DC (Maks 500mA)</td>
+                <td class="p-2.5">
+                  Dilengkapi PTC Resetting Fuse 500mA untuk memproteksi USB PC.
+                </td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-semibold bg-slate-50">
+                  Jack DC / Pin VIN
+                </td>
+                <td class="p-2.5">7V - 12V DC (Batas 6V - 20V)</td>
+                <td class="p-2.5">
+                  Rekomendasi ideal 9V DC. Tegangan diturunkan oleh LDO
+                  regulator.
+                </td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-semibold bg-slate-50">Pin 5V Output</td>
+                <td class="p-2.5">5V DC (Tergantung sumber daya)</td>
+                <td class="p-2.5">
+                  Menyuplai daya ke komponen/sensor 5V. Maks 500mA - 800mA.
+                </td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-semibold bg-slate-50">Pin 3.3V Output</td>
+                <td class="p-2.5">3.3V DC (Maks 50 mA)</td>
+                <td class="p-2.5">
+                  Dihasilkan oleh regulator LP2985 internal. Batas arus rendah
+                  (50mA).
+                </td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-semibold bg-slate-50">
+                  Level Logika I/O
+                </td>
+                <td class="p-2.5">0V (LOW) - 5V (HIGH)</td>
+                <td class="p-2.5">Operasi logika murni 5V TTL.</td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-semibold bg-slate-50">
+                  Batas Arus I/O Pin
+                </td>
+                <td class="p-2.5">20 mA (Maksimal absolut 40 mA)</td>
+                <td class="p-2.5">
+                  Batas aman kontinu adalah 20 mA per pin. Arus total seluruh
+                  pin maks 200 mA.
+                </td>
+              </tr>
+              <tr>
+                <td class="p-2.5 font-semibold bg-slate-50">
+                  Resolusi ADC (Analog)
+                </td>
+                <td class="p-2.5">10-bit (0 - 1023)</td>
+                <td class="p-2.5">
+                  6 saluran input analog (A0 - A5) membaca tegangan 0 - 5V DC.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- NAVIGATION FOOTER -->
+      <nav class="flex items-center justify-between pt-2">
+        <a
+          href="index.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs transition-colors shadow-2xs"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Kembali</span>
+        </a>
+        <a
+          href="1.2.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 font-bold text-xs transition-colors shadow-xs"
+        >
+          <span>Sub 1.2: Pemograman Arduino</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </nav>
+    </main>
+
+    <footer
+      class="max-w-6xl mx-auto w-full px-4 pt-4 text-center text-xs text-slate-400 font-medium"
+    >
+      <p>© MIKRO EDU - SMK SMTI Yogyakarta | Teknik Kimia Industri</p>
+    </footer>
+
+    <!-- SCRIPT INTERAKTIF ARDUINO UNO R3 DATA DENGAN KOMPONEN LENGKAP -->
+    <script>
+      const unoBoardData = {
+        atmega328: {
+          badge: "Core Microcontroller",
+          title: "Chip ATmega328P-PU (DIP-28)",
+          desc: "Mikrokontroler utama 8-bit AVR dari Microchip/Atmel dengan kemasan DIP (Dual In-line Package) 28-pin. Menjalankan program utama hasil kompilasi dari Arduino IDE.",
+          specs: [
+            "Arsitektur: 8-bit AVR RISC (Hingga 16 MIPS pada 16 MHz)",
+            "Memori: 32 KB Flash, 2 KB SRAM, 1 KB EEPROM",
+            "Tegangan Kerja: 5V DC",
+            "Kemasan: DIP-28 Socketed (Mudah dilepas/diganti jika rusak)",
+          ],
+        },
+        usb: {
+          badge: "Interface & Power Port",
+          title: "Port USB Type-B",
+          desc: "Port USB tipe B standar yang melayani komunikasi serial data ke PC, pengunggahan program (upload sketsa), serta penyalur daya utama 5V DC.",
+          specs: [
+            "Tegangan Input: 5V DC dari Komputer",
+            "Proteksi: Resettable Fuse (PTC) 500mA",
+            "Fungsi: Upload Kode & Serial Communication (UART)",
+          ],
+        },
+        dcjack: {
+          badge: "External Power Input",
+          title: "Power Jack DC (2.1mm Center-Positive)",
+          desc: "Konektor daya eksternal barrel jack untuk menyuplai papan menggunakan Adaptor AC-to-DC atau Baterai 9V tanpa tergantung port USB.",
+          specs: [
+            "Ukuran Jack: 2.1mm Pin Pusat (+), Ring Outer (-)",
+            "Tegangan Input Aman: 7V - 12V DC (Batas 6V-20V)",
+            "Diode Protection: Mencegah kerusakan jika polaritas terbalik",
+          ],
+        },
+        atmega16u2: {
+          badge: "USB-to-Serial Converter",
+          title: "Chip ATmega16U2 (USB Bridge)",
+          desc: "Mikrokontroler pendukung yang bertindak sebagai penerjemah komunikasi antara protokol USB Komputer dengan port Serial UART ATmega328P.",
+          specs: [
+            "Chip: ATmega16U2 (32-bit AVR USB Controller)",
+            "Keunggulan: Lebih stabil dibanding konverter FTDI/CH340 murah",
+            "Fitur: Menerima sinyal Auto-Reset saat pengunggahan sketsa",
+          ],
+        },
+        regulator: {
+          badge: "Power Management LDO",
+          title: "Regulator Tegangan 5V LDO",
+          desc: "IC Regulator Linier (seperti AMS1117-5.0) yang menurunkan tegangan tinggi dari Jack DC / VIN (7-12V) menjadi tegangan stabil 5V DC.",
+          specs: [
+            "Tegangan Keluar: 5.0V DC (Presisi ±1%)",
+            "Arus Maksimal: ~800mA (Berdasarkan pelepasan panas PCB)",
+            "Fitur Protection: Thermal Shutdown & Overcurrent Limit",
+          ],
+        },
+        capacitor: {
+          badge: "Filter & Power Smoothing",
+          title: "Kapasitor Elektrolit Filter Daya (47µF 25V)",
+          desc: "Komponen pasif penyimpan muatan untuk menyaring (*filtering*) riak/fluktuasi tegangan listrik dari adaptor luar agar suplai daya ke chip tetap mulus.",
+          specs: [
+            "Kapasitansi: 2 Unit x 47 µF / 25V",
+            "Lokasi: Terpasang di jalur Input VIN dan Output Regulator 5V",
+            "Fungsi: Mencegah Brown-out Reset saat beban melonjak",
+          ],
+        },
+        fuse: {
+          badge: "USB Circuit Protection",
+          title: "PTC Resettable Fuse 500mA",
+          desc: "Sekring otomatis tipe PTC (Positive Temperature Coefficient) yang secara spontan memutus jalur daya jika terjadi hubungan singkat (*short circuit*) pada port USB PC.",
+          specs: [
+            "Batas Arus Amandemen: 500 mA",
+            "Mekanisme: Hambatan melonjak drastis saat panas akibat korslet",
+            "Fitur Auto-Reset: Kembali normal otomatis setelah suhu mereda",
+          ],
+        },
+        resistor: {
+          badge: "Passive Components",
+          title: "Resistor SMD & Resistor Networks",
+          desc: "Komponen resistor berukuran mikro (SMD) yang dipasang untuk membatasi arus listrik pada LED indikator serta berfungsi sebagai Pull-Up/Pull-Down resistor.",
+          specs: [
+            "Nilai Umum: 10kΩ (Pull-up Reset), 1kΩ (Serial RX/TX), 1kΩ (LED)",
+            "Resistor Pack (103): Jaringan resistor terpadu untuk efisiensi PCB",
+            "Fungsi: Memastikan sinyal logika stabil dan melindungi pin dari arus berlebih",
+          ],
+        },
+        crystal: {
+          badge: "Clock Generator",
+          title: "Crystal Oscillator 16.000 MHz",
+          desc: "Komponen pemicu detak pulsa (*clock crystal*) yang memberikan frekuensi kerja presisi 16 MHz bagi mikrokontroler ATmega328P.",
+          specs: [
+            "Frekuensi: 16.000 MHz (16 Juta Siklus per Detik)",
+            "Toleransi: ±20 ppm (Sangat Presisi)",
+            "Kemasan: Metallic Package HC-49S",
+          ],
+        },
+        leds: {
+          badge: "Status Indicators",
+          title: "Indikator LED On-Board (ON, L, TX, RX)",
+          desc: "Empat buah LED mikro pemberi status visual sistem: LED PWR (Daya masuk), LED L (Terhubung ke Pin Digital 13), serta LED TX/RX (Aktivitas komunikasi data).",
+          specs: [
+            "LED ON (Hijau): Menyala saat papan menerima daya 5V",
+            "LED L (Kuning): Terhubung ke Digital Pin 13 via Op-Amp internal",
+            "LED TX & RX (Kuning): Berkedip saat data dikirim/diterima via USB",
+          ],
+        },
+        btnreset: {
+          badge: "System Control",
+          title: "Tombol Reset Mekanis",
+          desc: "Tombol tekan merah untuk mengulang (*restart*) eksekusi program dari baris pertama tanpa perlu memutus sumber daya listrik.",
+          specs: [
+            "Pin Terhubung: Pin RESET ATmega328P",
+            "Mekanisme: Pull-up internal (Menarik jalur RESET ke GND saat ditekan)",
+          ],
+        },
+        icsp: {
+          badge: "Direct Programming Header",
+          title: "Header ICSP (In-Circuit Serial Programming)",
+          desc: "Header 2x3 pin untuk memrogram ATmega328P atau ATmega16U2 secara langsung menggunakan AVR Programmer (USASP/STK500) tanpa bootloader.",
+          specs: [
+            "Protokol: SPI (MOSI, MISO, SCK, RESET, VCC, GND)",
+            "Fungsi Utamanya: Menulis ulang Bootloader jika chip corrupt",
+          ],
+        },
+        pindigital: {
+          badge: "Header Pin Sisi Atas",
+          title: "Pinout Digital I/O (Pin 0 - 13, GND, AREF, SDA, SCL)",
+          desc: "Jalur masukan/keluaran digital. Pin 0 (RX) & 1 (TX) untuk Serial, Pin ~3, ~5, ~6, ~9, ~10, ~11 untuk PWM, Pin 13 terhubung ke LED 'L'.",
+          specs: [
+            "Jumlah Pin: 14 Pin Digital I/O",
+            "Fungsi PWM: 6 Pin (~3, ~5, ~6, ~9, ~10, ~11)",
+            "Batas Arus Safe: 20 mA per pin (Level Logika 5V TTL)",
+          ],
+        },
+        pinpower: {
+          badge: "Header Pin Sisi Bawah Kiri",
+          title: "Pinout Power Supply (RESET, 3.3V, 5V, GND, VIN, IOREF)",
+          desc: "Kumpulan pin untuk mendistribusikan daya dari/ke sensor eksternal serta jalur input tegangan mentah (VIN).",
+          specs: [
+            "Output Tegangan: 5V DC & 3.3V DC (Maks 50mA)",
+            "Input Tegangan: VIN (7-12V DC)",
+            "GND: Ground Bersama Sistem",
+          ],
+        },
+        pinanalog: {
+          badge: "Header Pin Sisi Bawah Kanan",
+          title: "Pinout Analog Input (A0 - A5 ADC 10-bit)",
+          desc: "Enam pin khusus untuk membaca sinyal analog bervariasi (seperti potensiometer, LDR, sensor suhu) dengan ADC 10-bit internal.",
+          specs: [
+            "Jumlah Pin: 6 Input Analog (A0 hingga A5)",
+            "Resolusi ADC: 10-bit (Nilai Digital 0 - 1023)",
+            "Rentang Tegangan Input: 0V - 5V DC (Dapat disesuaikan via AREF)",
+          ],
+        },
+      };
+
+      function clickBoardPart(key) {
+        const data = unoBoardData[key];
+        if (!data) return;
+
+        document.querySelectorAll(".board-part").forEach((el) => {
+          el.classList.remove("board-part-active");
+        });
+
+        const selectedEl = document.getElementById("comp-" + key);
+        if (selectedEl) {
+          selectedEl.classList.add("board-part-active");
+        }
+
+        document.getElementById("part-badge").innerText = data.badge;
+        document.getElementById("part-title").innerText = data.title;
+        document.getElementById("part-desc").innerText = data.desc;
+
+        let specsHTML = `
+          <div class="font-bold text-slate-800 border-b border-slate-100 pb-1 flex items-center gap-1.5">
+            <i class="fa-solid fa-list-check text-teal-600"></i> Spesifikasi Utama:
+          </div>
+          <ul class="space-y-1 text-[11px] text-slate-600 list-disc list-inside">
+        `;
+        data.specs.forEach((item) => {
+          specsHTML += `<li>${item}</li>`;
+        });
+        specsHTML += `</ul>`;
+
+        document.getElementById("part-specs").innerHTML = specsHTML;
+      }
+
+      function filterPinUno(type) {
+        const box = document.getElementById("uno-pin-detail-box");
+        const btns = {
+          digital: document.getElementById("btn-uno-digital"),
+          adc: document.getElementById("btn-uno-adc"),
+          power: document.getElementById("btn-uno-power"),
+          comm: document.getElementById("btn-uno-comm"),
+        };
+
+        Object.keys(btns).forEach((key) => {
+          btns[key].className =
+            "px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all bg-slate-200 text-slate-700 hover:bg-slate-300";
+        });
+
+        btns[type].className =
+          "px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all bg-teal-600 text-white";
+
+        if (type === "digital") {
+          box.innerHTML = `
+            <div class="font-bold text-teal-700 text-sm">Digital GPIO (Pin 0 - 13) & PWM (Pulse Width Modulation)</div>
+            <p>Arduino Uno R3 memiliki 14 pin I/O digital. Pin yang ditandai dengan simbol tilde (<strong>~3, ~5, ~6, ~9, ~10, ~11</strong>) mendukung fungsi PWM 8-bit (nilai 0-255) untuk kontrol kecerahan LED atau kecepatan motor DC. Pin 0 (RX) dan Pin 1 (TX) digunakan untuk komunikasi serial hardware.</p>
+          `;
+        } else if (type === "adc") {
+          box.innerHTML = `
+            <div class="font-bold text-emerald-700 text-sm">Analog Input Pins (A0 - A5 / ADC 10-bit)</div>
+            <p>Terdapat 6 pin input analog (<strong>A0, A1, A2, A3, A4, A5</strong>) yang terhubung ke Analog-to-Digital Converter (ADC) internal beresolusi 10-bit (mengubah rentang tegangan 0 - 5V menjadi nilai integer <code>0 - 1023</code>).</p>
+          `;
+        } else if (type === "power") {
+          box.innerHTML = `
+            <div class="font-bold text-amber-700 text-sm">Jalur Catu Daya (5V, 3.3V, VIN, GND, RESET, IOREF)</div>
+            <p>• <strong>5V:</strong> Sumber daya terstabilkan 5V.<br>• <strong>3.3V:</strong> Sumber daya 3.3V maks 50mA.<br>• <strong>GND:</strong> Pin ground (0V).<br>• <strong>VIN:</strong> Input tegangan eksternal (7-12V).<br>• <strong>IOREF:</strong> Pin batas tegangan referensi I/O (5V pada Uno).</p>
+          `;
+        } else if (type === "comm") {
+          box.innerHTML = `
+            <div class="font-bold text-purple-700 text-sm">Antarmuka Protokol Komunikasi Serial</div>
+            <p>• <strong>UART Serial:</strong> Pin 0 (RX) & Pin 1 (TX).<br>• <strong>I2C Protocol:</strong> Pin A4 (SDA) & Pin A5 (SCL) atau pin header I2C khusus.<br>• <strong>SPI Protocol:</strong> Pin 10 (SS), Pin 11 (MOSI), Pin 12 (MISO), Pin 13 (SCK) atau melalui header ICSP.</p>
+          `;
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        clickBoardPart("atmega328");
+      });
+    </script>
+  </body>
+</html>

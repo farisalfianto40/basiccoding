@@ -1,0 +1,1283 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Sub 5.5: S tudi Kasus Automatic Bottling & Capping Line (F&B Industry)
+    </title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: #f8fafc;
+        color: #1e293b;
+      }
+
+      .font-mono-code {
+        font-family: "IBM Plex Mono", monospace;
+      }
+
+      h1,
+      h2,
+      h3,
+      .display-font {
+        font-family: "Space Grotesk", sans-serif;
+      }
+
+      /* Animasi Conveyor Belt */
+      .conveyor-pattern {
+        stroke-dasharray: 12 8;
+        animation: conveyor-move 1s linear infinite;
+      }
+
+      @keyframes conveyor-move {
+        from {
+          stroke-dashoffset: 0;
+        }
+        to {
+          stroke-dashoffset: -20;
+        }
+      }
+
+      /* Animasi Aliran Pengisi Cairan Botol */
+      .fluid-stream {
+        stroke-dasharray: 6 4;
+        animation: stream-down 0.3s linear infinite;
+      }
+
+      @keyframes stream-down {
+        from {
+          stroke-dashoffset: 0;
+        }
+        to {
+          stroke-dashoffset: 10;
+        }
+      }
+
+      /* Lengan Capper Servo Transisi Smooth */
+      .capper-arm {
+        transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform-origin: 380px 70px;
+      }
+
+      /* Animasi Sirine Buzzer Active */
+      .buzzer-active {
+        filter: drop-shadow(0 0 12px rgba(16, 185, 129, 0.8));
+        animation: pulse-buzzer 0.3s ease-in-out infinite alternate;
+      }
+
+      @keyframes pulse-buzzer {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(1.12);
+        }
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 99px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased pb-10"
+  >
+    <div>
+      <!-- HEADER APP -->
+      <header
+        class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs"
+      >
+        <div
+          class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3"
+        >
+          <div class="flex items-center gap-3">
+            <a
+              href="5.0.html"
+              class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-sm transition-colors"
+              title="Kembali"
+            >
+              <i class="fa-solid fa-home"></i>
+            </a>
+            <div>
+              <div class="flex items-center gap-2">
+                <span
+                  class="text-[10px] font-extrabold bg-teal-100 text-teal-800 px-2 py-0.5 rounded uppercase tracking-wider"
+                >
+                  SUB 5.5
+                </span>
+              </div>
+              <h1
+                class="text-sm sm:text-base font-black text-slate-900 leading-tight mt-0.5"
+              >
+                Studi Kasus: Automatic Bottling &amp; Capping Line (Industri
+                F&amp;B)
+              </h1>
+            </div>
+          </div>
+          <div
+            class="hidden sm:flex items-center gap-2 text-xs font-semibold text-slate-500"
+          >
+            <i class="fa-solid fa-wine-bottle text-teal-600"></i>
+            <span>Industri Makanan &amp; Minuman / F&amp;B Automation</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- MAIN CONTENT -->
+      <main
+        class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6"
+      >
+        <!-- HERO BANNER RINGKAS -->
+        <section
+          class="bg-gradient-to-r from-teal-800 to-teal-700 text-white rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden"
+        >
+          <div
+            class="absolute -right-4 -bottom-6 opacity-15 pointer-events-none hidden sm:block select-none"
+          >
+            <i
+              class="fa-solid fa-bottle-droplet text-[140px] text-teal-100"
+            ></i>
+          </div>
+          <div class="relative z-10 space-y-1.5 max-w-3xl">
+            <div
+              class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
+            >
+              <i
+                class="fa-solid fa-triangle-exclamation text-amber-300 text-xs"
+              ></i>
+              <span>High-Speed Beverage Packaging Line</span>
+            </div>
+            <h2
+              class="text-lg sm:text-xl font-extrabold text-white leading-tight display-font"
+            >
+              Otomatisasi Pengisian &amp; Penutupan Botol Minuman Kemasan
+            </h2>
+            <p class="text-xs text-emerald-50/90 leading-relaxed">
+              Sistem mengatur pengisian cairan presisi menggunakan
+              <b>Potensio 10K (Set-point Target Volume)</b> dan
+              <b>Sensor Level Air Merah (A0)</b>. Saat volume cairan botol
+              mencapai target, Relay mematikan pompa pengisi, Servo Motor
+              memasang tutup botol (capping 90°), dan Buzzer berbunyi tanda
+              botol selesai dikemas.
+            </p>
+          </div>
+        </section>
+
+        <!-- GRID DUA KOLOM -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <!-- KOLOM KIRI (7/12): STATUS & SVG VISUALIZER -->
+          <div class="lg:col-span-7 flex flex-col space-y-4">
+            <!-- STATUS CARDS GRID -->
+            <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
+              <!-- Status Proses -->
+              <div
+                id="cardStatus"
+                class="bg-white border border-slate-200 shadow-xs rounded-xl px-3 py-2.5 transition-all"
+              >
+                <div class="flex items-center justify-between mb-1">
+                  <p
+                    class="text-[9px] font-bold uppercase tracking-wider text-slate-400"
+                  >
+                    Status
+                  </p>
+                  <i
+                    id="statusIcon"
+                    class="fa-solid fa-spinner text-emerald-500 text-xs animate-spin"
+                  ></i>
+                </div>
+                <p
+                  id="statusText"
+                  class="font-black text-xs sm:text-sm text-emerald-600 display-font truncate"
+                >
+                  FILLING
+                </p>
+              </div>
+
+              <!-- Target Volume (Potensio A1) -->
+              <div
+                class="bg-white border border-slate-200 shadow-xs rounded-xl px-3 py-2.5"
+              >
+                <div class="flex items-center justify-between mb-1">
+                  <p
+                    class="text-[9px] font-bold uppercase tracking-wider text-slate-400"
+                  >
+                    Target (A1)
+                  </p>
+                  <i class="fa-solid fa-sliders text-slate-400 text-xs"></i>
+                </div>
+                <p
+                  id="targetVolText"
+                  class="font-bold text-xs sm:text-sm text-slate-800 font-mono-code"
+                >
+                  300 mL
+                </p>
+              </div>
+
+              <!-- Real Volume (Sensor A0) -->
+              <div
+                class="bg-white border border-slate-200 shadow-xs rounded-xl px-3 py-2.5"
+              >
+                <div class="flex items-center justify-between mb-1">
+                  <p
+                    class="text-[9px] font-bold uppercase tracking-wider text-slate-400"
+                  >
+                    Actual (A0)
+                  </p>
+                  <i class="fa-solid fa-fill-drip text-slate-400 text-xs"></i>
+                </div>
+                <p
+                  id="actualVolText"
+                  class="font-bold text-xs sm:text-sm text-emerald-600 font-mono-code"
+                >
+                  150 mL
+                </p>
+              </div>
+
+              <!-- Capper Servo (D3) -->
+              <div
+                class="bg-white border border-slate-200 shadow-xs rounded-xl px-3 py-2.5"
+              >
+                <div class="flex items-center justify-between mb-1">
+                  <p
+                    class="text-[9px] font-bold uppercase tracking-wider text-slate-400"
+                  >
+                    Servo (D3)
+                  </p>
+                  <i class="fa-solid fa-robot text-slate-400 text-xs"></i>
+                </div>
+                <p
+                  id="servoStatusText"
+                  class="font-bold text-xs sm:text-sm text-slate-700 font-mono-code"
+                >
+                  0° (UP)
+                </p>
+              </div>
+
+              <!-- Counter Botol -->
+              <div
+                class="bg-white border border-slate-200 shadow-xs rounded-xl px-3 py-2.5 col-span-2 sm:col-span-1"
+              >
+                <div class="flex items-center justify-between mb-1">
+                  <p
+                    class="text-[9px] font-bold uppercase tracking-wider text-slate-400"
+                  >
+                    Batch Total
+                  </p>
+                  <i
+                    class="fa-solid fa-boxes-packing text-emerald-600 text-xs"
+                  ></i>
+                </div>
+                <p
+                  id="bottleCountText"
+                  class="font-extrabold text-xs sm:text-sm text-slate-900 font-mono-code"
+                >
+                  0 Botol
+                </p>
+              </div>
+            </div>
+
+            <!-- GRAPHICAL ILLUSTRATION (SVG CANVAS) -->
+            <div
+              class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs flex-1 flex flex-col justify-between relative"
+            >
+              <div
+                class="bg-slate-100 px-4 py-2 border-b border-slate-200 flex items-center justify-between"
+              >
+                <div class="flex items-center gap-2">
+                  <span
+                    class="w-2.5 h-2.5 rounded-full bg-red-400 inline-block"
+                  ></span>
+                  <span
+                    class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"
+                  ></span>
+                  <span
+                    class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"
+                  ></span>
+                  <span
+                    class="text-xs font-bold text-slate-600 ml-2 font-mono-code"
+                    >BOTTLING_CAPPING_LINE.SVG</span
+                  >
+                </div>
+                <span
+                  class="text-[11px] font-bold text-slate-500 uppercase tracking-wider"
+                  >Live Visualizer</span
+                >
+              </div>
+
+              <svg
+                id="scene"
+                viewBox="0 0 760 400"
+                class="w-full h-auto block flex-1"
+              >
+                <defs>
+                  <!-- Gradient Minuman Segar / Liquid Fill -->
+                  <linearGradient
+                    id="juiceGrad"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="100%"
+                  >
+                    <stop offset="0%" stop-color="#10b981" />
+                    <stop offset="100%" stop-color="#059669" />
+                  </linearGradient>
+
+                  <!-- Glass Bottle Shading -->
+                  <linearGradient
+                    id="glassGrad"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="0%"
+                  >
+                    <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6" />
+                    <stop
+                      offset="20%"
+                      stop-color="#ffffff"
+                      stop-opacity="0.2"
+                    />
+                    <stop
+                      offset="80%"
+                      stop-color="#ffffff"
+                      stop-opacity="0.1"
+                    />
+                    <stop
+                      offset="100%"
+                      stop-color="#cbd5e1"
+                      stop-opacity="0.5"
+                    />
+                  </linearGradient>
+                </defs>
+
+                <!-- Latar Belakang Canvas Solid (Tanpa Grid) -->
+                <rect x="0" y="0" width="760" height="400" fill="#f8fafc" />
+
+                <!-- Rangka Atas Bangunan Pabrik -->
+                <rect x="0" y="0" width="760" height="16" fill="#334155" />
+
+                <!-- PIPANISASI PENGISI MINUMAN (INLET PUMP D5) -->
+                <path
+                  d="M 60 70 L 320 70 L 320 120"
+                  fill="none"
+                  stroke="#64748b"
+                  stroke-width="12"
+                  stroke-linejoin="round"
+                />
+                <!-- Kucuran Liquid dari Nozzle -->
+                <line
+                  id="fluidStream"
+                  x1="320"
+                  y1="120"
+                  x2="320"
+                  y2="300"
+                  stroke="#10b981"
+                  stroke-width="6"
+                  class="fluid-stream"
+                  opacity="1"
+                />
+
+                <!-- SENSOR LEVEL AIR ANALOG MERAH (MENYELAM KE BOTOL - A0) -->
+                <g id="redSensorGroup">
+                  <rect
+                    x="345"
+                    y="110"
+                    width="12"
+                    height="170"
+                    rx="2"
+                    fill="#ef4444"
+                    stroke="#b91c1c"
+                    stroke-width="1"
+                  />
+                  <!-- Jalur Tembaga Resistive -->
+                  <line
+                    x1="348"
+                    y1="135"
+                    x2="348"
+                    y2="275"
+                    stroke="#fbbf24"
+                    stroke-width="1"
+                  />
+                  <line
+                    x1="351"
+                    y1="135"
+                    x2="351"
+                    y2="275"
+                    stroke="#fbbf24"
+                    stroke-width="1"
+                  />
+                  <!-- Header Pin PCB -->
+                  <rect
+                    x="343"
+                    y="102"
+                    width="16"
+                    height="10"
+                    rx="2"
+                    fill="#1e293b"
+                  />
+                  <text
+                    x="425"
+                    y="125"
+                    font-family="Space Grotesk, sans-serif"
+                    font-weight="700"
+                    font-size="10"
+                    fill="#ef4444"
+                  >
+                    RED LEVEL SENSOR (A0)
+                  </text>
+                  <path
+                    d="M 418 122 L 360 122"
+                    stroke="#ef4444"
+                    stroke-width="1"
+                    stroke-dasharray="3 2"
+                  />
+                </g>
+
+                <!-- BOTOL MINUMAN KACA DI ATAS CONVEYOR -->
+                <g id="bottleGroup">
+                  <!-- Cairan Dalam Botol (Dynamic Fill) -->
+                  <rect
+                    id="bottleLiquid"
+                    x="284"
+                    y="250"
+                    width="72"
+                    height="60"
+                    rx="4"
+                    fill="url(#juiceGrad)"
+                  />
+                  <!-- Outline Kaca Botol -->
+                  <path
+                    d="M 308 170 L 332 170 L 332 200 L 360 220 L 360 310 Q 360 315 355 315 L 285 315 Q 280 315 280 310 L 280 220 L 308 200 Z"
+                    fill="url(#glassGrad)"
+                    stroke="#475569"
+                    stroke-width="3"
+                  />
+                  <!-- Label Botol Kemasan -->
+                  <rect
+                    x="282"
+                    y="240"
+                    width="76"
+                    height="35"
+                    rx="3"
+                    fill="#ffffff"
+                    stroke="#cbd5e1"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="320"
+                    y="255"
+                    font-family="Space Grotesk, sans-serif"
+                    font-weight="700"
+                    font-size="8"
+                    fill="#047857"
+                    text-anchor="middle"
+                  >
+                    FRESH JUICE
+                  </text>
+                  <text
+                    id="svgLabelVol"
+                    x="320"
+                    y="266"
+                    font-family="IBM Plex Mono, monospace"
+                    font-weight="600"
+                    font-size="8"
+                    fill="#64748b"
+                    text-anchor="middle"
+                  >
+                    300 mL
+                  </text>
+                </g>
+
+                <!-- MEKANISME SERVO CAPPER (PIN D3) -->
+                <g id="servoCapperGroup">
+                  <!-- Motor Servo Box -->
+                  <rect
+                    x="470"
+                    y="50"
+                    width="55"
+                    height="45"
+                    rx="4"
+                    fill="#1e293b"
+                    stroke="#475569"
+                    stroke-width="2"
+                  />
+                  <text
+                    x="497"
+                    y="40"
+                    font-family="Space Grotesk, sans-serif"
+                    font-weight="700"
+                    font-size="10"
+                    fill="#0f172a"
+                    text-anchor="middle"
+                  >
+                    CAPPER SERVO (D3)
+                  </text>
+
+                  <!-- Lengan Capper Bergerak Turun/Naik -->
+                  <g
+                    id="capperArm"
+                    class="capper-arm"
+                    transform="translate(0, 0)"
+                  >
+                    <path
+                      d="M 470 70 L 320 70 L 320 135"
+                      fill="none"
+                      stroke="#0284c7"
+                      stroke-width="6"
+                      stroke-linecap="round"
+                    />
+                    <!-- Kepala Penutup (Capper Head & Tutup Botol Merah) -->
+                    <rect
+                      x="306"
+                      y="135"
+                      width="28"
+                      height="16"
+                      rx="3"
+                      fill="#e11d48"
+                      stroke="#881337"
+                      stroke-width="1.5"
+                    />
+                  </g>
+                </g>
+
+                <!-- POTENSIOMETER SET-POINT VOLUME (PIN A1) -->
+                <g id="potentiometerGroup">
+                  <circle
+                    cx="130"
+                    cy="180"
+                    r="28"
+                    fill="#e2e8f0"
+                    stroke="#475569"
+                    stroke-width="3"
+                  />
+                  <!-- Dial Knob Rotary -->
+                  <line
+                    id="potKnobLine"
+                    x1="130"
+                    y1="180"
+                    x2="130"
+                    y2="157"
+                    stroke="#0f172a"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                  />
+                  <text
+                    x="130"
+                    y="222"
+                    font-family="Space Grotesk, sans-serif"
+                    font-weight="700"
+                    font-size="10"
+                    fill="#0f172a"
+                    text-anchor="middle"
+                  >
+                    SET-POINT POT (A1)
+                  </text>
+                  <text
+                    id="potSvgVal"
+                    x="130"
+                    y="235"
+                    font-family="IBM Plex Mono, monospace"
+                    font-weight="600"
+                    font-size="9"
+                    fill="#0284c7"
+                    text-anchor="middle"
+                  >
+                    TARGET: 300 mL
+                  </text>
+                </g>
+
+                <!-- CONVEYOR BELT LINI PRODUKSI -->
+                <g id="conveyorGroup">
+                  <rect
+                    x="60"
+                    y="315"
+                    width="640"
+                    height="24"
+                    rx="4"
+                    fill="#334155"
+                  />
+                  <!-- Roda Rol Conveyor -->
+                  <line
+                    x1="70"
+                    y1="327"
+                    x2="690"
+                    y2="327"
+                    stroke="#94a3b8"
+                    stroke-width="8"
+                    class="conveyor-pattern"
+                  />
+                  <!-- Penyangga Kaki -->
+                  <rect x="120" y="339" width="16" height="45" fill="#475569" />
+                  <rect x="370" y="339" width="16" height="45" fill="#475569" />
+                  <rect x="620" y="339" width="16" height="45" fill="#475569" />
+                </g>
+
+                <!-- BUZZER BATCH COMPLETE (PIN D6) -->
+                <g id="buzzerGroup">
+                  <circle
+                    cx="660"
+                    cy="110"
+                    r="18"
+                    fill="#ffffff"
+                    stroke="#334155"
+                    stroke-width="2.5"
+                  />
+                  <path
+                    d="M 651 103 L 669 103 L 669 117 L 651 117 Z"
+                    fill="#10b981"
+                  />
+                  <text
+                    x="660"
+                    y="82"
+                    font-family="Space Grotesk, sans-serif"
+                    font-weight="700"
+                    font-size="10"
+                    fill="#0f172a"
+                    text-anchor="middle"
+                  >
+                    BUZZER (D6)
+                  </text>
+                </g>
+              </svg>
+            </div>
+          </div>
+
+          <!-- KOLOM KANAN (5/12): KONEKSI SERIAL & MONITOR LOG -->
+          <div class="lg:col-span-5 flex flex-col space-y-4">
+            <!-- PANEL 1: STATUS KONEKSI ARDUINO -->
+            <div
+              class="bg-white border border-slate-200 shadow-xs rounded-2xl p-4 sm:p-5 space-y-3"
+            >
+              <div class="flex items-center justify-between">
+                <h3
+                  class="display-font text-sm font-bold text-slate-900 flex items-center gap-2"
+                >
+                  <i class="fa-solid fa-plug text-emerald-600"></i>
+                  <span>Koneksi Device</span>
+                </h3>
+                <span
+                  class="text-[10px] font-extrabold bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono-code"
+                  >WEB SERIAL API</span
+                >
+              </div>
+
+              <!-- Status Terhubung / Belum -->
+              <div
+                class="flex items-center justify-between p-3 bg-slate-50 border border-slate-200/80 rounded-xl"
+              >
+                <div class="flex items-center gap-2.5">
+                  <span
+                    id="connDot"
+                    class="w-3 h-3 rounded-full bg-slate-400 shrink-0"
+                  ></span>
+                  <div>
+                    <p
+                      class="text-[10px] uppercase font-bold text-slate-400 leading-none"
+                    >
+                      Status Hardware
+                    </p>
+                    <p
+                      id="connLabel"
+                      class="text-xs font-bold text-slate-700 mt-0.5"
+                    >
+                      Belum terhubung
+                    </p>
+                  </div>
+                </div>
+                <i class="fa-brands fa-usb text-slate-400 text-lg"></i>
+              </div>
+
+              <!-- Tombol Hubungkan -->
+              <button
+                id="connectBtn"
+                class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 active:scale-[0.99] text-white font-bold text-xs rounded-xl transition-all shadow-xs flex items-center justify-center gap-2"
+              >
+                <i class="fa-solid fa-plug text-xs"></i>
+                <span>Hubungkan Arduino</span>
+              </button>
+            </div>
+
+            <!-- PANEL 2: SERIAL MONITOR LOG -->
+            <div
+              class="bg-white border border-slate-200 shadow-xs rounded-2xl p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3"
+            >
+              <div class="flex items-center justify-between">
+                <h3
+                  class="display-font text-sm font-bold text-slate-900 flex items-center gap-2"
+                >
+                  <i class="fa-solid fa-terminal text-emerald-600"></i>
+                  <span>Serial Telemetry Log</span>
+                </h3>
+                <span
+                  class="text-[10px] font-mono-code bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200"
+                  >9600 BAUD</span
+                >
+              </div>
+
+              <!-- Terminal Output -->
+              <div
+                id="log"
+                class="flex-1 min-h-[16rem] overflow-y-auto text-xs font-mono-code bg-slate-50 border border-slate-200 text-slate-800 p-3 rounded-xl space-y-1.5 leading-relaxed"
+              >
+                <div class="text-slate-400 font-medium">
+                  // Menunggu stream data telemetry dari sistem pengisi botol...
+                </div>
+              </div>
+
+              <p class="text-[11px] text-slate-500 flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-info text-emerald-600"></i>
+                <span
+                  >Format string:
+                  <code
+                    class="bg-slate-100 text-slate-800 font-bold px-1 py-0.5 rounded border border-slate-200"
+                    >LEVEL:150|TARGET:300|PUMP:1|SERVO:0|COUNT:5|STATUS:FILLING</code
+                  ></span
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- BARIS BAWAH 1: PANDUAN PENGGUNAAN -->
+        <div class="bg-white border border-slate-200 shadow-xs rounded-2xl p-5">
+          <h3
+            class="display-font text-sm font-bold text-slate-900 mb-3 flex items-center gap-2"
+          >
+            <i class="fa-solid fa-list-check text-emerald-600"></i>
+            <span
+              >Skenario Operasi Pengisian &amp; Penutupan Botol Otomatis</span
+            >
+          </h3>
+          <ol
+            class="list-decimal list-inside text-xs text-slate-600 space-y-2 leading-relaxed font-medium"
+          >
+            <li class="pl-1">
+              Rangkai modul sesuai pinout: <b>Sensor Level Air Merah</b> ke Pin
+              <b>A0</b>, <b>Potensio 10K</b> ke Pin <b>A1</b>,
+              <b>Servo Motor</b> ke Pin <b>D3</b>, <b>Relay Pompa</b> ke Pin
+              <b>D5</b>, dan <b>Buzzer</b> ke Pin <b>D6</b>.
+            </li>
+            <li class="pl-1">
+              Putar <b>Potensio 10K</b> untuk menentukan batas target volume isi
+              botol (misal: 300 mL).
+            </li>
+            <li class="pl-1">
+              Saat botol kosong terdeteksi di stasiun,
+              <b>Relay menyalakan Pompa Pengisi (ON)</b> untuk mengucurkan
+              minuman ke dalam botol.
+            </li>
+            <li class="pl-1">
+              Sensor level air analog membaca pertambahan ketinggian cairan
+              secara real-time.
+            </li>
+            <li class="pl-1">
+              Seketika level cairan menyamai/melebihi target volume potensio,
+              <b>Relay mematikan pompa pengisi</b> secara presisi.
+            </li>
+            <li class="pl-1">
+              <b>Servo Motor Capper</b> berputar 90° bergerak turun
+              menekan/memasang tutup botol, lalu kembali ke posisi awal (0°).
+            </li>
+            <li class="pl-1">
+              <b>Buzzer berbunyi singkat</b> sebagai sinyal bahwa 1 botol
+              berhasil dikemas dan counter jumlah total botol bertambah (+1).
+            </li>
+          </ol>
+        </div>
+
+        <!-- BARIS BAWAH 2: SOURCE CODE ARDUINO IDE -->
+        <div
+          class="bg-white border border-slate-200 shadow-xs rounded-2xl p-5 space-y-4"
+        >
+          <div
+            id="toggleCodeHeader"
+            class="flex items-center justify-between cursor-pointer select-none group"
+          >
+            <div class="flex items-center gap-2.5">
+              <div
+                class="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-100 text-emerald-700 flex items-center justify-center text-xs group-hover:bg-emerald-100 transition-colors"
+              >
+                <i class="fa-solid fa-code"></i>
+              </div>
+              <div>
+                <h3 class="display-font text-sm font-bold text-slate-900">
+                  Kode Program Arduino IDE (Automatic Bottling &amp; Capping)
+                </h3>
+                <p class="text-[11px] text-slate-500 font-medium">
+                  Klik untuk membuka atau menyalin kode program C++ Arduino
+                  lengkap.
+                </p>
+              </div>
+            </div>
+            <button
+              id="toggleCodeBtn"
+              type="button"
+              class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-slate-700 font-bold text-xs transition-all border border-slate-200"
+            >
+              <span id="toggleText">Tampilkan Kode</span>
+              <i
+                id="toggleIcon"
+                class="fa-solid fa-chevron-down text-xs transition-transform duration-300"
+              ></i>
+            </button>
+          </div>
+
+          <!-- KONTEN KODE CERAH (Light Theme) -->
+          <div
+            id="arduinoCodeSection"
+            class="hidden space-y-0 border border-slate-200 rounded-xl overflow-hidden shadow-2xs"
+          >
+            <div
+              class="flex items-center justify-between bg-slate-100 text-slate-700 px-4 py-2.5 text-xs font-mono-code border-b border-slate-200"
+            >
+              <span class="flex items-center gap-2 font-bold text-slate-700">
+                <i class="fa-solid fa-file-code text-emerald-600"></i>
+                automatic_bottling_capper.ino
+              </span>
+              <button
+                id="copyCodeBtn"
+                class="hover:bg-slate-200 bg-white text-slate-700 px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors flex items-center gap-1.5 border border-slate-300 shadow-2xs"
+              >
+                <i class="fa-regular fa-copy"></i>
+                <span id="copyBtnText">Salin Kode</span>
+              </button>
+            </div>
+
+            <pre
+              class="bg-slate-50 text-slate-800 p-4 text-xs font-mono-code overflow-x-auto leading-relaxed select-all"
+            ><code id="codeText">// =========================================================================
+// PROGRAM AUTOMATIC BOTTLING & CAPPING LINE (INDUSTRI F&B)
+// MENGGUNAKAN SENSOR LEVEL AIR MERAH (A0) & POTENSIOMETER SET-POINT (A1)
+// JURUSAN TEKNIK KIMIA & OTOMASI INDUSTRI - SMK SMTI YOGYAKARTA
+// -------------------------------------------------------------------------
+// Pin Analog A0 : Sensor Level Air Merah (Actual Liquid Level)
+// Pin Analog A1 : Potensio 10K (Set-point Target Volume Botol)
+// Pin Digital 3 : Servo Motor (Katup Penutup / Capper Mechanism)
+// Pin Digital 5 : Relay Pompa Pengisi Minuman (HIGH = ON, LOW = OFF)
+// Pin Digital 6 : Buzzer Signal Batch Complete
+// Baud Rate     : 9600 bps
+// =========================================================================
+
+#include &lt;Servo.h&gt;
+
+#define LEVEL_SENSOR_PIN A0
+#define POT_TARGET_PIN A1
+#define SERVO_PIN 3
+#define PUMP_RELAY_PIN 5
+#define BUZZER_PIN 6
+
+Servo capperServo;
+
+// Kalibrasi Batas Pembacaan Sensor & Potensio (dalam mL)
+const int MIN_VOL = 50;   // 50 mL
+const int MAX_VOL = 500;  // 500 mL
+
+// Sensor Level Analog ADC Mapping Max (~600)
+const int SENSOR_ADC_MAX = 600;
+
+int bottleCount = 0;
+enum ProcessState { STATE_FILLING, STATE_CAPPING, STATE_COMPLETED };
+ProcessState currentState = STATE_FILLING;
+
+unsigned long stateTimer = 0;
+
+void setup() {
+  Serial.begin(9600);
+
+  pinMode(LEVEL_SENSOR_PIN, INPUT);
+  pinMode(POT_TARGET_PIN, INPUT);
+  pinMode(PUMP_RELAY_PIN, OUTPUT);
+  pinMode(BUZZER_PIN, OUTPUT);
+
+  capperServo.attach(SERVO_PIN);
+  capperServo.write(0); // Posisi Servo Awal (Up / Uncapped)
+
+  digitalWrite(PUMP_RELAY_PIN, LOW);
+  digitalWrite(BUZZER_PIN, LOW);
+}
+
+void loop() {
+  // 1. Baca Potensio Set-point Volume Target (50mL - 500mL)
+  int potRaw = analogRead(POT_TARGET_PIN);
+  int targetVolume = map(potRaw, 0, 1023, MIN_VOL, MAX_VOL);
+
+  // 2. Baca Sensor Level Air Merah (Actual Liquid Level)
+  int levelRaw = analogRead(LEVEL_SENSOR_PIN);
+  int actualVolume = map(levelRaw, 0, SENSOR_ADC_MAX, 0, MAX_VOL);
+  actualVolume = constrain(actualVolume, 0, MAX_VOL);
+
+  bool pumpState = false;
+  int servoPos = 0;
+  bool buzzerState = false;
+  String statusStr = "FILLING";
+
+  // 3. FSM (Finite State Machine) Lini Otomasi Botol
+  switch (currentState) {
+    case STATE_FILLING:
+      statusStr = "FILLING";
+      pumpState = true;
+      servoPos = 0;
+      buzzerState = false;
+
+      // Jika Ketinggian Cairan Mencapai Target Volume
+      if (actualVolume &gt;= targetVolume) {
+        digitalWrite(PUMP_RELAY_PIN, LOW); // Matikan Pompa Presisi
+        currentState = STATE_CAPPING;
+        stateTimer = millis();
+      }
+      break;
+
+    case STATE_CAPPING:
+      statusStr = "CAPPING";
+      pumpState = false;
+      servoPos = 90; // Servo Berputar 90 Derajat Memasang Tutup
+      buzzerState = false;
+
+      // Proses Capping Berlangsung selama 1.5 Detik
+      if (millis() - stateTimer &gt; 1500) {
+        currentState = STATE_COMPLETED;
+        bottleCount++; // Tambah Counter Botol
+        stateTimer = millis();
+      }
+      break;
+
+    case STATE_COMPLETED:
+      statusStr = "DONE";
+      pumpState = false;
+      servoPos = 0; // Servo Kembali Naik
+      buzzerState = true; // Sinyal Buzzer Selesai
+
+      // Tahan status selesai & bunyi buzzer selama 1 Detik, lalu reset batch baru
+      if (millis() - stateTimer &gt; 1000) {
+        currentState = STATE_FILLING;
+      }
+      break;
+  }
+
+  // Eksekusi Hardware
+  digitalWrite(PUMP_RELAY_PIN, pumpState ? HIGH : LOW);
+  capperServo.write(servoPos);
+  digitalWrite(BUZZER_PIN, buzzerState ? HIGH : LOW);
+
+  // 4. Kirim Telemetry Terformat ke Serial
+  Serial.print("LEVEL:");
+  Serial.print(actualVolume);
+  Serial.print("|TARGET:");
+  Serial.print(targetVolume);
+  Serial.print("|PUMP:");
+  Serial.print(pumpState ? 1 : 0);
+  Serial.print("|SERVO:");
+  Serial.print(servoPos);
+  Serial.print("|COUNT:");
+  Serial.print(bottleCount);
+  Serial.print("|STATUS:");
+  Serial.println(statusStr);
+
+  delay(300);
+}</code></pre>
+          </div>
+        </div>
+
+        <!-- NAVIGATION FOOTER -->
+        <nav class="flex items-center justify-between pt-2">
+          <a
+            href="index.html"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs transition-colors shadow-2xs"
+          >
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Kembali</span>
+          </a>
+        </nav>
+      </main>
+    </div>
+
+    <footer
+      class="max-w-6xl mx-auto w-full px-4 pt-4 text-center text-xs text-slate-400 font-medium"
+    >
+      <p>© MIKRO EDU - SMK SMTI Yogyakarta | Teknik Kimia Industri</p>
+    </footer>
+
+    <!-- SCRIPT LOGIC SIMULASI & SERIAL -->
+    <script>
+      // DOM Elements
+      const connectBtn = document.getElementById("connectBtn");
+      const connDot = document.getElementById("connDot");
+      const connLabel = document.getElementById("connLabel");
+      const statusText = document.getElementById("statusText");
+      const cardStatus = document.getElementById("cardStatus");
+      const statusIcon = document.getElementById("statusIcon");
+      const targetVolText = document.getElementById("targetVolText");
+      const actualVolText = document.getElementById("actualVolText");
+      const servoStatusText = document.getElementById("servoStatusText");
+      const bottleCountText = document.getElementById("bottleCountText");
+      const logEl = document.getElementById("log");
+
+      // SVG Animasi Elements
+      const bottleLiquid = document.getElementById("bottleLiquid");
+      const fluidStream = document.getElementById("fluidStream");
+      const capperArm = document.getElementById("capperArm");
+      const potKnobLine = document.getElementById("potKnobLine");
+      const potSvgVal = document.getElementById("potSvgVal");
+      const svgLabelVol = document.getElementById("svgLabelVol");
+      const buzzerGroup = document.getElementById("buzzerGroup");
+
+      // Collapsible Code Elements
+      const toggleCodeHeader = document.getElementById("toggleCodeHeader");
+      const arduinoCodeSection = document.getElementById("arduinoCodeSection");
+      const toggleText = document.getElementById("toggleText");
+      const toggleIcon = document.getElementById("toggleIcon");
+      const copyCodeBtn = document.getElementById("copyCodeBtn");
+      const copyBtnText = document.getElementById("copyBtnText");
+      const codeText = document.getElementById("codeText");
+
+      let port,
+        reader,
+        keepReading = true;
+
+      // Toggle Tampilkan / Sembunyikan Kode Arduino
+      toggleCodeHeader.addEventListener("click", () => {
+        const isHidden = arduinoCodeSection.classList.contains("hidden");
+        if (isHidden) {
+          arduinoCodeSection.classList.remove("hidden");
+          toggleText.textContent = "Sembunyikan Kode";
+          toggleIcon.style.transform = "rotate(180deg)";
+        } else {
+          arduinoCodeSection.classList.add("hidden");
+          toggleText.textContent = "Tampilkan Kode";
+          toggleIcon.style.transform = "rotate(0deg)";
+        }
+      });
+
+      // Copy Code Functionality
+      copyCodeBtn.addEventListener("click", () => {
+        navigator.clipboard.writeText(codeText.textContent.trim()).then(() => {
+          copyBtnText.textContent = "Tersalin!";
+          setTimeout(() => {
+            copyBtnText.textContent = "Salin Kode";
+          }, 2000);
+        });
+      });
+
+      function addLog(line) {
+        const p = document.createElement("div");
+        const t = new Date().toLocaleTimeString();
+        p.innerHTML = `<span class="text-slate-400">[${t}]</span> ${line}`;
+        logEl.prepend(p);
+        while (logEl.childElementCount > 50) logEl.removeChild(logEl.lastChild);
+      }
+
+      // Update Visuals SVG & UI berdasarkan Data Telemetry
+      function updateVisuals(level, target, pump, servo, count, status) {
+        // 1. Text Card Output
+        targetVolText.textContent = `${target} mL`;
+        actualVolText.textContent = `${level} mL`;
+        bottleCountText.textContent = `${count} Botol`;
+        svgLabelVol.textContent = `${target} mL`;
+
+        // 2. Potensio Knob Rotation Visualization
+        const angle = -120 + ((target - 50) / 450) * 240;
+        const rad = (angle - 90) * (Math.PI / 180);
+        const x2 = 130 + 23 * Math.cos(rad);
+        const y2 = 180 + 23 * Math.sin(rad);
+        potKnobLine.setAttribute("x2", x2);
+        potKnobLine.setAttribute("y2", y2);
+        potSvgVal.textContent = `TARGET: ${target} mL`;
+
+        // 3. Liquid Level Filling Animation inside Bottle
+        const maxH = 90;
+        const ratio = Math.min(1.0, level / 500);
+        const curH = Math.max(4, ratio * maxH);
+        const curY = 310 - curH;
+
+        bottleLiquid.setAttribute("height", curH);
+        bottleLiquid.setAttribute("y", curY);
+
+        // 4. Pump Stream Line
+        if (pump === 1) {
+          fluidStream.setAttribute("opacity", "1");
+        } else {
+          fluidStream.setAttribute("opacity", "0");
+        }
+
+        // 5. Capper Servo Arm Position
+        if (servo >= 45) {
+          capperArm.style.transform = "translateY(35px)";
+          servoStatusText.textContent = "90° (DOWN)";
+          servoStatusText.className =
+            "font-bold text-xs sm:text-sm text-sky-600 font-mono-code";
+        } else {
+          capperArm.style.transform = "translateY(0px)";
+          servoStatusText.textContent = "0° (UP)";
+          servoStatusText.className =
+            "font-bold text-xs sm:text-sm text-slate-700 font-mono-code";
+        }
+
+        // 6. Status System & Buzzer
+        if (status === "CAPPING") {
+          statusText.textContent = "CAPPING";
+          statusText.className =
+            "font-black text-xs sm:text-sm text-sky-600 display-font truncate";
+          statusIcon.className = "fa-solid fa-robot text-sky-500 text-xs";
+          buzzerGroup.classList.remove("buzzer-active");
+        } else if (status === "DONE") {
+          statusText.textContent = "BATCH DONE";
+          statusText.className =
+            "font-black text-xs sm:text-sm text-emerald-600 display-font truncate";
+          statusIcon.className =
+            "fa-solid fa-circle-check text-emerald-500 text-xs";
+          buzzerGroup.classList.add("buzzer-active");
+        } else {
+          statusText.textContent = "FILLING";
+          statusText.className =
+            "font-black text-xs sm:text-sm text-emerald-600 display-font truncate";
+          statusIcon.className =
+            "fa-solid fa-spinner text-emerald-500 text-xs animate-spin";
+          buzzerGroup.classList.remove("buzzer-active");
+        }
+      }
+
+      function parseTelemetry(line) {
+        let level = 150,
+          target = 300,
+          pump = 1,
+          servo = 0,
+          count = 0,
+          status = "FILLING";
+
+        if (line.includes("|")) {
+          const parts = line.split("|");
+          parts.forEach((p) => {
+            const [key, val] = p.split(":");
+            if (key && val !== undefined) {
+              const k = key.trim().toUpperCase();
+              const v = val.trim().toUpperCase();
+              if (k === "LEVEL") level = parseInt(v) || 0;
+              if (k === "TARGET") target = parseInt(v) || 300;
+              if (k === "PUMP") pump = v === "1" || v === "ON" ? 1 : 0;
+              if (k === "SERVO") servo = parseInt(v) || 0;
+              if (k === "COUNT") count = parseInt(v) || 0;
+              if (k === "STATUS") status = v;
+            }
+          });
+        }
+
+        updateVisuals(level, target, pump, servo, count, status);
+      }
+
+      function handleLine(line) {
+        line = line.trim();
+        if (!line) return;
+        addLog(line);
+        parseTelemetry(line);
+      }
+
+      async function connectSerial() {
+        if (!("serial" in navigator)) {
+          alert(
+            "Browser Anda tidak mendukung Web Serial API. Gunakan Chrome atau Edge.",
+          );
+          return;
+        }
+        try {
+          port = await navigator.serial.requestPort();
+          await port.open({ baudRate: 9600 });
+
+          connDot.className = "w-3 h-3 rounded-full bg-emerald-500 shrink-0";
+          connLabel.textContent = "Terhubung via USB";
+          connectBtn.innerHTML = `<i class="fa-solid fa-plug-circle-xmark text-xs"></i> <span>Putuskan Koneksi</span>`;
+          connectBtn.className =
+            "w-full py-2.5 bg-rose-600 hover:bg-rose-700 active:scale-[0.99] text-white font-bold text-xs rounded-xl transition-all shadow-xs flex items-center justify-center gap-2";
+
+          addLog(
+            "<span class='text-emerald-700 font-bold'>[SYSTEM] Terhubung ke Arduino Serial Port.</span>",
+          );
+
+          const decoder = new TextDecoderStream();
+          port.readable.pipeTo(decoder.writable);
+          reader = decoder.readable.getReader();
+
+          keepReading = true;
+          readLoop();
+        } catch (err) {
+          addLog(
+            `<span class='text-rose-600 font-bold'>[ERROR] ${err.message}</span>`,
+          );
+        }
+      }
+
+      async function readLoop() {
+        let buffer = "";
+        try {
+          while (keepReading) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            if (value) {
+              buffer += value;
+              let idx;
+              while ((idx = buffer.indexOf("\n")) >= 0) {
+                const line = buffer.slice(0, idx);
+                buffer = buffer.slice(idx + 1);
+                handleLine(line);
+              }
+            }
+          }
+        } catch (err) {
+          addLog(
+            `<span class='text-rose-600 font-bold'>[TERPUTUS] ${err.message}</span>`,
+          );
+        } finally {
+          reader?.releaseLock();
+        }
+      }
+
+      async function disconnectSerial() {
+        keepReading = false;
+        try {
+          await reader?.cancel();
+        } catch (e) {}
+        try {
+          await port?.close();
+        } catch (e) {}
+
+        connDot.className = "w-3 h-3 rounded-full bg-slate-400 shrink-0";
+        connLabel.textContent = "Belum terhubung";
+        connectBtn.innerHTML = `<i class="fa-solid fa-plug text-xs"></i> <span>Hubungkan Arduino</span>`;
+        connectBtn.className =
+          "w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-bold text-xs rounded-xl transition-all shadow-xs flex items-center justify-center gap-2";
+
+        addLog(
+          "<span class='text-amber-700 font-bold'>[SYSTEM] Koneksi terputus.</span>",
+        );
+      }
+
+      connectBtn.addEventListener("click", () => {
+        if (connLabel.textContent.includes("Terhubung")) {
+          disconnectSerial();
+        } else {
+          connectSerial();
+        }
+      });
+
+      // Initial Default Visualization
+      updateVisuals(150, 300, 1, 0, 0, "FILLING");
+    </script>
+  </body>
+</html>
