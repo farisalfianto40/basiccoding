@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sub 3.3 - Kontrol Kecerahan LED dengan Potensiometer</title>
+    <title>Sub 3.3 - Pembacaan Sensor Analog LDR & Persentase</title>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -30,7 +30,7 @@
         border-radius: 9999px;
       }
 
-      /* Style Custom Range Input (Potensiometer Dial) */
+      /* Style Custom Range Input (LDR Light Slider) */
       input[type="range"]::-webkit-slider-thumb {
         appearance: none;
         width: 20px;
@@ -72,7 +72,7 @@
             <h1
               class="text-sm sm:text-base font-black text-slate-900 leading-tight mt-0.5"
             >
-              Potensiometer & Pengendalian Kecerahan PWM
+              Sensor Cahaya LDR Analog & Konversi Persentase
             </h1>
           </div>
         </div>
@@ -88,33 +88,33 @@
         <div
           class="absolute -right-4 -bottom-6 opacity-15 pointer-events-none hidden sm:block select-none"
         >
-          <i class="fa-solid fa-gauge text-[140px] text-teal-100"></i>
+          <i class="fa-solid fa-sun text-[140px] text-teal-100"></i>
         </div>
         <div class="relative z-10 space-y-1.5 max-w-3xl">
           <div
             class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
           >
             <i class="fa-solid fa-microchip text-teal-200 text-xs"></i>
-            <span>Praktik Analog Input to PWM Output</span>
+            <span>Praktik Analog Input & Mapping Data</span>
           </div>
           <h2
             class="text-lg sm:text-xl font-extrabold text-white leading-tight display-font"
           >
-            Kontrol Dimmer LED Manual dengan Potensiometer
+            Membaca Intensitas Cahaya LDR & Pemetaan Persentase
           </h2>
           <p
             class="text-xs sm:text-sm text-teal-50/90 leading-relaxed font-normal"
           >
-            Pelajari cara membaca sinyal analog dari Potensiometer menggunakan
+            Pelajari cara membaca sinyal analog dari Sensor LDR menggunakan
             <code class="font-mono text-teal-200 font-bold"
-              >analogRead(A0)</code
+              >analogRead(A2)</code
             >
-            (0–1023) lalu konversi menjadi sinyal PWM
+            (0–1023) lalu konversi nilainya menjadi skala persentase (0–100%)
+            menggunakan fungsi
             <code class="font-mono text-teal-200 font-bold"
-              >analogWrite(3, pwm)</code
+              >map(val, 0, 1023, 100, 0)</code
             >
-            (0–255) secara langsung menggunakan fungsi
-            <code class="font-mono text-teal-200 font-bold">map()</code>.
+            pada Serial Monitor.
           </p>
         </div>
       </section>
@@ -132,12 +132,12 @@
               class="text-sm sm:text-base font-extrabold text-slate-800 flex items-center gap-2"
             >
               <i class="fa-solid fa-diagram-project text-teal-600"></i> Skema
-              Rangkaian Potensiometer & LED
+              Rangkaian Sensor LDR & Arduino
             </h2>
             <span
               class="text-xs font-semibold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-100"
             >
-              PIN A0 (Input) & PIN ~3 (PWM)
+              PIN A2 (Analog Input)
             </span>
           </div>
 
@@ -145,18 +145,18 @@
             class="w-full bg-slate-50 p-3 sm:p-5 rounded-xl border border-slate-200 flex items-center justify-center min-h-[220px]"
           >
             <img
-              src="img/Modul03/3.3.1.png"
-              alt="Skema Rangkaian Potensiometer LED Arduino"
+              src="img/modul03/3.4.1.png"
+              alt="Skema Rangkaian LDR Arduino"
               class="max-h-[260px] w-auto max-w-full object-contain rounded-lg border border-slate-200 bg-white p-2 shadow-xs"
               onerror="
                 this.onerror = null;
-                this.src = 'modul03/img/3.3.1.png';
+                this.src = '3.4.1.png';
               "
             />
           </div>
         </div>
 
-        <!-- VISUAL HARDWARE SIMULATOR & POTENTIOMETER SLIDER -->
+        <!-- VISUAL HARDWARE SIMULATOR & LDR SLIDER -->
         <div
           class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between items-center text-center overflow-hidden"
         >
@@ -166,16 +166,15 @@
             <h2
               class="text-sm sm:text-base font-extrabold text-slate-800 flex items-center gap-2"
             >
-              <i class="fa-solid fa-microchip text-teal-600"></i> Visual
-              Hardware
+              <i class="fa-solid fa-sun text-teal-600"></i> Visual Sensor LDR
             </h2>
             <span
               class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200"
-              >A0 & PIN ~3</span
+              >PIN A2</span
             >
           </div>
 
-          <!-- CONTAINER SVG SIMULATOR HARDWARE -->
+          <!-- CONTAINER SVG / VISUAL SIMULATOR HARDWARE -->
           <div
             class="relative w-full h-full min-h-[200px] bg-slate-50 rounded-2xl p-3 flex flex-col items-center justify-center overflow-hidden border border-slate-200 shadow-xs my-auto"
           >
@@ -183,88 +182,26 @@
               class="absolute inset-0 opacity-30 bg-[radial-gradient(#94a3b8_1px,transparent_1px)] [background-size:16px_16px]"
             ></div>
 
-            <!-- SVG REALISTIC LED WITH PWM INTENSITY -->
-            <svg
-              viewBox="0 0 200 140"
-              class="w-40 h-40 z-10 filter drop-shadow-md"
+            <!-- VISUAL CAHAYA & SENSOR LDR -->
+            <div
+              id="ldrGlowBg"
+              class="relative z-10 w-28 h-28 rounded-full flex items-center justify-center transition-all duration-300 bg-amber-100 border-4 border-amber-300 shadow-lg"
             >
-              <defs>
-                <radialGradient id="ledGlowOff" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="#ef4444" stop-opacity="0" />
-                  <stop offset="100%" stop-color="#ef4444" stop-opacity="0" />
-                </radialGradient>
-                <radialGradient id="ledGlowOn" cx="50%" cy="50%" r="50%">
-                  <stop offset="0%" stop-color="#ff4d4d" stop-opacity="0.9" />
-                  <stop offset="50%" stop-color="#ef4444" stop-opacity="0.5" />
-                  <stop offset="100%" stop-color="#ef4444" stop-opacity="0" />
-                </radialGradient>
-                <linearGradient
-                  id="lensReflect"
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="100%"
-                >
-                  <stop offset="0%" stop-color="#ffffff" stop-opacity="0.6" />
-                  <stop offset="40%" stop-color="#ffffff" stop-opacity="0.1" />
-                  <stop offset="100%" stop-color="#000000" stop-opacity="0.3" />
-                </linearGradient>
-              </defs>
-
-              <rect x="91" y="70" width="4" height="60" fill="#64748b" rx="1" />
-              <rect
-                x="105"
-                y="70"
-                width="4"
-                height="60"
-                fill="#94a3b8"
-                rx="1"
-              />
-
-              <circle
-                id="svgGlow"
-                cx="100"
-                cy="45"
-                r="45"
-                fill="url(#ledGlowOn)"
-                style="opacity: 0.5"
-                class="transition-all duration-150"
-              />
-
-              <path
-                id="svgLedBody"
-                d="M 80 45 A 20 20 0 0 1 120 45 L 120 65 A 2 2 0 0 1 118 67 L 82 67 A 2 2 0 0 1 80 65 Z"
-                fill="#b91c1c"
-                class="transition-colors duration-150"
-              />
-
-              <path
-                d="M 90 55 L 95 45 L 98 55 Z"
-                fill="#f87171"
-                opacity="0.7"
-              />
-              <path
-                d="M 105 55 L 105 48 Z"
-                stroke="#f87171"
-                stroke-width="2"
-                opacity="0.7"
-              />
-
-              <path
-                d="M 80 45 A 20 20 0 0 1 120 45 L 120 65 A 2 2 0 0 1 118 67 L 82 67 A 2 2 0 0 1 80 65 Z"
-                fill="url(#lensReflect)"
-              />
-            </svg>
+              <i
+                id="ldrSunIcon"
+                class="fa-solid fa-sun text-5xl text-amber-500 transition-all duration-300"
+              ></i>
+            </div>
 
             <div
-              id="ledStatusBadge"
-              class="z-10 text-[11px] font-mono font-bold px-3 py-0.5 rounded-full bg-slate-200 text-slate-700 border border-slate-300 transition-all duration-150"
+              id="ldrStatusBadge"
+              class="z-10 text-[11px] font-mono font-bold px-3 py-1 mt-3 rounded-full bg-slate-200 text-slate-700 border border-slate-300 transition-all duration-150"
             >
-              ADC: 512 | PWM: 128 (50%)
+              ADC: 512 | Cahaya: 50%
             </div>
           </div>
 
-          <!-- SLIDER SIMULASI POTENSIOMETER -->
+          <!-- SLIDER SIMULASI INTENSITAS CAHAYA -->
           <div
             class="w-full mt-3 p-2.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5"
           >
@@ -272,28 +209,28 @@
               class="flex justify-between items-center text-xs font-bold text-slate-700"
             >
               <span class="flex items-center gap-1.5">
-                <i class="fa-solid fa-sliders text-teal-600"></i> Putar
-                Potensio:
+                <i class="fa-solid fa-sliders text-teal-600"></i> Nilai Analog
+                LDR:
               </span>
-              <span id="potValueText" class="font-mono text-teal-700"
-                >512 (2.50V)</span
+              <span id="ldrValueText" class="font-mono text-teal-700"
+                >512 (ADC)</span
               >
             </div>
             <input
               type="range"
-              id="potSlider"
+              id="ldrSlider"
               min="0"
               max="1023"
               value="512"
-              oninput="onPotentiometerChange(this.value)"
+              oninput="onLdrChange(this.value)"
               class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-teal-600"
             />
             <div
               class="flex justify-between text-[10px] text-slate-400 font-mono"
             >
-              <span>0 (0V)</span>
-              <span>512 (2.5V)</span>
-              <span>1023 (5V)</span>
+              <span>0 (100% Terang)</span>
+              <span>512 (50%)</span>
+              <span>1023 (0% Gelap)</span>
             </div>
           </div>
         </div>
@@ -312,18 +249,16 @@
           </div>
           <div class="space-y-1">
             <div class="font-bold text-slate-900">
-              Program Dimmer LED dengan Fungsi
-              <code class="font-mono bg-teal-100 text-teal-800 px-1 rounded"
-                >map()</code
-              >
+              Program Pembacaan LDR dengan Konversi Skala Persentase
             </div>
             <p class="text-slate-600 text-xs">
               Gunakan fungsi
               <code class="font-mono bg-teal-100 text-teal-800 px-1 rounded"
-                >map(val, 0, 1023, 0, 255)</code
+                >map(nilaiAnalog, 0, 1023, 100, 0)</code
               >
-              untuk mengubah pembacaan sinyal analog 10-bit dari Potensiometer
-              menjadi sinyal PWM 8-bit untuk LED.
+              untuk mengubah pembacaan analog LDR menjadi nilai persentase
+              kecerahan ($0\%$ saat nilai analog $1023$ dan $100\%$ saat nilai
+              analog $0$).
             </p>
           </div>
         </div>
@@ -379,7 +314,7 @@
               class="flex items-center gap-2 font-mono font-medium text-slate-700"
             >
               <i class="fa-solid fa-file-code text-teal-600"></i>
-              <span>sketch_potensio_led.ino</span>
+              <span>sketch_ldr_analog_map.ino</span>
             </div>
             <div class="flex items-center gap-3 text-slate-400 text-xs">
               <i
@@ -416,7 +351,7 @@
               <span
                 class="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse"
               ></span>
-              <span id="ideStatusText">Ready | Pin Input: A0, PWM: PIN ~3</span>
+              <span id="ideStatusText">Ready | Pin Input: A2</span>
             </span>
             <span class="font-mono text-[10px] text-teal-200"
               >Arduino Uno on COM3</span
@@ -435,7 +370,7 @@
             <div class="flex items-center gap-2">
               <i class="fa-solid fa-terminal text-teal-700 text-xs"></i>
               <span class="font-bold text-xs uppercase tracking-wide"
-                >Serial Monitor (Simulasi Analog Input)</span
+                >Serial Monitor (Simulasi Pembacaan LDR)</span
               >
               <span
                 class="text-[10px] font-mono bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold hidden sm:inline-block"
@@ -481,8 +416,8 @@
             id="serialMonitorOutput"
           >
             <div class="text-slate-400 italic">
-              [Serial Monitor Siap. Geser slider potensiometer lalu klik "Upload
-              & Run"]
+              [Serial Monitor Siap. Geser slider sensor LDR lalu klik "Upload &
+              Run"]
             </div>
           </div>
 
@@ -536,13 +471,13 @@
           class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs transition-colors shadow-2xs"
         >
           <i class="fa-solid fa-arrow-left"></i>
-          <span>Sub 3.2: Output LED Analog</span>
+          <span>Sub 3.2: Potensiometer & PWM</span>
         </a>
         <a
           href="3.4.html"
           class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 font-bold text-xs transition-colors shadow-xs"
         >
-          <span>Sub 3.4: Sensor Cahaya LDR & PWM</span>
+          <span>Sub 3.4: Studi Kasus</span>
           <i class="fa-solid fa-arrow-right"></i>
         </a>
       </nav>
@@ -554,48 +489,75 @@
       <p>© MIKRO EDU - SMK SMTI Yogyakarta | Teknik Kimia Industri</p>
     </footer>
 
-    <!-- SCRIPT LOGIKA PROGRAM & SIMULATOR POTENSIOMETER LED -->
+    <!-- SCRIPT LOGIKA PROGRAM & SIMULATOR -->
     <script>
-      // KODE ARDUINO C++ UNTUK SUB 3.3
-      const rawArduinoCode = `// --- SUB 3.3: KONTROL KECERAHAN LED DENGAN POTENSIOMETER ---
-const int pinPot = A0;  // Pin Analog Potensiometer
-const int pinLED = 3;   // Pin PWM LED (~3)
+      const rawCodeText = `// --- SUB 3.3: SENSOR CAHAYA LDR & MAPPING PERSENTASE ---
+const int pinLDR = A2; // Pin Analog A2 terhubung ke A0 modul LDR
 
 void setup() {
-  Serial.begin(9600);        // Inisialisasi komunikasi serial 9600 bps
-  pinMode(pinLED, OUTPUT);   // Set pin LED sebagai OUTPUT
+  Serial.begin(9600); // Inisialisasi komunikasi serial
 }
 
 void loop() {
-  // 1. Baca nilai analog dari potensiometer (0 - 1023)
-  int nilaiADC = analogRead(pinPot);
+  // Membaca nilai analog LDR (0 - 1023)
+  int nilaiAnalog = analogRead(pinLDR);
 
-  // 2. Konversi nilai ADC (0-1023) ke nilai PWM (0-255)
-  int nilaiPWM = map(nilaiADC, 0, 1023, 0, 255);
+  // Konversi nilai analog ke persentase (0 = 100%, 1023 = 0%)
+  int persen = map(nilaiAnalog, 0, 1023, 100, 0);
 
-  // 3. Hitung estimasi tegangan analog (0.0V - 5.0V)
-  float tegangan = (nilaiADC / 1023.0) * 5.0;
+  // Menampilkan hasil pada Serial Monitor
+  Serial.print("Nilai Analog LDR: ");
+  Serial.print(nilaiAnalog);
+  Serial.print(" | Intensitas Cahaya: ");
+  Serial.print(persen);
+  Serial.println("%");
 
-  // 4. Output sinyal PWM ke LED untuk mengatur kecerahan
-  analogWrite(pinLED, nilaiPWM);
-
-  // 5. Tampilkan data ke Serial Monitor untuk monitoring
-  Serial.print("ADC: ");
-  Serial.print(nilaiADC);
-  Serial.print(" | Tegangan: ");
-  Serial.print(tegangan, 2);
-  Serial.print("V | PWM: ");
-  Serial.print(nilaiPWM);
-  Serial.print(" (");
-  Serial.print((nilaiPWM * 100) / 255);
-  Serial.println("%)");
-
-  delay(300);  // Jeda sampling 300 ms
+  delay(500); // Jeda pembacaan 0.5 detik
 }`;
 
       let isProgramRunning = false;
       let isUploading = false;
       let liveTimer = null;
+      let currentLdrVal = 512;
+
+      function onLdrChange(val) {
+        currentLdrVal = parseInt(val);
+        document.getElementById("ldrValueText").innerText =
+          `${currentLdrVal} (ADC)`;
+
+        // Pemetaan nilai persentase (0 = 100%, 1023 = 0%)
+        const percent = Math.round(((1023 - currentLdrVal) / 1023) * 100);
+
+        const ldrGlowBg = document.getElementById("ldrGlowBg");
+        const ldrSunIcon = document.getElementById("ldrSunIcon");
+        const ldrStatusBadge = document.getElementById("ldrStatusBadge");
+
+        ldrStatusBadge.innerText = `ADC: ${currentLdrVal} | Cahaya: ${percent}%`;
+
+        // Update tampilan visual berdasarkan persentase
+        if (percent > 66) {
+          ldrGlowBg.className =
+            "relative z-10 w-28 h-28 rounded-full flex items-center justify-center transition-all duration-300 bg-amber-200 border-4 border-amber-400 shadow-[0_0_25px_rgba(245,158,11,0.6)]";
+          ldrSunIcon.className =
+            "fa-solid fa-sun text-6xl text-amber-500 scale-110";
+        } else if (percent > 33) {
+          ldrGlowBg.className =
+            "relative z-10 w-28 h-28 rounded-full flex items-center justify-center transition-all duration-300 bg-amber-100 border-4 border-amber-300 shadow-md";
+          ldrSunIcon.className = "fa-solid fa-sun text-5xl text-amber-500";
+        } else {
+          ldrGlowBg.className =
+            "relative z-10 w-28 h-28 rounded-full flex items-center justify-center transition-all duration-300 bg-slate-200 border-4 border-slate-300 shadow-none opacity-80";
+          ldrSunIcon.className = "fa-solid fa-moon text-4xl text-slate-500";
+        }
+      }
+
+      function getRealtimeTimestamp() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const seconds = String(now.getSeconds()).padStart(2, "0");
+        return `[${hours}:${minutes}:${seconds}]`;
+      }
 
       function escapeHtml(text) {
         return text
@@ -629,11 +591,11 @@ void loop() {
               '<span class="text-[#05797d] font-bold">$1</span>',
             )
             .replace(
-              /\b(setup|loop|pinMode|analogRead|analogWrite|map|delay|millis|Serial)\b/g,
+              /\b(setup|loop|pinMode|analogRead|map|delay|millis|Serial)\b/g,
               '<span class="text-[#d97706] font-semibold">$1</span>',
             )
             .replace(
-              /\b(HIGH|LOW|OUTPUT|INPUT|INPUT_PULLUP|A0|A1|A2|A3|A4|A5)\b/g,
+              /\b(HIGH|LOW|OUTPUT|INPUT|A0|A1|A2|A3|A4|A5)\b/g,
               '<span class="text-[#0284c7] font-bold">$1</span>',
             )
             .replace(
@@ -652,50 +614,6 @@ void loop() {
 
         htmlResult += "</div>";
         return htmlResult;
-      }
-
-      /* PERUBAHAN NILAI POTENSIOMETER (SLIDER) */
-      function onPotentiometerChange(val) {
-        const adc = parseInt(val);
-        const pwm = Math.round((adc / 1023) * 255);
-        const volts = ((adc / 1023) * 5.0).toFixed(2);
-        const percent = Math.round((pwm / 255) * 100);
-
-        // Update Label Teks
-        document.getElementById("potValueText").innerText =
-          `${adc} (${volts}V)`;
-        document.getElementById("ledStatusBadge").innerText =
-          `ADC: ${adc} | PWM: ${pwm} (${percent}%)`;
-
-        // Update Visual LED SVG
-        const svgGlow = document.getElementById("svgGlow");
-        const svgLedBody = document.getElementById("svgLedBody");
-
-        const ratio = pwm / 255;
-        if (svgGlow) {
-          svgGlow.style.opacity = ratio;
-          svgGlow.setAttribute(
-            "fill",
-            ratio > 0 ? "url(#ledGlowOn)" : "url(#ledGlowOff)",
-          );
-        }
-
-        if (svgLedBody) {
-          if (ratio === 0) {
-            svgLedBody.setAttribute("fill", "#7f1d1d");
-          } else {
-            const lightness = 25 + Math.round(ratio * 30);
-            svgLedBody.setAttribute("fill", `hsl(0, 85%, ${lightness}%)`);
-          }
-        }
-      }
-
-      function getRealtimeTimestamp() {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, "0");
-        const minutes = String(now.getMinutes()).padStart(2, "0");
-        const seconds = String(now.getSeconds()).padStart(2, "0");
-        return `[${hours}:${minutes}:${seconds}]`;
       }
 
       function printLiveLog(logText) {
@@ -735,30 +653,24 @@ void loop() {
         });
       }
 
-      /* LOGIKA EKSEKUSI SIMULASI SERIAL MONITOR */
       function startSimulationLoop() {
         isProgramRunning = true;
 
         const monitor = document.getElementById("serialMonitorOutput");
         monitor.innerHTML = "";
 
-        printLiveLog("System Ready - Potentiometer & PWM Dimmer Simulation");
+        printLiveLog("System Ready - Sub 3.3 LDR Analog");
 
         liveTimer = setInterval(() => {
           if (!isProgramRunning) return;
 
-          const potVal = parseInt(document.getElementById("potSlider").value);
-          const pwmVal = Math.round((potVal / 1023) * 255);
-          const volts = ((potVal / 1023) * 5.0).toFixed(2);
-          const percent = Math.round((pwmVal / 255) * 100);
-
+          const percent = Math.round(((1023 - currentLdrVal) / 1023) * 100);
           printLiveLog(
-            `ADC: ${potVal} | Tegangan: ${volts}V | PWM: ${pwmVal} (${percent}%)`,
+            `Nilai Analog LDR: ${currentLdrVal} | Intensitas Cahaya: ${percent}%`,
           );
-        }, 400);
+        }, 500);
       }
 
-      /* FITUR UPLOAD & RUN */
       function uploadAndRun() {
         if (isUploading) return;
         isUploading = true;
@@ -818,7 +730,7 @@ void loop() {
       }
 
       function copyCode() {
-        navigator.clipboard.writeText(rawArduinoCode).then(() => {
+        navigator.clipboard.writeText(rawCodeText).then(() => {
           const btnText = document.getElementById("btnCopyText");
           const btnIcon = document.getElementById("btnCopyIcon");
 
@@ -833,12 +745,9 @@ void loop() {
       }
 
       window.onload = function () {
-        // Load Arduino Code ke editor
         document.getElementById("codeDisplay").innerHTML =
-          renderArduinoSyntax(rawArduinoCode);
-
-        // Inisialisasi tampilan slider potensiometer awal (512)
-        onPotentiometerChange(document.getElementById("potSlider").value);
+          renderArduinoSyntax(rawCodeText);
+        onLdrChange(512);
       };
     </script>
   </body>

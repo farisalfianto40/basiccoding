@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sub 3.2 - Output LED Analog (PWM)</title>
+    <title>Sub 3.2 - Kontrol Kecerahan LED dengan Potensiometer</title>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -30,14 +30,16 @@
         border-radius: 9999px;
       }
 
-      /* Animasi Arus Listrik Kabel */
-      @keyframes dashMove {
-        to {
-          stroke-dashoffset: -8;
-        }
-      }
-      .animate-dash {
-        animation: dashMove 0.4s linear infinite;
+      /* Style Custom Range Input (Potensiometer Dial) */
+      input[type="range"]::-webkit-slider-thumb {
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #0d9488;
+        cursor: pointer;
+        border: 2px solid #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       }
     </style>
   </head>
@@ -70,7 +72,7 @@
             <h1
               class="text-sm sm:text-base font-black text-slate-900 leading-tight mt-0.5"
             >
-              Output LED Analog: PWM & Gradasi Kecerahan
+              Potensiometer & Pengendalian Kecerahan PWM
             </h1>
           </div>
         </div>
@@ -86,35 +88,38 @@
         <div
           class="absolute -right-4 -bottom-6 opacity-15 pointer-events-none hidden sm:block select-none"
         >
-          <i class="fa-solid fa-sliders text-[140px] text-teal-100"></i>
+          <i class="fa-solid fa-gauge text-[140px] text-teal-100"></i>
         </div>
         <div class="relative z-10 space-y-1.5 max-w-3xl">
           <div
             class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
           >
-            <i class="fa-solid fa-microchip text-teal-200-300 text-xs"></i>
-            <span>Praktik Output Analog (PWM)</span>
+            <i class="fa-solid fa-microchip text-teal-200 text-xs"></i>
+            <span>Praktik Analog Input to PWM Output</span>
           </div>
           <h2
             class="text-lg sm:text-xl font-extrabold text-white leading-tight display-font"
           >
-            Pengontrolan Tingkat Kecerahan LED (PWM)
+            Kontrol Dimmer LED Manual dengan Potensiometer
           </h2>
           <p
             class="text-xs sm:text-sm text-teal-50/90 leading-relaxed font-normal"
           >
-            Pelajari cara mengendalikan intensitas cahaya LED menggunakan Sinyal
-            PWM via instruksi
+            Pelajari cara membaca sinyal analog dari Potensiometer menggunakan
             <code class="font-mono text-teal-200 font-bold"
-              >analogWrite(pin, nilai PWM)</code
+              >analogRead(A0)</code
             >
-            mulai dari tingkatan Redup (PWM 25), Sedang (PWM 100), Terang (PWM
-            255), hingga Transisi Otomatis.
+            (0–1023) lalu konversi menjadi sinyal PWM
+            <code class="font-mono text-teal-200 font-bold"
+              >analogWrite(3, pwm)</code
+            >
+            (0–255) secara langsung menggunakan fungsi
+            <code class="font-mono text-teal-200 font-bold">map()</code>.
           </p>
         </div>
       </section>
 
-      <!-- SKEMA RANGKAIAN & VISUAL HARDWARE LED -->
+      <!-- SKEMA RANGKAIAN & VISUAL HARDWARE SIMULATOR -->
       <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <!-- GAMBAR RANGKAIAN (2 Kolom) -->
         <div
@@ -127,12 +132,12 @@
               class="text-sm sm:text-base font-extrabold text-slate-800 flex items-center gap-2"
             >
               <i class="fa-solid fa-diagram-project text-teal-600"></i> Skema
-              Rangkaian Analog
+              Rangkaian Potensiometer & LED
             </h2>
             <span
               class="text-xs font-semibold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-md border border-teal-100"
             >
-              PIN PWM ~3 & GND
+              PIN A0 (Input) & PIN ~3 (PWM)
             </span>
           </div>
 
@@ -140,18 +145,18 @@
             class="w-full bg-slate-50 p-3 sm:p-5 rounded-xl border border-slate-200 flex items-center justify-center min-h-[220px]"
           >
             <img
-              src="img/modul03/3.2.1.png"
-              alt="Skema Rangkaian PWM LED Arduino"
+              src="img/Modul03/3.3.1.png"
+              alt="Skema Rangkaian Potensiometer LED Arduino"
               class="max-h-[260px] w-auto max-w-full object-contain rounded-lg border border-slate-200 bg-white p-2 shadow-xs"
               onerror="
                 this.onerror = null;
-                this.src = 'rangkaian1.png';
+                this.src = 'modul03/img/3.3.1.png';
               "
             />
           </div>
         </div>
 
-        <!-- SIMULASI ANIMASI HARDWARE LED REALISTIS (1 Kolom - ANALOG GRADASI) -->
+        <!-- VISUAL HARDWARE SIMULATOR & POTENTIOMETER SLIDER -->
         <div
           class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between items-center text-center overflow-hidden"
         >
@@ -166,39 +171,33 @@
             </h2>
             <span
               class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200"
-              >PWM ~3</span
+              >A0 & PIN ~3</span
             >
           </div>
 
           <!-- CONTAINER SVG SIMULATOR HARDWARE -->
           <div
-            class="relative w-full h-full min-h-[220px] bg-slate-50 rounded-2xl p-4 flex flex-col items-center justify-center overflow-hidden border border-slate-200 shadow-xs my-auto"
+            class="relative w-full h-full min-h-[200px] bg-slate-50 rounded-2xl p-3 flex flex-col items-center justify-center overflow-hidden border border-slate-200 shadow-xs my-auto"
           >
-            <!-- BACKGROUND GRID CERAH -->
             <div
               class="absolute inset-0 opacity-30 bg-[radial-gradient(#94a3b8_1px,transparent_1px)] [background-size:16px_16px]"
             ></div>
 
             <!-- SVG REALISTIC LED WITH PWM INTENSITY -->
             <svg
-              viewBox="0 0 200 160"
-              class="w-48 h-48 z-10 filter drop-shadow-md"
+              viewBox="0 0 200 140"
+              class="w-40 h-40 z-10 filter drop-shadow-md"
             >
               <defs>
-                <!-- Halo Pendar Cahaya LED Off -->
                 <radialGradient id="ledGlowOff" cx="50%" cy="50%" r="50%">
                   <stop offset="0%" stop-color="#ef4444" stop-opacity="0" />
                   <stop offset="100%" stop-color="#ef4444" stop-opacity="0" />
                 </radialGradient>
-
-                <!-- Halo Pendar Cahaya LED On -->
                 <radialGradient id="ledGlowOn" cx="50%" cy="50%" r="50%">
                   <stop offset="0%" stop-color="#ff4d4d" stop-opacity="0.9" />
                   <stop offset="50%" stop-color="#ef4444" stop-opacity="0.5" />
                   <stop offset="100%" stop-color="#ef4444" stop-opacity="0" />
                 </radialGradient>
-
-                <!-- Gradien Lensa Kaca LED -->
                 <linearGradient
                   id="lensReflect"
                   x1="0%"
@@ -212,143 +211,119 @@
                 </linearGradient>
               </defs>
 
-              <!-- KAKI LED (Anode & Cathode) -->
-              <rect x="91" y="80" width="4" height="60" fill="#64748b" rx="1" />
+              <rect x="91" y="70" width="4" height="60" fill="#64748b" rx="1" />
               <rect
                 x="105"
-                y="80"
+                y="70"
                 width="4"
                 height="60"
                 fill="#94a3b8"
                 rx="1"
               />
 
-              <!-- PENDARAN CAHAYA (GLOW HALO DENGAN OPACITY DYNAMIS) -->
               <circle
                 id="svgGlow"
                 cx="100"
-                cy="55"
+                cy="45"
                 r="45"
-                fill="url(#ledGlowOff)"
-                style="opacity: 0"
-                class="transition-all duration-300"
+                fill="url(#ledGlowOn)"
+                style="opacity: 0.5"
+                class="transition-all duration-150"
               />
 
-              <!-- BADAN UTAMA LED (BODY) -->
               <path
                 id="svgLedBody"
-                d="M 80 55 A 20 20 0 0 1 120 55 L 120 75 A 2 2 0 0 1 118 77 L 82 77 A 2 2 0 0 1 80 75 Z"
-                fill="#7f1d1d"
-                class="transition-colors duration-300"
+                d="M 80 45 A 20 20 0 0 1 120 45 L 120 65 A 2 2 0 0 1 118 67 L 82 67 A 2 2 0 0 1 80 65 Z"
+                fill="#b91c1c"
+                class="transition-colors duration-150"
               />
 
-              <!-- ELEMEN DALAM LED (ANVIL & POST) -->
               <path
-                d="M 90 65 L 95 55 L 98 65 Z"
+                d="M 90 55 L 95 45 L 98 55 Z"
                 fill="#f87171"
                 opacity="0.7"
               />
               <path
-                d="M 105 65 L 105 58 Z"
+                d="M 105 55 L 105 48 Z"
                 stroke="#f87171"
                 stroke-width="2"
                 opacity="0.7"
               />
 
-              <!-- LAPISAN REFLEKSI KACA (GLASS REFLECTION) -->
               <path
-                d="M 80 55 A 20 20 0 0 1 120 55 L 120 75 A 2 2 0 0 1 118 77 L 82 77 A 2 2 0 0 1 80 75 Z"
+                d="M 80 45 A 20 20 0 0 1 120 45 L 120 65 A 2 2 0 0 1 118 67 L 82 67 A 2 2 0 0 1 80 65 Z"
                 fill="url(#lensReflect)"
-              />
-              <ellipse
-                cx="93"
-                cy="45"
-                rx="5"
-                ry="8"
-                fill="#ffffff"
-                opacity="0.4"
-                transform="rotate(-20 93 45)"
               />
             </svg>
 
-            <!-- STATUS BADGE LED -->
             <div
               id="ledStatusBadge"
-              class="z-10 mt-1 text-[11px] font-mono font-bold px-3 py-1 rounded-full bg-slate-200 text-slate-600 border border-slate-300 transition-all duration-200"
+              class="z-10 text-[11px] font-mono font-bold px-3 py-0.5 rounded-full bg-slate-200 text-slate-700 border border-slate-300 transition-all duration-150"
             >
-              STATUS: MATI (PWM 0)
+              ADC: 512 | PWM: 128 (50%)
+            </div>
+          </div>
+
+          <!-- SLIDER SIMULASI POTENSIOMETER -->
+          <div
+            class="w-full mt-3 p-2.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5"
+          >
+            <div
+              class="flex justify-between items-center text-xs font-bold text-slate-700"
+            >
+              <span class="flex items-center gap-1.5">
+                <i class="fa-solid fa-sliders text-teal-600"></i> Putar
+                Potensio:
+              </span>
+              <span id="potValueText" class="font-mono text-teal-700"
+                >512 (2.50V)</span
+              >
+            </div>
+            <input
+              type="range"
+              id="potSlider"
+              min="0"
+              max="1023"
+              value="512"
+              oninput="onPotentiometerChange(this.value)"
+              class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-teal-600"
+            />
+            <div
+              class="flex justify-between text-[10px] text-slate-400 font-mono"
+            >
+              <span>0 (0V)</span>
+              <span>512 (2.5V)</span>
+              <span>1023 (5V)</span>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- SELEKTOR MISI PRAKTIKUM PWM (Pill Buttons) -->
+      <!-- PRAKTIKUM CODE EDITOR & SERIAL MONITOR -->
       <section class="space-y-4">
-        <div class="flex items-center justify-between">
-          <h3
-            class="text-base sm:text-lg font-extrabold text-slate-900 flex items-center gap-2"
-          >
-            <i class="fa-solid fa-gamepad text-teal-600"></i> Pilih Misi
-            Praktikum
-          </h3>
-          <span
-            class="text-xs font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-100"
-          >
-            4 Opsi Kode PWM
-          </span>
-        </div>
-
-        <!-- TOMBOL STRIP MISI 4A, 4B, 4C, 4D -->
-        <div class="flex flex-wrap gap-2.5">
-          <button
-            onclick="switchMission('4A')"
-            id="sub-btn-4a"
-            class="px-4 py-2.5 rounded-2xl text-xs font-bold bg-teal-700 text-white shadow-xs transition cursor-pointer flex items-center gap-2"
-          >
-            <i class="fa-solid fa-moon"></i> Kode 4A: Redup (PWM 25)
-          </button>
-          <button
-            onclick="switchMission('4B')"
-            id="sub-btn-4b"
-            class="px-4 py-2.5 rounded-2xl text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition cursor-pointer flex items-center gap-2"
-          >
-            <i class="fa-solid fa-circle-half-stroke"></i> Kode 4B: Sedang (PWM
-            100)
-          </button>
-          <button
-            onclick="switchMission('4C')"
-            id="sub-btn-4c"
-            class="px-4 py-2.5 rounded-2xl text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition cursor-pointer flex items-center gap-2"
-          >
-            <i class="fa-solid fa-sun"></i> Kode 4C: Terang (PWM 255)
-          </button>
-          <button
-            onclick="switchMission('4D')"
-            id="sub-btn-4d"
-            class="px-4 py-2.5 rounded-2xl text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition cursor-pointer flex items-center gap-2"
-          >
-            <i class="fa-solid fa-arrows-rotate"></i> Kode 4D: Transisi Otomatis
-          </button>
-        </div>
-
         <!-- PANEL DESKRIPSI MISI -->
         <div
-          id="mission-description-box"
           class="bg-teal-50/80 border border-teal-200 rounded-xl p-3.5 text-xs sm:text-sm text-teal-950 flex items-start gap-3"
         >
           <div
             class="w-8 h-8 rounded-lg bg-teal-600 text-white flex items-center justify-center shrink-0 font-bold text-sm"
           >
-            <i id="mission-icon" class="fa-solid fa-moon"></i>
+            <i class="fa-solid fa-code"></i>
           </div>
           <div class="space-y-1">
-            <div id="mission-title" class="font-bold">
-              Kode 4A: Redup (PWM 25)
+            <div class="font-bold text-slate-900">
+              Program Dimmer LED dengan Fungsi
+              <code class="font-mono bg-teal-100 text-teal-800 px-1 rounded"
+                >map()</code
+              >
             </div>
-            <p id="mission-goal" class="text-slate-600 text-xs">
-              <strong>Tugas 4A:</strong> Kirim nilai PWM 25 (~10% daya) untuk
-              menyalakan LED dalam kondisi redup. Klik
-              <strong>Upload & Run</strong>!
+            <p class="text-slate-600 text-xs">
+              Gunakan fungsi
+              <code class="font-mono bg-teal-100 text-teal-800 px-1 rounded"
+                >map(val, 0, 1023, 0, 255)</code
+              >
+              untuk mengubah pembacaan sinyal analog 10-bit dari Potensiometer
+              menjadi sinyal PWM 8-bit untuk LED.
             </p>
           </div>
         </div>
@@ -375,7 +350,7 @@
                 class="bg-white text-slate-800 px-3 py-1 rounded-md text-xs font-medium flex items-center gap-2 border border-teal-700 shadow-xs"
               >
                 <i class="fa-solid fa-microchip text-teal-600"></i>
-                <span id="boardName">Arduino Uno</span>
+                <span>Arduino Uno</span>
                 <i
                   class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1"
                 ></i>
@@ -404,7 +379,7 @@
               class="flex items-center gap-2 font-mono font-medium text-slate-700"
             >
               <i class="fa-solid fa-file-code text-teal-600"></i>
-              <span id="ideTitle">sketch_misi4a_redup.ino</span>
+              <span>sketch_potensio_led.ino</span>
             </div>
             <div class="flex items-center gap-3 text-slate-400 text-xs">
               <i
@@ -441,7 +416,7 @@
               <span
                 class="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse"
               ></span>
-              <span id="ideStatusText">Ready | Pin Output PWM: PIN ~3</span>
+              <span id="ideStatusText">Ready | Pin Input: A0, PWM: PIN ~3</span>
             </span>
             <span class="font-mono text-[10px] text-teal-200"
               >Arduino Uno on COM3</span
@@ -453,14 +428,14 @@
         <div
           class="rounded-xl overflow-hidden shadow-sm border border-slate-300 bg-white font-sans mt-4"
         >
-          <!-- SERIAL MONITOR HEADER (TOMBOL UPLOAD & RUN, STOP, CLEAR) -->
+          <!-- SERIAL MONITOR HEADER -->
           <div
             class="bg-slate-200/90 border-b border-slate-300 px-3 py-2 flex flex-wrap items-center justify-between gap-2 text-slate-800 select-none"
           >
             <div class="flex items-center gap-2">
               <i class="fa-solid fa-terminal text-teal-700 text-xs"></i>
               <span class="font-bold text-xs uppercase tracking-wide"
-                >Serial Monitor (Simulasi PWM Output)</span
+                >Serial Monitor (Simulasi Analog Input)</span
               >
               <span
                 class="text-[10px] font-mono bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold hidden sm:inline-block"
@@ -470,7 +445,6 @@
 
             <!-- ACTION BUTTONS -->
             <div class="flex items-center gap-1.5">
-              <!-- TOMBOL UPLOAD & RUN -->
               <button
                 id="btnUpload"
                 onclick="uploadAndRun()"
@@ -481,7 +455,6 @@
                 <span>Upload & Run</span>
               </button>
 
-              <!-- TOMBOL STOP -->
               <button
                 id="btnStop"
                 onclick="stopProgram()"
@@ -492,7 +465,6 @@
                 <span>Stop</span>
               </button>
 
-              <!-- TOMBOL CLEAR -->
               <button
                 onclick="clearSerialMonitor()"
                 class="bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold px-2 py-1 rounded border border-slate-300 transition cursor-pointer"
@@ -509,7 +481,8 @@
             id="serialMonitorOutput"
           >
             <div class="text-slate-400 italic">
-              [Serial Monitor Siap. Klik "Upload & Run" untuk memulai]
+              [Serial Monitor Siap. Geser slider potensiometer lalu klik "Upload
+              & Run"]
             </div>
           </div>
 
@@ -526,7 +499,6 @@
               >
             </div>
 
-            <!-- TOGGLE OPTION -->
             <div class="flex items-center gap-3 text-[11px] text-slate-500">
               <label
                 class="flex items-center gap-1.5 cursor-pointer select-none"
@@ -564,13 +536,13 @@
           class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs transition-colors shadow-2xs"
         >
           <i class="fa-solid fa-arrow-left"></i>
-          <span>Sub 3.1: Pengenalan PWM</span>
+          <span>Sub 3.1: Output LED Analog</span>
         </a>
         <a
-          href="3.3.html"
+          href="3.4.html"
           class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 font-bold text-xs transition-colors shadow-xs"
         >
-          <span>Sub 3.3: Potensiosmeter PWM</span>
+          <span>Sub 3.3: Sensor Cahaya LDR & PWM</span>
           <i class="fa-solid fa-arrow-right"></i>
         </a>
       </nav>
@@ -582,148 +554,48 @@
       <p>© MIKRO EDU - SMK SMTI Yogyakarta | Teknik Kimia Industri</p>
     </footer>
 
-    <!-- SCRIPT LOGIKA PROGRAM -->
+    <!-- SCRIPT LOGIKA PROGRAM & SIMULATOR POTENSIOMETER LED -->
     <script>
-      const missions = {
-        "4A": {
-          filename: "sketch_misi4a_redup.ino",
-          title: "Kode 4A: Redup (PWM 25)",
-          icon: "fa-moon",
-          desc: "<strong>Tugas 4A:</strong> Kirim nilai PWM 25 (~10% daya) untuk menyalakan LED dalam kondisi redup.",
-          rawCode: `// --- MISI 4A: LED REDUP (PWM 25) ---
-int pinLED = 3; // Kaki LED terhubung ke Pin PWM ~3
+      // KODE ARDUINO C++ UNTUK SUB 3.3
+      const rawArduinoCode = `// --- SUB 3.2: KONTROL KECERAHAN LED DENGAN POTENSIOMETER ---
+const int pinPot = A0;  // Pin Analog Potensiometer
+const int pinLED = 3;   // Pin PWM LED (~3)
 
 void setup() {
-  Serial.begin(9600);      // Memulai komunikasi serial (9600 baud)
-  pinMode(pinLED, OUTPUT); // Set pin 3 sebagai Output
+  Serial.begin(9600);        // Inisialisasi komunikasi serial 9600 bps
+  pinMode(pinLED, OUTPUT);   // Set pin LED sebagai OUTPUT
 }
 
 void loop() {
-  analogWrite(pinLED, 25); // Kirim sinyal PWM = 25 (Redup)
-  Serial.println("Status LED: REDUP (PWM: 25 | 10%)");
-  delay(1000);             // Jeda 1 detik
-}`,
-        },
-        "4B": {
-          filename: "sketch_misi4b_sedang.ino",
-          title: "Kode 4B: Sedang (PWM 100)",
-          icon: "fa-circle-half-stroke",
-          desc: "<strong>Tugas 4B:</strong> Kirim nilai PWM 100 (~39% daya) untuk menyalakan LED dalam kondisi sedang.",
-          rawCode: `// --- MISI 4B: LED SEDANG (PWM 100) ---
-int pinLED = 3; // Kaki LED terhubung ke Pin PWM ~3
+  // 1. Baca nilai analog dari potensiometer (0 - 1023)
+  int nilaiADC = analogRead(pinPot);
 
-void setup() {
-  Serial.begin(9600);      // Memulai komunikasi serial
-  pinMode(pinLED, OUTPUT); // Set pin 3 sebagai Output
-}
+  // 2. Konversi nilai ADC (0-1023) ke nilai PWM (0-255)
+  int nilaiPWM = map(nilaiADC, 0, 1023, 0, 255);
 
-void loop() {
-  analogWrite(pinLED, 100); // Kirim sinyal PWM = 100 (Sedang)
-  Serial.println("Status LED: SEDANG (PWM: 100 | 39%)");
-  delay(1000);              // Jeda 1 detik
-}`,
-        },
-        "4C": {
-          filename: "sketch_misi4c_terang.ino",
-          title: "Kode 4C: Terang (PWM 255)",
-          icon: "fa-sun",
-          desc: "<strong>Tugas 4C:</strong> Kirim nilai PWM 255 (100% daya) untuk menyalakan LED secara maksimal.",
-          rawCode: `// --- MISI 4C: LED TERANG (PWM 255) ---
-int pinLED = 3; // Kaki LED terhubung ke Pin PWM ~3
+  // 3. Hitung estimasi tegangan analog (0.0V - 5.0V)
+  float tegangan = (nilaiADC / 1023.0) * 5.0;
 
-void setup() {
-  Serial.begin(9600);      // Memulai komunikasi serial
-  pinMode(pinLED, OUTPUT); // Set pin 3 sebagai Output
-}
+  // 4. Output sinyal PWM ke LED untuk mengatur kecerahan
+  analogWrite(pinLED, nilaiPWM);
 
-void loop() {
-  analogWrite(pinLED, 255); // Kirim sinyal PWM = 255 (Maksimal)
-  Serial.println("Status LED: TERANG (PWM: 255 | 100%)");
-  delay(1000);              // Jeda 1 detik
-}`,
-        },
-        "4D": {
-          filename: "sketch_misi4d_transisi.ino",
-          title: "Kode 4D: Transisi Otomatis",
-          icon: "fa-arrows-rotate",
-          desc: "<strong>Tugas 4D:</strong> Program melakukan transisi dari Redup (PWM 25) -> Sedang (PWM 100) -> Terang (PWM 255) -> Mati (PWM 0) secara bertahap.",
-          rawCode: `// --- MISI 4D: TRANSISI OTOMATIS ---
-int pinLED = 3; // Kaki LED terhubung ke Pin PWM ~3
+  // 5. Tampilkan data ke Serial Monitor untuk monitoring
+  Serial.print("ADC: ");
+  Serial.print(nilaiADC);
+  Serial.print(" | Tegangan: ");
+  Serial.print(tegangan, 2);
+  Serial.print("V | PWM: ");
+  Serial.print(nilaiPWM);
+  Serial.print(" (");
+  Serial.print((nilaiPWM * 100) / 255);
+  Serial.println("%)");
 
-void setup() {
-  Serial.begin(9600);
-  pinMode(pinLED, OUTPUT);
-}
+  delay(300);  // Jeda sampling 300 ms
+}`;
 
-void loop() {
-  // Tahap 1: Redup
-  analogWrite(pinLED, 25);
-  Serial.println("Transisi Stage 1 - REDUP (PWM: 25)");
-  delay(1000);
-
-  // Tahap 2: Sedang
-  analogWrite(pinLED, 100);
-  Serial.println("Transisi Stage 2 - SEDANG (PWM: 100)");
-  delay(1000);
-
-  // Tahap 3: Terang
-  analogWrite(pinLED, 255);
-  Serial.println("Transisi Stage 3 - TERANG (PWM: 255)");
-  delay(1000);
-
-  // Tahap 4: Mati
-  analogWrite(pinLED, 0);
-  Serial.println("Transisi Stage 4 - MATI (PWM: 0)");
-  delay(1000);
-}`,
-        },
-      };
-
-      let currentMissionKey = "4A";
-      let liveTimer = null;
+      let isProgramRunning = false;
       let isUploading = false;
-
-      /* KONTROL ANIMASI HARDWARE LED VISUAL (GRADASI PWM ANALOG) */
-      function setLedAnalogValue(pwmVal) {
-        const glow = document.getElementById("svgGlow");
-        const body = document.getElementById("svgLedBody");
-        const badge = document.getElementById("ledStatusBadge");
-
-        const ratio = Math.min(Math.max(pwmVal / 255, 0), 1);
-        const percentage = Math.round(ratio * 100);
-
-        if (pwmVal > 0) {
-          glow.setAttribute("fill", "url(#ledGlowOn)");
-          glow.style.opacity = (ratio * 0.95).toFixed(2);
-
-          if (percentage > 70) {
-            body.setAttribute("fill", "#ef4444");
-          } else if (percentage > 30) {
-            body.setAttribute("fill", "#b91c1c");
-          } else {
-            body.setAttribute("fill", "#991b1b");
-          }
-
-          badge.className =
-            "z-10 mt-1 text-[11px] font-mono font-bold px-3 py-1 rounded-full bg-amber-500 text-white border border-amber-600 shadow-[0_0_10px_rgba(245,158,11,0.4)] transition-all duration-200";
-          badge.innerText = `STATUS: PWM ${pwmVal} (${percentage}%)`;
-        } else {
-          glow.setAttribute("fill", "url(#ledGlowOff)");
-          glow.style.opacity = "0";
-          body.setAttribute("fill", "#7f1d1d");
-          badge.className =
-            "z-10 mt-1 text-[11px] font-mono font-bold px-3 py-1 rounded-full bg-slate-200 text-slate-600 border border-slate-300 transition-all duration-200";
-          badge.innerText = "STATUS: MATI (PWM 0)";
-        }
-      }
-
-      function getRealtimeTimestamp() {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, "0");
-        const minutes = String(now.getMinutes()).padStart(2, "0");
-        const seconds = String(now.getSeconds()).padStart(2, "0");
-        return `[${hours}:${minutes}:${seconds}]`;
-      }
+      let liveTimer = null;
 
       function escapeHtml(text) {
         return text
@@ -744,22 +616,24 @@ void loop() {
           const commentIdx = line.indexOf("//");
           if (commentIdx !== -1) {
             codePart = line.substring(0, commentIdx);
-            comment = `<span class="text-slate-400 italic font-normal">${escapeHtml(line.substring(commentIdx))}</span>`;
+            comment = `<span class="text-slate-400 italic font-normal">${escapeHtml(
+              line.substring(commentIdx),
+            )}</span>`;
           }
 
           codePart = escapeHtml(codePart);
 
           codePart = codePart
             .replace(
-              /\b(int|void|float|boolean|bool|char|const|long|unsigned|for)\b/g,
+              /\b(int|void|float|boolean|bool|char|const|long|unsigned)\b/g,
               '<span class="text-[#05797d] font-bold">$1</span>',
             )
             .replace(
-              /\b(setup|loop|pinMode|digitalWrite|analogWrite|delay|millis|Serial)\b/g,
+              /\b(setup|loop|pinMode|analogRead|analogWrite|map|delay|millis|Serial)\b/g,
               '<span class="text-[#d97706] font-semibold">$1</span>',
             )
             .replace(
-              /\b(HIGH|LOW|OUTPUT|INPUT|INPUT_PULLUP)\b/g,
+              /\b(HIGH|LOW|OUTPUT|INPUT|INPUT_PULLUP|A0|A1|A2|A3|A4|A5)\b/g,
               '<span class="text-[#0284c7] font-bold">$1</span>',
             )
             .replace(
@@ -768,14 +642,60 @@ void loop() {
             );
 
           htmlResult += `
-            <div class="table-row hover:bg-slate-50">
-              <div class="table-cell text-right select-none pr-3.5 text-slate-300 font-mono text-xs w-7 border-r border-slate-100 py-0.5">${index + 1}</div>
-              <div class="table-cell pl-3.5 whitespace-pre font-mono text-slate-800 py-0.5">${codePart}${comment}</div>
-            </div>`;
+        <div class="table-row hover:bg-slate-50">
+          <div class="table-cell text-right select-none pr-3.5 text-slate-300 font-mono text-xs w-7 border-r border-slate-100 py-0.5">${
+            index + 1
+          }</div>
+          <div class="table-cell pl-3.5 whitespace-pre font-mono text-slate-800 py-0.5">${codePart}${comment}</div>
+        </div>`;
         });
 
         htmlResult += "</div>";
         return htmlResult;
+      }
+
+      /* PERUBAHAN NILAI POTENSIOMETER (SLIDER) */
+      function onPotentiometerChange(val) {
+        const adc = parseInt(val);
+        const pwm = Math.round((adc / 1023) * 255);
+        const volts = ((adc / 1023) * 5.0).toFixed(2);
+        const percent = Math.round((pwm / 255) * 100);
+
+        // Update Label Teks
+        document.getElementById("potValueText").innerText =
+          `${adc} (${volts}V)`;
+        document.getElementById("ledStatusBadge").innerText =
+          `ADC: ${adc} | PWM: ${pwm} (${percent}%)`;
+
+        // Update Visual LED SVG
+        const svgGlow = document.getElementById("svgGlow");
+        const svgLedBody = document.getElementById("svgLedBody");
+
+        const ratio = pwm / 255;
+        if (svgGlow) {
+          svgGlow.style.opacity = ratio;
+          svgGlow.setAttribute(
+            "fill",
+            ratio > 0 ? "url(#ledGlowOn)" : "url(#ledGlowOff)",
+          );
+        }
+
+        if (svgLedBody) {
+          if (ratio === 0) {
+            svgLedBody.setAttribute("fill", "#7f1d1d");
+          } else {
+            const lightness = 25 + Math.round(ratio * 30);
+            svgLedBody.setAttribute("fill", `hsl(0, 85%, ${lightness}%)`);
+          }
+        }
+      }
+
+      function getRealtimeTimestamp() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const seconds = String(now.getSeconds()).padStart(2, "0");
+        return `[${hours}:${minutes}:${seconds}]`;
       }
 
       function printLiveLog(logText) {
@@ -791,10 +711,10 @@ void loop() {
         const timestampStr = getRealtimeTimestamp();
 
         line.innerHTML = `
-          <span class="text-teal-600 font-semibold">&gt;</span>
-          <span class="timestamp-tag text-slate-400 text-[11px] font-mono ${hideClass}">${timestampStr}</span>
-          <span class="text-slate-800 font-mono">${escapeHtml(logText)}</span>
-        `;
+      <span class="text-teal-600 font-semibold">&gt;</span>
+      <span class="timestamp-tag text-slate-400 text-[11px] font-mono ${hideClass}">${timestampStr}</span>
+      <span class="text-slate-800 font-mono">${escapeHtml(logText)}</span>
+    `;
 
         monitor.appendChild(line);
 
@@ -815,53 +735,27 @@ void loop() {
         });
       }
 
-      /* LOGIKA MENJALANKAN SIMULASI PWM */
-      function startContinuousOutput(key) {
-        stopProgramSilently();
+      /* LOGIKA EKSEKUSI SIMULASI SERIAL MONITOR */
+      function startSimulationLoop() {
+        isProgramRunning = true;
+
         const monitor = document.getElementById("serialMonitorOutput");
         monitor.innerHTML = "";
 
-        if (key === "4A") {
-          printLiveLog("System Ready - Misi 4A Dimulai");
-          setLedAnalogValue(25);
-          liveTimer = setInterval(() => {
-            printLiveLog("Status LED: REDUP (PWM: 25 | 10%)");
-            setLedAnalogValue(25);
-          }, 1000);
-        } else if (key === "4B") {
-          printLiveLog("System Ready - Misi 4B Dimulai");
-          setLedAnalogValue(100);
-          liveTimer = setInterval(() => {
-            printLiveLog("Status LED: SEDANG (PWM: 100 | 39%)");
-            setLedAnalogValue(100);
-          }, 1000);
-        } else if (key === "4C") {
-          printLiveLog("System Ready - Misi 4C Dimulai");
-          setLedAnalogValue(255);
-          liveTimer = setInterval(() => {
-            printLiveLog("Status LED: TERANG (PWM: 255 | 100%)");
-            setLedAnalogValue(255);
-          }, 1000);
-        } else if (key === "4D") {
-          printLiveLog("System Ready - Misi 4D (Transisi Otomatis) Dimulai");
+        printLiveLog("System Ready - Potentiometer & PWM Dimmer Simulation");
 
-          const stages = [
-            { pwm: 25, msg: "Transisi Stage 1 - REDUP (PWM: 25)" },
-            { pwm: 100, msg: "Transisi Stage 2 - SEDANG (PWM: 100)" },
-            { pwm: 255, msg: "Transisi Stage 3 - TERANG (PWM: 255)" },
-            { pwm: 0, msg: "Transisi Stage 4 - MATI (PWM: 0)" },
-          ];
+        liveTimer = setInterval(() => {
+          if (!isProgramRunning) return;
 
-          let stepIndex = 0;
-          printLiveLog(stages[0].msg);
-          setLedAnalogValue(stages[0].pwm);
+          const potVal = parseInt(document.getElementById("potSlider").value);
+          const pwmVal = Math.round((potVal / 1023) * 255);
+          const volts = ((potVal / 1023) * 5.0).toFixed(2);
+          const percent = Math.round((pwmVal / 255) * 100);
 
-          liveTimer = setInterval(() => {
-            stepIndex = (stepIndex + 1) % stages.length;
-            printLiveLog(stages[stepIndex].msg);
-            setLedAnalogValue(stages[stepIndex].pwm);
-          }, 1000);
-        }
+          printLiveLog(
+            `ADC: ${potVal} | Tegangan: ${volts}V | PWM: ${pwmVal} (${percent}%)`,
+          );
+        }, 400);
       }
 
       /* FITUR UPLOAD & RUN */
@@ -870,7 +764,6 @@ void loop() {
         isUploading = true;
 
         stopProgramSilently();
-        setLedAnalogValue(0);
 
         const statusText = document.getElementById("ideStatusText");
         const btnUpload = document.getElementById("btnUpload");
@@ -888,13 +781,13 @@ void loop() {
             btnUpload.classList.remove("opacity-50", "cursor-not-allowed");
             isUploading = false;
 
-            startContinuousOutput(currentMissionKey);
+            startSimulationLoop();
           }, 600);
         }, 500);
       }
 
-      /* MEMATIKAN TIMER SECARA INTERNAL */
       function stopProgramSilently() {
+        isProgramRunning = false;
         if (liveTimer) {
           clearInterval(liveTimer);
           liveTimer = null;
@@ -902,10 +795,8 @@ void loop() {
         isUploading = false;
       }
 
-      /* FITUR STOP */
       function stopProgram() {
         stopProgramSilently();
-        setLedAnalogValue(0);
 
         const btnUpload = document.getElementById("btnUpload");
         btnUpload.disabled = false;
@@ -926,47 +817,8 @@ void loop() {
           `<span class="text-slate-400 italic">[Serial Monitor Cleared]</span>`;
       }
 
-      function switchMission(key) {
-        const keys = ["4A", "4B", "4C", "4D"];
-        keys.forEach((k) => {
-          const btn = document.getElementById(`sub-btn-${k.toLowerCase()}`);
-          if (btn) {
-            if (k === key) {
-              btn.className =
-                "px-4 py-2.5 rounded-2xl text-xs font-bold bg-teal-700 text-white shadow-xs transition cursor-pointer flex items-center gap-2";
-            } else {
-              btn.className =
-                "px-4 py-2.5 rounded-2xl text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition cursor-pointer flex items-center gap-2";
-            }
-          }
-        });
-
-        updateView(key);
-      }
-
-      function updateView(key) {
-        stopProgramSilently();
-        setLedAnalogValue(0);
-
-        currentMissionKey = key;
-        const data = missions[key];
-
-        document.getElementById("ideTitle").innerText = data.filename;
-        document.getElementById("codeDisplay").innerHTML = renderArduinoSyntax(
-          data.rawCode,
-        );
-        document.getElementById("mission-title").innerText = data.title;
-        document.getElementById("mission-goal").innerHTML = data.desc;
-        document.getElementById("mission-icon").className =
-          `fa-solid ${data.icon}`;
-
-        const monitor = document.getElementById("serialMonitorOutput");
-        monitor.innerHTML = `<span class="text-slate-400 italic">[Serial Monitor Siap. Klik "Upload & Run" untuk memulai]</span>`;
-      }
-
       function copyCode() {
-        const rawCodeText = missions[currentMissionKey].rawCode;
-        navigator.clipboard.writeText(rawCodeText).then(() => {
+        navigator.clipboard.writeText(rawArduinoCode).then(() => {
           const btnText = document.getElementById("btnCopyText");
           const btnIcon = document.getElementById("btnCopyIcon");
 
@@ -981,7 +833,12 @@ void loop() {
       }
 
       window.onload = function () {
-        switchMission("4A");
+        // Load Arduino Code ke editor
+        document.getElementById("codeDisplay").innerHTML =
+          renderArduinoSyntax(rawArduinoCode);
+
+        // Inisialisasi tampilan slider potensiometer awal (512)
+        onPotentiometerChange(document.getElementById("potSlider").value);
       };
     </script>
   </body>
