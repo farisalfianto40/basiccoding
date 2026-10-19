@@ -3,944 +3,422 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sub 2.5: Studi Kasus Kontrol 3 LED Berurutan</title>
-    <!-- Tailwind CSS -->
+    <title>Sub 2.5 - Studi Kasus I/O Digital</title>
+
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
+
+    <!-- FontAwesome CDN -->
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
+
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
-
       body {
-        font-family: "Plus Jakarta Sans", sans-serif;
-        background-color: #f8fafc;
-        color: #1e293b;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
       }
-
-      .font-mono-code {
-        font-family: "IBM Plex Mono", monospace;
-      }
-
-      h1,
-      h2,
-      h3,
-      .display-font {
-        font-family: "Space Grotesk", sans-serif;
-      }
-
-      /* Animasi Glow LED */
-      .led-red-active {
-        fill: #ef4444;
-        filter: drop-shadow(0 0 14px rgba(239, 68, 68, 0.95));
-      }
-      .led-yellow-active {
-        fill: #f59e0b;
-        filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.95));
-      }
-      .led-green-active {
-        fill: #10b981;
-        filter: drop-shadow(0 0 14px rgba(16, 185, 129, 0.95));
-      }
-      .led-off {
-        fill: #cbd5e1;
-        filter: none;
-      }
-
-      /* Custom Scrollbar */
       ::-webkit-scrollbar {
         width: 6px;
         height: 6px;
       }
       ::-webkit-scrollbar-thumb {
         background: #cbd5e1;
-        border-radius: 99px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
+        border-radius: 9999px;
       }
     </style>
   </head>
   <body
     class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased pb-10"
   >
-    <div>
-      <!-- HEADER APP -->
-      <header
-        class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs"
+    <!-- HEADER APP -->
+    <header
+      class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3"
       >
-        <div
-          class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3"
-        >
-          <div class="flex items-center gap-3">
-            <a
-              href="5.0.html"
-              class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-sm transition-colors"
-              title="Kembali"
-            >
-              <i class="fa-solid fa-home"></i>
-            </a>
-            <div>
-              <div class="flex items-center gap-2">
-                <span
-                  class="text-[10px] font-extrabold bg-teal-100 text-teal-800 px-2 py-0.5 rounded uppercase tracking-wider"
-                >
-                  SUB 2.5
-                </span>
-              </div>
-              <h1
-                class="text-sm sm:text-base font-black text-slate-900 leading-tight mt-0.5"
-              >
-                Studi Kasus: Kontrol 3 LED Berurutan
-              </h1>
-            </div>
-          </div>
-          <div
-            class="hidden sm:flex items-center gap-2 text-xs font-semibold text-slate-500"
+        <div class="flex items-center gap-3">
+          <a
+            href="index.html"
+            class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-sm transition-colors"
+            title="Kembali"
           >
-            <i class="fa-solid fa-microchip text-teal-600"></i>
-            <span>Sequential LED Simulation</span>
-          </div>
-        </div>
-      </header>
-
-      <!-- MAIN CONTENT -->
-      <main
-        class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6"
-      >
-        <!-- HERO BANNER RINGKAS -->
-        <section
-          class="bg-gradient-to-r from-teal-800 to-teal-700 text-white rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden"
-        >
-          <div
-            class="absolute -right-4 -bottom-6 opacity-15 pointer-events-none hidden sm:block select-none"
-          >
-            <i class="fa-solid fa-lightbulb text-[140px] text-teal-100"></i>
-          </div>
-          <div class="relative z-10 space-y-1.5 max-w-3xl">
-            <div
-              class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
-            >
-              <i class="fa-solid fa-bolt text-amber-300 text-xs"></i>
-              <span>Sistem Kendali Output Digital Real-Time</span>
-            </div>
-            <h2
-              class="text-lg sm:text-xl font-extrabold text-white leading-tight display-font"
-            >
-              Simulasi Lampu Berurutan (Merah, Kuning, Hijau)
-            </h2>
-            <p class="text-xs text-teal-50/90 leading-relaxed">
-              Pantau status nyala LED Merah (Pin 8), Kuning (Pin 9), dan Hijau
-              (Pin 10) secara langsung melalui Web Serial API dengan jeda waktu
-              2 detik.
-            </p>
-          </div>
-        </section>
-
-        <!-- GRID DUA KOLOM -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-          <!-- KOLOM KIRI (7/12): STATUS & ANIMASI ILUSTRASI SIMULASI -->
-          <div class="lg:col-span-7 flex flex-col space-y-4">
-            <!-- STATUS CARDS GRID -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              <!-- Status Utama -->
-              <div
-                id="cardStatus"
-                class="bg-white border border-slate-200 shadow-xs rounded-xl px-3.5 py-3 transition-all"
+            <i class="fa-solid fa-home"></i>
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span
+                class="text-[10px] font-extrabold bg-teal-100 text-teal-800 px-2 py-0.5 rounded uppercase tracking-wider"
               >
-                <div class="flex items-center justify-between mb-1">
-                  <p
-                    class="text-[10px] font-bold uppercase tracking-wider text-slate-400"
-                  >
-                    Status Sistem
-                  </p>
-                  <i
-                    id="statusIcon"
-                    class="fa-solid fa-circle-play text-emerald-500 text-xs"
-                  ></i>
-                </div>
-                <p
-                  id="statusText"
-                  class="font-black text-sm sm:text-base text-emerald-600 display-font"
-                >
-                  BERJALAN
-                </p>
-              </div>
-
-              <!-- LED Merah Pin -->
-              <div
-                class="bg-white border border-slate-200 shadow-xs rounded-xl px-3.5 py-3"
-              >
-                <div class="flex items-center justify-between mb-1">
-                  <p
-                    class="text-[10px] font-bold uppercase tracking-wider text-slate-400"
-                  >
-                    Merah (P8)
-                  </p>
-                  <i class="fa-solid fa-circle text-rose-500 text-xs"></i>
-                </div>
-                <p
-                  id="redPinText"
-                  class="font-bold text-xs sm:text-sm text-slate-800 font-mono-code"
-                >
-                  —
-                </p>
-              </div>
-
-              <!-- LED Kuning Pin -->
-              <div
-                class="bg-white border border-slate-200 shadow-xs rounded-xl px-3.5 py-3"
-              >
-                <div class="flex items-center justify-between mb-1">
-                  <p
-                    class="text-[10px] font-bold uppercase tracking-wider text-slate-400"
-                  >
-                    Kuning (P9)
-                  </p>
-                  <i class="fa-solid fa-circle text-amber-500 text-xs"></i>
-                </div>
-                <p
-                  id="yellowPinText"
-                  class="font-bold text-xs sm:text-sm text-slate-800 font-mono-code"
-                >
-                  —
-                </p>
-              </div>
-
-              <!-- LED Hijau Pin -->
-              <div
-                class="bg-white border border-slate-200 shadow-xs rounded-xl px-3.5 py-3"
-              >
-                <div class="flex items-center justify-between mb-1">
-                  <p
-                    class="text-[10px] font-bold uppercase tracking-wider text-slate-400"
-                  >
-                    Hijau (P10)
-                  </p>
-                  <i class="fa-solid fa-circle text-emerald-500 text-xs"></i>
-                </div>
-                <p
-                  id="greenPinText"
-                  class="font-bold text-xs sm:text-sm text-slate-800 font-mono-code"
-                >
-                  —
-                </p>
-              </div>
-            </div>
-
-            <!-- GRAPHICAL ILLUSTRATION (SVG CANVAS) -->
-            <div
-              class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs flex-1 flex flex-col justify-between"
-            >
-              <div
-                class="bg-slate-100 px-4 py-2 border-b border-slate-200 flex items-center justify-between"
-              >
-                <div class="flex items-center gap-2">
-                  <span
-                    class="w-2.5 h-2.5 rounded-full bg-red-400 inline-block"
-                  ></span>
-                  <span
-                    class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"
-                  ></span>
-                  <span
-                    class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"
-                  ></span>
-                  <span
-                    class="text-xs font-bold text-slate-600 ml-2 font-mono-code"
-                    >SEQUENTIAL_LED_SIMULATION.SVG</span
-                  >
-                </div>
-                <span
-                  class="text-[11px] font-bold text-slate-500 uppercase tracking-wider"
-                  >Live Visualizer</span
-                >
-              </div>
-
-              <svg
-                id="scene"
-                viewBox="0 0 760 400"
-                class="w-full h-auto block flex-1"
-              >
-                <defs>
-                  <clipPath id="clip">
-                    <rect x="0" y="0" width="760" height="400" rx="0" />
-                  </clipPath>
-                </defs>
-                <g clip-path="url(#clip)">
-                  <!-- Latar Belakang Denah -->
-                  <rect
-                    id="bgRect"
-                    x="0"
-                    y="0"
-                    width="760"
-                    height="400"
-                    fill="#f8fafc"
-                  />
-
-                  <!-- Top & Bottom Structural Beams -->
-                  <rect x="0" y="0" width="760" height="14" fill="#334155" />
-                  <rect x="0" y="384" width="760" height="16" fill="#334155" />
-
-                  <!-- Breadboard / Kontrol Panel Ilustrasi -->
-                  <rect
-                    x="180"
-                    y="80"
-                    width="400"
-                    height="240"
-                    rx="12"
-                    fill="#f1f5f9"
-                    stroke="#cbd5e1"
-                    stroke-width="2"
-                  />
-                  <text
-                    x="380"
-                    y="110"
-                    text-anchor="middle"
-                    font-family="Space Grotesk, sans-serif"
-                    font-weight="700"
-                    font-size="14"
-                    fill="#334155"
-                  >
-                    MODUL RANGKAIAN 3 LED ARDUINO
-                  </text>
-
-                  <!-- Jalur Kabel / Pin -->
-                  <line
-                    x1="280"
-                    y1="130"
-                    x2="280"
-                    y2="220"
-                    stroke="#ef4444"
-                    stroke-width="2"
-                    stroke-dasharray="4 4"
-                  />
-                  <line
-                    x1="380"
-                    y1="130"
-                    x2="380"
-                    y2="220"
-                    stroke="#f59e0b"
-                    stroke-width="2"
-                    stroke-dasharray="4 4"
-                  />
-                  <line
-                    x1="480"
-                    y1="130"
-                    x2="480"
-                    y2="220"
-                    stroke="#10b981"
-                    stroke-width="2"
-                    stroke-dasharray="4 4"
-                  />
-
-                  <!-- LED Merah -->
-                  <g transform="translate(280, 180)">
-                    <circle
-                      id="ledRed"
-                      cx="0"
-                      cy="0"
-                      r="24"
-                      class="led-off"
-                      stroke="#1e293b"
-                      stroke-width="2"
-                    />
-                    <circle cx="0" cy="0" r="16" fill="#ffffff" opacity="0.3" />
-                  </g>
-                  <text
-                    x="280"
-                    y="245"
-                    text-anchor="middle"
-                    font-family="Space Grotesk, sans-serif"
-                    font-weight="700"
-                    font-size="12"
-                    fill="#0f172a"
-                  >
-                    LED MERAH
-                  </text>
-                  <text
-                    x="280"
-                    y="260"
-                    text-anchor="middle"
-                    font-family="IBM Plex Mono, monospace"
-                    font-weight="600"
-                    font-size="10"
-                    fill="#64748b"
-                  >
-                    PIN 8
-                  </text>
-
-                  <!-- LED Kuning -->
-                  <g transform="translate(380, 180)">
-                    <circle
-                      id="ledYellow"
-                      cx="0"
-                      cy="0"
-                      r="24"
-                      class="led-off"
-                      stroke="#1e293b"
-                      stroke-width="2"
-                    />
-                    <circle cx="0" cy="0" r="16" fill="#ffffff" opacity="0.3" />
-                  </g>
-                  <text
-                    x="380"
-                    y="245"
-                    text-anchor="middle"
-                    font-family="Space Grotesk, sans-serif"
-                    font-weight="700"
-                    font-size="12"
-                    fill="#0f172a"
-                  >
-                    LED KUNING
-                  </text>
-                  <text
-                    x="380"
-                    y="260"
-                    text-anchor="middle"
-                    font-family="IBM Plex Mono, monospace"
-                    font-weight="600"
-                    font-size="10"
-                    fill="#64748b"
-                  >
-                    PIN 9
-                  </text>
-
-                  <!-- LED Hijau -->
-                  <g transform="translate(480, 180)">
-                    <circle
-                      id="ledGreen"
-                      cx="0"
-                      cy="0"
-                      r="24"
-                      class="led-off"
-                      stroke="#1e293b"
-                      stroke-width="2"
-                    />
-                    <circle cx="0" cy="0" r="16" fill="#ffffff" opacity="0.3" />
-                  </g>
-                  <text
-                    x="480"
-                    y="245"
-                    text-anchor="middle"
-                    font-family="Space Grotesk, sans-serif"
-                    font-weight="700"
-                    font-size="12"
-                    fill="#0f172a"
-                  >
-                    LED HIJAU
-                  </text>
-                  <text
-                    x="480"
-                    y="260"
-                    text-anchor="middle"
-                    font-family="IBM Plex Mono, monospace"
-                    font-weight="600"
-                    font-size="10"
-                    fill="#64748b"
-                  >
-                    PIN 10
-                  </text>
-                </g>
-              </svg>
-            </div>
-          </div>
-
-          <!-- KOLOM KANAN (5/12): KONEKSI ARDUINO & SERIAL MONITOR -->
-          <div class="lg:col-span-5 flex flex-col space-y-4">
-            <!-- PANEL 1: STATUS KONEKSI & TOMBOL HUBUNGKAN ARDUINO -->
-            <div
-              class="bg-white border border-slate-200 shadow-xs rounded-2xl p-4 sm:p-5 space-y-3"
-            >
-              <div class="flex items-center justify-between">
-                <h3
-                  class="display-font text-sm font-bold text-slate-900 flex items-center gap-2"
-                >
-                  <i class="fa-solid fa-plug text-teal-600"></i>
-                  <span>Koneksi Device</span>
-                </h3>
-                <span
-                  class="text-[10px] font-extrabold bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono-code"
-                  >WEB SERIAL API</span
-                >
-              </div>
-
-              <!-- Status Terhubung / Belum -->
-              <div
-                class="flex items-center justify-between p-3 bg-slate-50 border border-slate-200/80 rounded-xl"
-              >
-                <div class="flex items-center gap-2.5">
-                  <span
-                    id="connDot"
-                    class="w-3 h-3 rounded-full bg-slate-400 shrink-0"
-                  ></span>
-                  <div>
-                    <p
-                      class="text-[10px] uppercase font-bold text-slate-400 leading-none"
-                    >
-                      Status Koneksi
-                    </p>
-                    <p
-                      id="connLabel"
-                      class="text-xs font-bold text-slate-700 mt-0.5"
-                    >
-                      Belum terhubung
-                    </p>
-                  </div>
-                </div>
-                <i class="fa-brands fa-usb text-slate-400 text-lg"></i>
-              </div>
-
-              <!-- Tombol Hubungkan -->
-              <button
-                id="connectBtn"
-                class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 active:scale-[0.99] text-white font-bold text-xs rounded-xl transition-all shadow-xs flex items-center justify-center gap-2"
-              >
-                <i class="fa-solid fa-plug text-xs"></i>
-                <span>Hubungkan Arduino</span>
-              </button>
-            </div>
-
-            <!-- PANEL 2: MONITOR SERIAL LOG CERAH (LIGHT MODE) -->
-            <div
-              class="bg-white border border-slate-200 shadow-xs rounded-2xl p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3"
-            >
-              <div class="flex items-center justify-between">
-                <h3
-                  class="display-font text-sm font-bold text-slate-900 flex items-center gap-2"
-                >
-                  <i class="fa-solid fa-terminal text-teal-600"></i>
-                  <span>Serial Monitor Log</span>
-                </h3>
-                <span
-                  class="text-[10px] font-mono-code bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200"
-                  >9600 BAUD</span
-                >
-              </div>
-
-              <!-- Terminal Output -->
-              <div
-                id="log"
-                class="flex-1 min-h-[16rem] overflow-y-auto text-xs font-mono-code bg-slate-50 border border-slate-200 text-slate-800 p-3 rounded-xl space-y-1.5 leading-relaxed"
-              >
-                <div class="text-slate-400 font-medium">
-                  // Menunggu koneksi serial dari Arduino...
-                </div>
-              </div>
-
-              <p class="text-[11px] text-slate-500 flex items-center gap-1.5">
-                <i class="fa-solid fa-circle-info text-teal-600"></i>
-                <span
-                  >Menerima status string dari Arduino (contoh:
-                  <code
-                    class="bg-slate-100 text-slate-800 font-bold px-1 py-0.5 rounded border border-slate-200"
-                    >RED_ON</code
-                  >,
-                  <code
-                    class="bg-slate-100 text-slate-800 font-bold px-1 py-0.5 rounded border border-slate-200"
-                    >YELLOW_ON</code
-                  >,
-                  <code
-                    class="bg-slate-100 text-slate-800 font-bold px-1 py-0.5 rounded border border-slate-200"
-                    >GREEN_ON</code
-                  >).</span
-                >
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- BARIS BAWAH 1: PANDUAN PENGGUNAAN -->
-        <div class="bg-white border border-slate-200 shadow-xs rounded-2xl p-5">
-          <h3
-            class="display-font text-sm font-bold text-slate-900 mb-3 flex items-center gap-2"
-          >
-            <i class="fa-solid fa-list-check text-teal-600"></i>
-            <span>Panduan Penggunaan</span>
-          </h3>
-          <ol
-            class="list-decimal list-inside text-xs text-slate-600 space-y-2 leading-relaxed font-medium"
-          >
-            <li class="pl-1">
-              Unggah sketch program Arduino ke modul <b>Arduino Uno</b> Anda.
-            </li>
-            <li class="pl-1">
-              Hubungkan <b>LED Merah</b> ke
-              <code
-                class="bg-slate-100 text-slate-800 font-bold px-1 py-0.5 rounded"
-                >Pin 8</code
-              >, <b>LED Kuning</b> ke
-              <code
-                class="bg-slate-100 text-slate-800 font-bold px-1 py-0.5 rounded"
-                >Pin 9</code
-              >, dan <b>LED Hijau</b> ke
-              <code
-                class="bg-slate-100 text-slate-800 font-bold px-1 py-0.5 rounded"
-                >Pin 10</code
-              >.
-            </li>
-            <li class="pl-1">
-              Gunakan browser <b class="text-slate-800">Chrome</b> atau
-              <b class="text-slate-800">Edge</b>, lalu klik tombol
-              <span class="text-teal-700 font-bold">"Hubungkan Arduino"</span>
-              di kanan atas.
-            </li>
-            <li class="pl-1">
-              Pilih port USB COM Arduino Anda pada jendela pop-up.
-            </li>
-            <li class="pl-1">
-              Amati perubahan nyala LED yang berurutan secara otomatis setiap 2
-              detik.
-            </li>
-          </ol>
-        </div>
-
-        <!-- BARIS BAWAH 2: KUNCI JAWABAN PROGRAM ARDUINO IDE -->
-        <div
-          class="bg-white border border-slate-200 shadow-xs rounded-2xl p-5 space-y-4"
-        >
-          <div
-            id="toggleCodeHeader"
-            class="flex items-center justify-between cursor-pointer select-none group"
-          >
-            <div class="flex items-center gap-2.5">
-              <div
-                class="w-8 h-8 rounded-lg bg-teal-50 border border-teal-100 text-teal-700 flex items-center justify-center text-xs group-hover:bg-teal-100 transition-colors"
-              >
-                <i class="fa-solid fa-code"></i>
-              </div>
-              <div>
-                <h3 class="display-font text-sm font-bold text-slate-900">
-                  Kunci Jawaban Program Arduino IDE
-                </h3>
-                <p class="text-[11px] text-slate-500 font-medium">
-                  Klik untuk membuka atau menyembunyikan referensi source code
-                  Arduino.
-                </p>
-              </div>
-            </div>
-            <button
-              id="toggleCodeBtn"
-              type="button"
-              class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-700 font-bold text-xs transition-all border border-slate-200"
-            >
-              <span id="toggleText">Tampilkan Kode</span>
-              <i
-                id="toggleIcon"
-                class="fa-solid fa-chevron-down text-xs transition-transform duration-300"
-              ></i>
-            </button>
-          </div>
-
-          <!-- KONTEN KODE -->
-          <div
-            id="arduinoCodeSection"
-            class="hidden space-y-0 border border-slate-200 rounded-xl overflow-hidden shadow-2xs"
-          >
-            <div
-              class="flex items-center justify-between bg-slate-100 text-slate-700 px-4 py-2.5 text-xs font-mono-code border-b border-slate-200"
-            >
-              <span class="flex items-center gap-2 font-bold text-slate-700">
-                <i class="fa-solid fa-file-code text-teal-600"></i>
-                lampu_berurutan.ino
+                SUB 2.5
               </span>
-              <button
-                id="copyCodeBtn"
-                class="hover:bg-slate-200 bg-white text-slate-700 px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors flex items-center gap-1.5 border border-slate-300 shadow-2xs"
-              >
-                <i class="fa-regular fa-copy"></i>
-                <span id="copyBtnText">Salin Kode</span>
-              </button>
             </div>
-
-            <pre
-              class="bg-slate-50 text-slate-800 p-4 text-xs font-mono-code overflow-x-auto leading-relaxed select-all"
-            ><code id="codeText">// ======================================================
-// PROGRAM 3 LED BERURUTAN (MERAH, KUNING, HIJAU)
-// Pin Digital 8 : LED Merah
-// Pin Digital 9 : LED Kuning
-// Pin Digital 10: LED Hijau
-// Jeda Waktu    : 2 Detik (2000 ms)
-// Baud Rate     : 9600 bps
-// ======================================================
-
-const int RED_PIN    = 8;   // Pin LED Merah
-const int YELLOW_PIN = 9;   // Pin LED Kuning
-const int GREEN_PIN  = 10;  // Pin LED Hijau
-
-void setup() {
-  // Inisialisasi komunikasi Serial
-  Serial.begin(9600);
-
-  // Konfigurasi Pin sebagai OUTPUT
-  pinMode(RED_PIN, OUTPUT);
-  pinMode(YELLOW_PIN, OUTPUT);
-  pinMode(GREEN_PIN, OUTPUT);
-}
-
-void loop() {
-  // 1. Nyalakan LED Merah, matikan yang lain
-  digitalWrite(RED_PIN, HIGH);
-  digitalWrite(YELLOW_PIN, LOW);
-  digitalWrite(GREEN_PIN, LOW);
-  Serial.println("RED_ON");
-  delay(2000);  // Jeda 2 detik
-
-  // 2. Nyalakan LED Kuning, matikan yang lain
-  digitalWrite(RED_PIN, LOW);
-  digitalWrite(YELLOW_PIN, HIGH);
-  digitalWrite(GREEN_PIN, LOW);
-  Serial.println("YELLOW_ON");
-  delay(2000);  // Jeda 2 detik
-
-  // 3. Nyalakan LED Hijau, matikan yang lain
-  digitalWrite(RED_PIN, LOW);
-  digitalWrite(YELLOW_PIN, LOW);
-  digitalWrite(GREEN_PIN, HIGH);
-  Serial.println("GREEN_ON");
-  delay(2000);  // Jeda 2 detik
-}</code></pre>
+            <h1
+              class="text-sm sm:text-base font-black text-slate-900 leading-tight mt-0.5"
+            >
+              Studi Kasus Pemrograman I/O Digital
+            </h1>
           </div>
         </div>
+      </div>
+    </header>
 
-        <!-- NAVIGATION FOOTER -->
-        <nav class="flex items-center justify-between pt-2">
-          <a
-            href="2.4.html"
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs transition-colors shadow-2xs"
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <!-- HERO BANNER RINGKAS -->
+      <section
+        class="bg-gradient-to-r from-teal-800 to-teal-700 text-white rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden"
+      >
+        <div
+          class="absolute -right-4 -bottom-6 opacity-15 pointer-events-none hidden sm:block select-none"
+        >
+          <i class="fa-solid fa-list-check text-[140px] text-teal-100"></i>
+        </div>
+        <div class="relative z-10 space-y-1.5 max-w-2xl">
+          <div
+            class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
           >
-            <i class="fa-solid fa-arrow-left"></i>
-            <span>Sub 2.4: Sensor Digital</span>
-          </a>
-          <a
-            href="2.6.html"
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 font-bold text-xs transition-colors shadow-xs"
+            <i class="fa-solid fa-laptop-code text-teal-200 text-xs"></i>
+            <span>Lembar Kerja Studi Kasus</span>
+          </div>
+          <h2
+            class="text-lg sm:text-xl font-extrabold text-white leading-tight display-font"
           >
-            <span>Sub 2.6: Studi Kasus 2</span>
-            <i class="fa-solid fa-arrow-right"></i>
-          </a>
-        </nav>
-      </main>
-    </div>
+            Soal & Data Pengamatan I/O Digital
+          </h2>
+          <p
+            class="text-xs sm:text-sm text-teal-50/90 leading-relaxed font-normal"
+          >
+            Daftar soal studi kasus pemrograman kontrol LED berurutan dan
+            analisis input Push Button beserta tabel data pengamatan.
+          </p>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- STUDI KASUS NO. 1                          -->
+      <!-- ========================================== -->
+      <section
+        class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5"
+      >
+        <!-- HEADER SOAL 1 -->
+        <div
+          class="flex items-center justify-between border-b border-slate-100 pb-3"
+        >
+          <div class="flex items-center gap-2.5">
+            <span
+              class="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center font-bold text-xs"
+              >1</span
+            >
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+              Studi Kasus Pemrograman I/O Digital - Soal 1: Kontrol LED
+              Berurutan
+            </h3>
+          </div>
+          <span
+            class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded border border-teal-200 uppercase"
+          >
+            Soal 1
+          </span>
+        </div>
+
+        <!-- INSTRUKSI / SOAL 1 -->
+        <div
+          class="bg-teal-50/80 border border-teal-200 rounded-xl p-3.5 text-xs sm:text-sm text-teal-950 space-y-1"
+        >
+          <div class="font-bold">Instruksi:</div>
+          <p class="text-slate-700 leading-relaxed">
+            Buatlah program untuk menghidupkan 3 LED secara berurutan (merah,
+            kuning, hijau) dengan jeda waktu masing-masing lampu menyala selama
+            2 detik.
+          </p>
+        </div>
+
+        <!-- TABEL DATA PENGAMATAN 1 -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+            Tabel Data Pengamatan 1
+          </h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-center border-collapse">
+              <thead>
+                <tr
+                  class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200"
+                >
+                  <th class="p-2.5 border border-slate-200 w-12">No</th>
+                  <th class="p-2.5 border border-slate-200 text-left">LED</th>
+                  <th class="p-2.5 border border-slate-200">Detik ke-1</th>
+                  <th class="p-2.5 border border-slate-200">Detik ke-2</th>
+                  <th class="p-2.5 border border-slate-200">Detik ke-3</th>
+                  <th class="p-2.5 border border-slate-200">Detik ke-4</th>
+                  <th class="p-2.5 border border-slate-200">Detik ke-5</th>
+                  <th class="p-2.5 border border-slate-200">Detik ke-6</th>
+                  <th class="p-2.5 border border-slate-200">Dst.</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 font-mono text-[11px]">
+                <tr>
+                  <td class="p-2.5 border border-slate-200 font-bold">1</td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-left font-bold text-red-600"
+                  >
+                    Merah
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 bg-red-50 text-red-700 font-bold"
+                  >
+                    HIGH
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 bg-red-50 text-red-700 font-bold"
+                  >
+                    HIGH
+                  </td>
+                  <td class="p-2.5 border border-slate-200 text-slate-400">
+                    LOW
+                  </td>
+                  <td class="p-2.5 border border-slate-200 text-slate-400">
+                    LOW
+                  </td>
+                  <td class="p-2.5 border border-slate-200 text-slate-400">
+                    LOW
+                  </td>
+                  <td class="p-2.5 border border-slate-200 text-slate-400">
+                    LOW
+                  </td>
+                  <td class="p-2.5 border border-slate-200 text-slate-400">
+                    Berulang
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-2.5 border border-slate-200 font-bold">2</td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-left font-bold text-amber-600"
+                  >
+                    Kuning
+                  </td>
+                  <td class="p-2.5 border border-slate-200 text-slate-400">
+                    LOW
+                  </td>
+                  <td class="p-2.5 border border-slate-200 text-slate-400">
+                    LOW
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 bg-amber-50 text-amber-700 font-bold"
+                  >
+                    HIGH
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 bg-amber-50 text-amber-700 font-bold"
+                  >
+                    HIGH
+                  </td>
+                  <td class="p-2.5 border border-slate-200 text-slate-400">
+                    LOW
+                  </td>
+                  <td class="p-2.5 border border-slate-200 text-slate-400">
+                    LOW
+                  </td>
+                  <td class="p-2.5 border border-slate-200 text-slate-400">
+                    Berulang
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-2.5 border border-slate-200 font-bold">3</td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-left font-bold text-emerald-600"
+                  >
+                    Hijau
+                  </td>
+                  <td class="p-2.5 border border-slate-200 text-slate-400">
+                    LOW
+                  </td>
+                  <td class="p-2.5 border border-slate-200 text-slate-400">
+                    LOW
+                  </td>
+                  <td class="p-2.5 border border-slate-200 text-slate-400">
+                    LOW
+                  </td>
+                  <td class="p-2.5 border border-slate-200 text-slate-400">
+                    LOW
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 bg-emerald-50 text-emerald-700 font-bold"
+                  >
+                    HIGH
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 bg-emerald-50 text-emerald-700 font-bold"
+                  >
+                    HIGH
+                  </td>
+                  <td class="p-2.5 border border-slate-200 text-slate-400">
+                    Berulang
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- STUDI KASUS NO. 2                          -->
+      <!-- ========================================== -->
+      <section
+        class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5"
+      >
+        <!-- HEADER SOAL 2 -->
+        <div
+          class="flex items-center justify-between border-b border-slate-100 pb-3"
+        >
+          <div class="flex items-center gap-2.5">
+            <span
+              class="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center font-bold text-xs"
+              >2</span
+            >
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+              Studi Kasus Pemrograman I/O Digital - Soal 2: Kontrol LED
+              Menggunakan Push Button
+            </h3>
+          </div>
+          <span
+            class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded border border-teal-200 uppercase"
+          >
+            Soal 2
+          </span>
+        </div>
+
+        <!-- INSTRUKSI / SOAL 2 -->
+        <div
+          class="bg-teal-50/80 border border-teal-200 rounded-xl p-3.5 text-xs sm:text-sm text-teal-950 space-y-1"
+        >
+          <div class="font-bold">Instruksi:</div>
+          <p class="text-slate-700 leading-relaxed">
+            Buatlah program untuk mengontrol 2 LED menggunakan input dari push
+            button.
+          </p>
+        </div>
+
+        <!-- TABEL DATA PENGAMATAN 2 -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider">
+            Tabel Data Pengamatan 2
+          </h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs border-collapse">
+              <thead>
+                <tr
+                  class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200"
+                >
+                  <th class="p-2.5 border border-slate-200 text-center w-12">
+                    No
+                  </th>
+                  <th class="p-2.5 border border-slate-200">Button</th>
+                  <th class="p-2.5 border border-slate-200">Kondisi</th>
+                  <th class="p-2.5 border border-slate-200 text-center">
+                    Kondisi LED
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-[11px]">
+                <tr class="hover:bg-slate-50">
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold"
+                  >
+                    1
+                  </td>
+                  <td class="p-2.5 border border-slate-200 font-bold">
+                    Button 1
+                  </td>
+                  <td class="p-2.5 border border-slate-200">Pull Down</td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-mono"
+                  >
+                    Dilepas = LOW (Mati) | Ditekan = HIGH (Nyala)
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold"
+                  >
+                    2
+                  </td>
+                  <td class="p-2.5 border border-slate-200 font-bold">
+                    Button 1
+                  </td>
+                  <td class="p-2.5 border border-slate-200">Pull Up</td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-mono"
+                  >
+                    Dilepas = HIGH (Mati) | Ditekan = LOW (Nyala)
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold"
+                  >
+                    3
+                  </td>
+                  <td class="p-2.5 border border-slate-200 font-bold">
+                    Button 2
+                  </td>
+                  <td class="p-2.5 border border-slate-200">Pull Down</td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-mono"
+                  >
+                    Dilepas = LOW (Mati) | Ditekan = HIGH (Nyala)
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold"
+                  >
+                    4
+                  </td>
+                  <td class="p-2.5 border border-slate-200 font-bold">
+                    Button 2
+                  </td>
+                  <td class="p-2.5 border border-slate-200">Pull Up</td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-mono"
+                  >
+                    Dilepas = HIGH (Mati) | Ditekan = LOW (Nyala)
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- NAVIGATION FOOTER -->
+      <nav class="flex items-center justify-between pt-2">
+        <a
+          href="2.4.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs transition-colors shadow-2xs"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Sub 2.4: Input Digital</span>
+        </a>
+        <a
+          href="index.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 font-bold text-xs transition-colors shadow-xs"
+        >
+          <span>Finish</span>
+          <i class="fa-solid fa-check"></i>
+        </a>
+      </nav>
+    </main>
 
     <footer
-      class="max-w-6xl mx-auto w-full px-4 pt-4 text-center text-xs text-slate-400 font-medium"
+      class="max-w-4xl mx-auto w-full px-4 pt-4 text-center text-xs text-slate-400 font-medium"
     >
       <p>© MIKRO EDU - SMK SMTI Yogyakarta | Teknik Kimia Industri</p>
     </footer>
-
-    <!-- SCRIPT LOGIC -->
-    <script>
-      // DOM Elements
-      const connectBtn = document.getElementById("connectBtn");
-      const connDot = document.getElementById("connDot");
-      const connLabel = document.getElementById("connLabel");
-      const statusText = document.getElementById("statusText");
-      const cardStatus = document.getElementById("cardStatus");
-      const statusIcon = document.getElementById("statusIcon");
-      const redPinText = document.getElementById("redPinText");
-      const yellowPinText = document.getElementById("yellowPinText");
-      const greenPinText = document.getElementById("greenPinText");
-      const logEl = document.getElementById("log");
-
-      const ledRed = document.getElementById("ledRed");
-      const ledYellow = document.getElementById("ledYellow");
-      const ledGreen = document.getElementById("ledGreen");
-
-      // Collapsible Code Elements
-      const toggleCodeHeader = document.getElementById("toggleCodeHeader");
-      const arduinoCodeSection = document.getElementById("arduinoCodeSection");
-      const toggleText = document.getElementById("toggleText");
-      const toggleIcon = document.getElementById("toggleIcon");
-      const copyCodeBtn = document.getElementById("copyCodeBtn");
-      const copyBtnText = document.getElementById("copyBtnText");
-      const codeText = document.getElementById("codeText");
-
-      let port,
-        reader,
-        keepReading = true;
-
-      // Toggle Tampilkan / Sembunyikan Kode Arduino
-      toggleCodeHeader.addEventListener("click", () => {
-        const isHidden = arduinoCodeSection.classList.contains("hidden");
-        if (isHidden) {
-          arduinoCodeSection.classList.remove("hidden");
-          toggleText.textContent = "Sembunyikan Kode";
-          toggleIcon.style.transform = "rotate(180deg)";
-        } else {
-          arduinoCodeSection.classList.add("hidden");
-          toggleText.textContent = "Tampilkan Kode";
-          toggleIcon.style.transform = "rotate(0deg)";
-        }
-      });
-
-      // Copy Code Functionality
-      copyCodeBtn.addEventListener("click", () => {
-        navigator.clipboard.writeText(codeText.textContent.trim()).then(() => {
-          copyBtnText.textContent = "Tersalin!";
-          setTimeout(() => {
-            copyBtnText.textContent = "Salin Kode";
-          }, 2000);
-        });
-      });
-
-      function addLog(line) {
-        const p = document.createElement("div");
-        const t = new Date().toLocaleTimeString();
-        p.innerHTML = `<span class="text-slate-400">[${t}]</span> ${line}`;
-        logEl.prepend(p);
-        while (logEl.childElementCount > 50) logEl.removeChild(logEl.lastChild);
-      }
-
-      function updateLEDState(state) {
-        // Reset all
-        ledRed.className = "led-off";
-        ledYellow.className = "led-off";
-        ledGreen.className = "led-off";
-
-        redPinText.textContent = "LOW (OFF)";
-        redPinText.className =
-          "font-bold text-xs sm:text-sm text-slate-800 font-mono-code";
-
-        yellowPinText.textContent = "LOW (OFF)";
-        yellowPinText.className =
-          "font-bold text-xs sm:text-sm text-slate-800 font-mono-code";
-
-        greenPinText.textContent = "LOW (OFF)";
-        greenPinText.className =
-          "font-bold text-xs sm:text-sm text-slate-800 font-mono-code";
-
-        if (state === "RED") {
-          ledRed.className = "led-red-active";
-          redPinText.textContent = "HIGH (ON)";
-          redPinText.className =
-            "font-bold text-xs sm:text-sm text-rose-600 font-mono-code";
-          statusText.textContent = "MERAH MENYALA";
-          statusText.className =
-            "font-black text-sm sm:text-base text-rose-600 display-font";
-        } else if (state === "YELLOW") {
-          ledYellow.className = "led-yellow-active";
-          yellowPinText.textContent = "HIGH (ON)";
-          yellowPinText.className =
-            "font-bold text-xs sm:text-sm text-amber-600 font-mono-code";
-          statusText.textContent = "KUNING MENYALA";
-          statusText.className =
-            "font-black text-sm sm:text-base text-amber-600 display-font";
-        } else if (state === "GREEN") {
-          ledGreen.className = "led-green-active";
-          greenPinText.textContent = "HIGH (ON)";
-          greenPinText.className =
-            "font-bold text-xs sm:text-sm text-emerald-600 font-mono-code";
-          statusText.textContent = "HIJAU MENYALA";
-          statusText.className =
-            "font-black text-sm sm:text-base text-emerald-600 display-font";
-        }
-      }
-
-      function handleLine(line) {
-        line = line.trim();
-        if (!line) return;
-        addLog(line);
-
-        if (line.includes("RED_ON")) {
-          updateLEDState("RED");
-        } else if (line.includes("YELLOW_ON")) {
-          updateLEDState("YELLOW");
-        } else if (line.includes("GREEN_ON")) {
-          updateLEDState("GREEN");
-        }
-      }
-
-      async function connectSerial() {
-        if (!("serial" in navigator)) {
-          alert(
-            "Browser ini tidak mendukung Web Serial API. Gunakan Chrome atau Edge terbaru.",
-          );
-          return;
-        }
-        try {
-          port = await navigator.serial.requestPort();
-          await port.open({ baudRate: 9600 });
-
-          connDot.className = "w-3 h-3 rounded-full bg-emerald-500 shrink-0";
-          connLabel.textContent = "Terhubung via USB";
-          connectBtn.innerHTML = `<i class="fa-solid fa-plug-circle-xmark text-xs"></i> <span>Putuskan Koneksi</span>`;
-          connectBtn.className =
-            "w-full py-2.5 bg-rose-600 hover:bg-rose-700 active:scale-[0.99] text-white font-bold text-xs rounded-xl transition-all shadow-xs flex items-center justify-center gap-2";
-
-          addLog(
-            "<span class='text-teal-700 font-bold'>[SYSTEM] Terhubung ke Serial Port Arduino.</span>",
-          );
-
-          const decoder = new TextDecoderStream();
-          port.readable.pipeTo(decoder.writable);
-          reader = decoder.readable.getReader();
-
-          keepReading = true;
-          readLoop();
-        } catch (err) {
-          addLog(
-            `<span class='text-rose-600 font-bold'>[ERROR] ${err.message}</span>`,
-          );
-        }
-      }
-
-      async function readLoop() {
-        let buffer = "";
-        try {
-          while (keepReading) {
-            const { value, done } = await reader.read();
-            if (done) break;
-            if (value) {
-              buffer += value;
-              let idx;
-              while ((idx = buffer.indexOf("\n")) >= 0) {
-                const line = buffer.slice(0, idx);
-                buffer = buffer.slice(idx + 1);
-                handleLine(line);
-              }
-            }
-          }
-        } catch (err) {
-          addLog(
-            `<span class='text-rose-600 font-bold'>[KONEKSI TERPUTUS] ${err.message}</span>`,
-          );
-        } finally {
-          reader?.releaseLock();
-        }
-      }
-
-      async function disconnectSerial() {
-        keepReading = false;
-        try {
-          await reader?.cancel();
-        } catch (e) {}
-        try {
-          await port?.close();
-        } catch (e) {}
-
-        connDot.className = "w-3 h-3 rounded-full bg-slate-400 shrink-0";
-        connLabel.textContent = "Belum terhubung";
-        connectBtn.innerHTML = `<i class="fa-solid fa-plug text-xs"></i> <span>Hubungkan Arduino</span>`;
-        connectBtn.className =
-          "w-full py-2.5 bg-teal-600 hover:bg-teal-700 active:scale-[0.99] text-white font-bold text-xs rounded-xl transition-all shadow-xs flex items-center justify-center gap-2";
-
-        addLog(
-          "<span class='text-amber-700 font-bold'>[SYSTEM] Koneksi terputus dari Arduino.</span>",
-        );
-      }
-
-      connectBtn.addEventListener("click", () => {
-        if (connLabel.textContent.includes("Terhubung")) {
-          disconnectSerial();
-        } else {
-          connectSerial();
-        }
-      });
-
-      // Default State Init
-      updateLEDState("RED");
-    </script>
   </body>
 </html>
