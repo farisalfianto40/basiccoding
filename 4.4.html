@@ -92,7 +92,7 @@
               <span
                 class="text-[10px] font-extrabold bg-teal-100 text-teal-800 px-2 py-0.5 rounded uppercase tracking-wider"
               >
-                SUB 4.3
+                SUB 4.4
               </span>
             </div>
             <h1
@@ -120,7 +120,7 @@
           <div
             class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
           >
-            <i class="fa-solid fa-microchip text-teal-200-300 text-xs"></i>
+            <i class="fa-solid fa-microchip text-teal-200 text-xs"></i>
             <span>Praktik Display Character LCD I2C</span>
           </div>
           <h2
@@ -132,8 +132,8 @@
             class="text-xs sm:text-sm text-teal-50/90 leading-relaxed font-normal"
           >
             Pelajari komunikasi protokol I2C (SDA/SCL) untuk menghemat
-            penggunaan pin Arduino, serta menampilkan data sensor DHT11 secara
-            real-time pada layar LCD 16x2.
+            penggunaan pin Arduino, menampilkan teks berjalan (running text)
+            khusus pada baris ke-0, serta data sensor pada layar LCD 16x2.
           </p>
         </div>
       </section>
@@ -233,7 +233,7 @@
 
           <!-- INPUT CONTROLS / INTERAKTIF KONTROL SIMULASI -->
           <div class="w-full space-y-2 mt-3">
-            <!-- CONTROLS MISI 2: SLIDER DHT11 -->
+            <!-- CONTROLS MISI 3: SLIDER DHT11 -->
             <div
               id="dhtSliderBox"
               class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-left hidden"
@@ -296,25 +296,32 @@
           <span
             class="text-xs font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-100"
           >
-            2 Misi Utama
+            3 Misi Utama
           </span>
         </div>
 
-        <!-- TOMBOL STRIP MISI 1 & MISI 2 -->
+        <!-- TOMBOL STRIP MISI 1, 2, & 3 -->
         <div class="flex flex-wrap gap-2.5">
           <button
             onclick="switchMission('1')"
             id="sub-btn-1"
             class="px-4 py-2.5 rounded-2xl text-xs font-bold bg-teal-700 text-white shadow-xs transition cursor-pointer flex items-center gap-2"
           >
-            <i class="fa-solid fa-font"></i> Misi 1: Teks Dasar LCD I2C
+            <i class="fa-solid fa-font"></i> Misi 1: Teks Dasar
           </button>
           <button
             onclick="switchMission('2')"
             id="sub-btn-2"
             class="px-4 py-2.5 rounded-2xl text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition cursor-pointer flex items-center gap-2"
           >
-            <i class="fa-solid fa-temperature-three-quarters"></i> Misi 2:
+            <i class="fa-solid fa-arrows-left-right"></i> Misi 2: Running Text
+          </button>
+          <button
+            onclick="switchMission('3')"
+            id="sub-btn-3"
+            class="px-4 py-2.5 rounded-2xl text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition cursor-pointer flex items-center gap-2"
+          >
+            <i class="fa-solid fa-temperature-three-quarters"></i> Misi 3:
             Monitoring DHT11
           </button>
         </div>
@@ -583,43 +590,74 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 
-// Inisialisasi LCD pada alamat 0x27, 16 kolom x 2 baris
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 void setup() {
   Serial.begin(9600);
-  
-  lcd.init();          // Inisialisasi LCD
-  lcd.backlight();     // Menyalakan lampu latar (backlight)
+  lcd.init();
+  lcd.backlight();
   
   // Baris 1 (Index 0,0)
   lcd.setCursor(0, 0);
-  lcd.print("  MIKROEDU 2026 ");
+  lcd.print("SMK SMTI Yogya");
   
   // Baris 2 (Index 0,1)
   lcd.setCursor(0, 1);
-  lcd.print(" LCD I2C 16x2 OK");
-  
-  Serial.println("System Initialized - LCD I2C Ready!");
+  lcd.print("Teknik Mekatronika");
 }
 
 void loop() {
-  // Teks tetap ditampilkan secara statis
   delay(1000);
 }`,
         },
         2: {
-          filename: "sketch_misi2_lcd_dht11.ino",
-          title: "Misi 2: Monitoring Sensor DHT11 pada LCD",
+          filename: "sketch_misi2_running_text.ino",
+          title: "Misi 2: Running Text di Baris ke-0",
+          icon: "fa-arrows-left-right",
+          statusText: "Ready | LCD: SDA(A4), SCL(A5) - Running Text",
+          schemaTitle: "Skema Misi 2 (Running Text LCD I2C)",
+          schemaImg: "img/modul04/4.4.1.png",
+          schemaFallbackImg: "4.4.1.png",
+          schemaDesc:
+            "<strong>Skema Misi 2:</strong> Menggunakan rangkaian LCD I2C standar (A4 & A5) untuk menampilkan teks berjalan (running text) pada baris pertama (baris ke-0).",
+          desc: "<strong>Tugas Misi 2:</strong> Membuat efek teks berjalan (running text) secara kontinyu khusus pada baris ke-0 (indeks baris 0) layar LCD 16x2.",
+          rawCode: `// --- MISI 2: RUNNING TEXT DI BARIS KE-0 ---
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+String pesan = "SMK SMTI Yogyakarta - Unggul & Berkarakter ";
+int panjangPesan = pesan.length();
+
+void setup() {
+  Serial.begin(9600);
+  lcd.init();
+  lcd.backlight();
+}
+
+void loop() {
+  // Menampilkan running text hanya di baris ke-0 (index 0)
+  for (int i = 0; i <= panjangPesan - 16; i++) {
+    lcd.setCursor(0, 0);
+    lcd.print(pesan.substring(i, i + 16));
+    
+    delay(300);
+  }
+}`,
+        },
+        3: {
+          filename: "sketch_misi3_lcd_dht11.ino",
+          title: "Misi 3: Monitoring Sensor DHT11 pada LCD",
           icon: "fa-temperature-three-quarters",
           statusText: "Ready | LCD: A4/A5 | DHT11: PIN 2",
-          schemaTitle: "Skema Misi 2 (LCD I2C + DHT11)",
+          schemaTitle: "Skema Misi 3 (LCD I2C + DHT11)",
           schemaImg: "img/modul04/4.4.2.png",
           schemaFallbackImg: "4.4.2.png",
           schemaDesc:
-            "<strong>Skema Misi 2:</strong> Tambahkan Sensor DHT11 ke rangkaian. Pin Out/Data DHT11 terhubung ke <strong class='text-teal-700'>Pin Digital 2</strong>. LCD terhubung ke I2C (A4 & A5).",
-          desc: "<strong>Tugas Misi 2:</strong> Membaca nilai Suhu (°C) dan Kelembaban (%) dari sensor DHT11 kemudian memperbarui tampilannya di layar LCD setiap 2 detik.",
-          rawCode: `// --- MISI 2: MONITORING DHT11 PADA LCD I2C ---
+            "<strong>Skema Misi 3:</strong> Tambahkan Sensor DHT11 ke rangkaian. Pin Out/Data DHT11 terhubung ke <strong class='text-teal-700'>Pin Digital 2</strong>. LCD terhubung ke I2C (A4 & A5).",
+          desc: "<strong>Tugas Misi 3:</strong> Membaca nilai Suhu (°C) dan Kelembaban (%) dari sensor DHT11 kemudian memperbarui tampilannya di layar LCD setiap 2 detik.",
+          rawCode: `// --- MISI 3: MONITORING DHT11 PADA LCD I2C ---
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <DHT.h>
@@ -697,7 +735,7 @@ void loop() {
         document.getElementById("tempValText").innerText = `${tempVal} °C`;
         document.getElementById("humValText").innerText = `${humVal} %`;
 
-        if (currentMissionKey === "2") {
+        if (currentMissionKey === "3") {
           writeToSimLcd(`Temp : ${tempVal}\u00B0C`, `Humid: ${humVal}%`);
         }
       }
@@ -740,11 +778,11 @@ void loop() {
               '<span class="text-[#05797d] font-bold">$1</span>',
             )
             .replace(
-              /\b(setup|loop|pinMode|digitalRead|digitalWrite|analogRead|delay|millis|begin|print|println|init|backlight|setCursor|clear|readHumidity|readTemperature)\b/g,
+              /\b(setup|loop|pinMode|digitalRead|digitalWrite|analogRead|delay|millis|begin|print|println|init|backlight|setCursor|clear|readHumidity|readTemperature|substring)\b/g,
               '<span class="text-[#d97706] font-semibold">$1</span>',
             )
             .replace(
-              /\b(HIGH|LOW|OUTPUT|INPUT|INPUT_PULLUP|lcd|dht|DHTPIN|DHTTYPE|DHT11|LiquidCrystal_I2C|Serial|Wire)\b/g,
+              /\b(HIGH|LOW|OUTPUT|INPUT|INPUT_PULLUP|lcd|dht|DHTPIN|DHTTYPE|DHT11|LiquidCrystal_I2C|Serial|Wire|String)\b/g,
               '<span class="text-[#0284c7] font-bold">$1</span>',
             )
             .replace(
@@ -811,12 +849,23 @@ void loop() {
 
         if (key === "1") {
           printLiveLog("System Initialized - LCD I2C Ready!");
-          writeToSimLcd("  MIKROEDU 2026 ", " LCD I2C 16x2 OK");
+          writeToSimLcd("SMK SMTI Yogya", "Teknik Mekatronika");
 
           liveTimer = setInterval(() => {
             printLiveLog("LCD Active - Displaying Static Text");
           }, 3000);
         } else if (key === "2") {
+          printLiveLog("Running Text Initialized on Row 0...");
+          const text = "SMK SMTI Yogyakarta - Unggul & Berkarakter ";
+          let idx = 0;
+
+          liveTimer = setInterval(() => {
+            const sub = text.substring(idx, idx + 16).padEnd(16, " ");
+            writeToSimLcd(sub, ""); // Baris 1 dikosongkan, hanya baris ke-0 yang running text
+            printLiveLog(`Running Text [Row 0]: "${sub.trim()}"`);
+            idx = (idx + 1) % (text.length - 15);
+          }, 300);
+        } else if (key === "3") {
           printLiveLog("DHT11 Sensor Initializing...");
 
           setTimeout(() => {
@@ -900,7 +949,7 @@ void loop() {
       }
 
       function switchMission(key) {
-        const keys = ["1", "2"];
+        const keys = ["1", "2", "3"];
         keys.forEach((k) => {
           const btn = document.getElementById(`sub-btn-${k}`);
           if (btn) {
@@ -934,12 +983,12 @@ void loop() {
         document.getElementById("mission-icon").className =
           `fa-solid ${data.icon}`;
 
-        // Toggle Control Panels (Misi 2)
+        // Toggle Control Panels (Misi 3 for DHT11)
         const dhtBox = document.getElementById("dhtSliderBox");
 
-        if (key === "1") {
+        if (key === "1" || key === "2") {
           dhtBox.classList.add("hidden");
-        } else if (key === "2") {
+        } else if (key === "3") {
           dhtBox.classList.remove("hidden");
         }
 
