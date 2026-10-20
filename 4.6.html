@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sub 4.6 - Studi Kasus Pemrograman Sensor & LCD</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      body {
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 9999px;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased pb-10"
+  >
+    <!-- HEADER APP -->
+    <header
+      class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3"
+      >
+        <div class="flex items-center gap-3">
+          <a
+            href="index.html"
+            class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-sm transition-colors"
+            title="Kembali"
+          >
+            <i class="fa-solid fa-home"></i>
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span
+                class="text-[10px] font-extrabold bg-teal-100 text-teal-800 px-2 py-0.5 rounded uppercase tracking-wider"
+              >
+                SUB 4.6
+              </span>
+            </div>
+            <h1
+              class="text-sm sm:text-base font-black text-slate-900 leading-tight mt-0.5"
+            >
+              Studi Kasus Pemrograman Sensor & Display LCD 16x2
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <!-- HERO BANNER RINGKAS -->
+      <section
+        class="bg-gradient-to-r from-teal-800 to-teal-700 text-white rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden"
+      >
+        <div
+          class="absolute -right-4 -bottom-6 opacity-15 pointer-events-none hidden sm:block select-none"
+        >
+          <i class="fa-solid fa-laptop-code text-[140px] text-teal-100"></i>
+        </div>
+        <div class="relative z-10 space-y-1.5 max-w-2xl">
+          <div
+            class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
+          >
+            <i class="fa-solid fa-laptop-code text-teal-200 text-xs"></i>
+            <span>Lembar Kerja Studi Kasus Modul 4</span>
+          </div>
+          <h2
+            class="text-lg sm:text-xl font-extrabold text-white leading-tight display-font"
+          >
+            Soal & Data Pengamatan Sistem Sensor & LCD
+          </h2>
+          <p
+            class="text-xs sm:text-sm text-teal-50/90 leading-relaxed font-normal"
+          >
+            Studi kasus pemanfaatan sensor ultrasonik dan sensor api (flame
+            sensor) dengan antarmuka penampil LCD I2C 16x2 pada Arduino Uno.
+          </p>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- STUDI KASUS SOAL 1                        -->
+      <!-- ========================================== -->
+      <section
+        class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5"
+      >
+        <!-- HEADER SOAL 1 -->
+        <div
+          class="flex items-center justify-between border-b border-slate-100 pb-3"
+        >
+          <div class="flex items-center gap-2.5">
+            <span
+              class="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center font-bold text-xs"
+              >1</span
+            >
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+              Studi Kasus Soal 1: Pembacaan Sensor Ultrasonik pada LCD 16x2
+            </h3>
+          </div>
+          <span
+            class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded border border-teal-200 uppercase"
+          >
+            Soal Studi Kasus
+          </span>
+        </div>
+
+        <!-- INSTRUKSI / SOAL 1 -->
+        <div
+          class="bg-teal-50/80 border border-teal-200 rounded-xl p-3.5 text-xs sm:text-sm text-teal-950 space-y-1.5"
+        >
+          <div class="font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-info text-teal-600"></i> Instruksi
+            Soal:
+          </div>
+          <p class="text-slate-700 leading-relaxed">
+            Buatlah program untuk menampilkan hasil pembacaan sensor ultrasonik
+            pada layar LCD 16x2 menggunakan Arduino Uno.
+          </p>
+          <ul class="list-disc pl-5 space-y-1 text-slate-700">
+            <li>
+              <strong>Baris 1:</strong> Menampilkan teks
+              <code>"Jarak: XX cm"</code>, di mana XX adalah nilai jarak yang
+              diukur dalam satuan sentimeter (cm).
+            </li>
+            <li>
+              <strong>Baris 2:</strong> Menampilkan status berdasarkan jarak:
+              <code>"Dekat"</code> jika jarak kurang dari 10 cm,
+              <code>"Sedang"</code> jika jarak antara 10 cm hingga 50 cm, dan
+              <code>"Jauh"</code> jika jarak lebih dari 50 cm.
+            </li>
+          </ul>
+        </div>
+
+        <!-- TABEL DATA PENGAMATAN 1 -->
+        <div class="space-y-2">
+          <h4
+            class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-table text-teal-600"></i> Tabel Data
+            Pengamatan Sensor Ultrasonik
+          </h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs border-collapse">
+              <thead>
+                <tr
+                  class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200"
+                >
+                  <th class="p-2.5 border border-slate-200 text-center w-12">
+                    No
+                  </th>
+                  <th class="p-2.5 border border-slate-200 text-center">
+                    Jarak Objek
+                  </th>
+                  <th class="p-2.5 border border-slate-200 text-left">
+                    Tampilan Layar LCD 16x2
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-[11px] font-mono">
+                <tr class="hover:bg-slate-50">
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold"
+                  >
+                    1
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center text-rose-600 font-bold"
+                  >
+                    ... cm
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 font-sans text-slate-400"
+                  >
+                    ...
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold"
+                  >
+                    2
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center text-amber-600 font-bold"
+                  >
+                    ... cm
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 font-sans text-slate-400"
+                  >
+                    ...
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold"
+                  >
+                    Dst.
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center text-slate-400 font-bold"
+                  >
+                    ...
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 font-sans text-slate-400"
+                  >
+                    ...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PETUNJUK KODE ARDUINO 1 -->
+        <div
+          class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2"
+        >
+          <h4
+            class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-code text-teal-600"></i> Petunjuk Logika
+            Pemrograman Soal 1
+          </h4>
+          <p class="text-xs text-slate-600">
+            Gunakan pengkondisian <code>if-else</code> untuk menentukan status
+            jarak pada baris kedua LCD:
+          </p>
+          <div
+            class="bg-white border border-slate-200 text-slate-800 p-3 rounded-lg font-mono text-xs overflow-x-auto shadow-2xs"
+          >
+            <span class="text-slate-400">// Logika Status Jarak Ultrasonik</span
+            ><br />
+            <span class="text-teal-700 font-semibold">if</span> (jarak &lt;
+            <span class="text-emerald-600 font-bold">10</span>) &#123;
+            lcd.print(<span class="text-amber-600">"Dekat"</span>); &#125;<br />
+            <span class="text-teal-700 font-semibold">else if</span> (jarak
+            &gt;= <span class="text-emerald-600 font-bold">10</span> && jarak
+            &lt;= <span class="text-emerald-600 font-bold">50</span>) &#123;
+            lcd.print(<span class="text-amber-600">"Sedang"</span>); &#125;<br />
+            <span class="text-teal-700 font-semibold">else</span> &#123;
+            lcd.print(<span class="text-amber-600">"Jauh"</span>); &#125;
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- STUDI KASUS SOAL 2                        -->
+      <!-- ========================================== -->
+      <section
+        class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5"
+      >
+        <!-- HEADER SOAL 2 -->
+        <div
+          class="flex items-center justify-between border-b border-slate-100 pb-3"
+        >
+          <div class="flex items-center gap-2.5">
+            <span
+              class="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center font-bold text-xs"
+              >2</span
+            >
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+              Studi Kasus Soal 2: Sistem Deteksi Api (Flame Sensor) & LCD 16x2
+            </h3>
+          </div>
+          <span
+            class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded border border-teal-200 uppercase"
+          >
+            Soal Studi Kasus
+          </span>
+        </div>
+
+        <!-- INSTRUKSI / SOAL 2 -->
+        <div
+          class="bg-teal-50/80 border border-teal-200 rounded-xl p-3.5 text-xs sm:text-sm text-teal-950 space-y-1.5"
+        >
+          <div class="font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-info text-teal-600"></i> Instruksi
+            Soal:
+          </div>
+          <p class="text-slate-700 leading-relaxed">
+            Buatlah sistem deteksi api menggunakan sensor flame yang terhubung
+            ke Arduino. Sistem ini harus mampu menampilkan status deteksi api
+            dan kondisi keselamatan pada LCD 16x2. Ketika api terdeteksi, LCD
+            akan menampilkan peringatan bahaya. Jika tidak ada api yang
+            terdeteksi, LCD akan menampilkan status "Aman".
+          </p>
+          <ul class="list-disc pl-5 space-y-1 text-slate-700">
+            <li>
+              <strong>Baris 1:</strong> Menampilkan teks
+              <code>"Terdeteksi Api"</code> atau
+              <code>"Tidak Terdeteksi Api"</code> sesuai kondisi sensor.
+            </li>
+            <li>
+              <strong>Baris 2:</strong> Menampilkan teks
+              <code>"Kondisi: Bahaya"</code> ketika api terdeteksi, dan
+              <code>"Kondisi: Aman"</code> ketika tidak ada api.
+            </li>
+          </ul>
+        </div>
+
+        <!-- TABEL DATA PENGAMATAN 2 -->
+        <div class="space-y-2">
+          <h4
+            class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-table text-teal-600"></i> Tabel Data
+            Pengamatan Sistem Deteksi Api
+          </h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs border-collapse">
+              <thead>
+                <tr
+                  class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200"
+                >
+                  <th class="p-2.5 border border-slate-200 text-center w-12">
+                    No
+                  </th>
+                  <th class="p-2.5 border border-slate-200 text-center">
+                    Kondisi Sensor
+                  </th>
+                  <th class="p-2.5 border border-slate-200 text-left">
+                    Tampilan Layar LCD 16x2
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-[11px] font-mono">
+                <tr class="hover:bg-slate-50">
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold"
+                  >
+                    1
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center text-slate-400 font-bold"
+                  >
+                    ...
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 font-sans text-slate-400"
+                  >
+                    ...
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold"
+                  >
+                    2
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center text-slate-400 font-bold"
+                  >
+                    ...
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 font-sans text-slate-400"
+                  >
+                    ...
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold"
+                  >
+                    Dst.
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center text-slate-400 font-bold"
+                  >
+                    ...
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 font-sans text-slate-400"
+                  >
+                    ...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PETUNJUK KODE ARDUINO 2 -->
+        <div
+          class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2"
+        >
+          <h4
+            class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-code text-teal-600"></i> Petunjuk Logika
+            Pemrograman Soal 2
+          </h4>
+          <p class="text-xs text-slate-600">
+            Gunakan fungsi <code>digitalRead()</code> untuk membaca sinyal
+            digital dari sensor api:
+          </p>
+          <div
+            class="bg-white border border-slate-200 text-slate-800 p-3 rounded-lg font-mono text-xs overflow-x-auto shadow-2xs"
+          >
+            <span class="text-slate-400"
+              >// Logika Sensor Api (Umumnya aktif LOW)</span
+            ><br />
+            <span class="text-teal-700 font-semibold">int</span> sensorState =
+            <span class="text-amber-600 font-semibold">digitalRead</span
+            >(flamePin);<br />
+            <span class="text-teal-700 font-semibold">if</span> (sensorState ==
+            LOW) &#123;
+            <span class="text-slate-400">// Terdeteksi Api</span> &#125;
+          </div>
+        </div>
+      </section>
+
+      <!-- NAVIGATION FOOTER -->
+      <nav class="flex items-center justify-between pt-2">
+        <a
+          href="4.5.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs transition-colors shadow-2xs"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Sub 4.5: Keypad Matrix</span>
+        </a>
+        <a
+          href="index.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 font-bold text-xs transition-colors shadow-xs"
+        >
+          <span>Finish</span>
+          <i class="fa-solid fa-check"></i>
+        </a>
+      </nav>
+    </main>
+
+    <footer
+      class="max-w-7xl mx-auto w-full px-4 pt-4 text-center text-xs text-slate-400 font-medium"
+    >
+      <p>© MIKRO EDU - SMK SMTI Yogyakarta | Teknik Kimia Industri</p>
+    </footer>
+  </body>
+</html>

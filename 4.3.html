@@ -98,7 +98,7 @@
           <div
             class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
           >
-            <i class="fa-solid fa-microchip text-teal-200-300 text-xs"></i>
+            <i class="fa-solid fa-microchip text-teal-200 text-xs"></i>
             <span>Praktik Penggerak Actuator Servo</span>
           </div>
           <h2
@@ -110,8 +110,8 @@
             class="text-xs sm:text-sm text-teal-50/90 leading-relaxed font-normal"
           >
             Pelajari cara kerja library Servo.h untuk mengendalikan posisi sudut
-            lengan servo (0°–180°), baik melalui gerakan otomatis berulang
-            (Sweep) maupun pembacaan analog potensiometer secara manual.
+            lengan servo menggunakan perintah langsung myServo.write(), serta
+            pembacaan analog potensiometer secara manual.
           </p>
         </div>
       </section>
@@ -207,7 +207,7 @@
                 </div>
               </div>
 
-              <!-- BUSUR BUSUR / SKALA SUDUT -->
+              <!-- BUSUR / SKALA SUDUT -->
               <div
                 class="absolute -top-3 left-1/2 -translate-x-1/2 text-[9px] font-mono text-slate-500 font-bold"
               >
@@ -291,7 +291,8 @@
             id="sub-btn-1"
             class="px-5 py-2.5 rounded-2xl text-xs font-bold bg-teal-700 text-white shadow-xs transition cursor-pointer flex items-center gap-2"
           >
-            <i class="fa-solid fa-rotate"></i> Misi 1: Servo Sweep Otomatis
+            <i class="fa-solid fa-rotate"></i> Misi 1: Servo Berdasarkan Sudut
+            Tulis
           </button>
           <button
             onclick="switchMission('2')"
@@ -315,11 +316,12 @@
           </div>
           <div class="space-y-1">
             <div id="mission-title" class="font-bold">
-              Misi 1: Gerakan Sweep Otomatis
+              Misi 1: Gerakan Servo Bertahap Manual
             </div>
             <p id="mission-goal" class="text-slate-600 text-xs">
-              Menggerakkan motor servo dari 0° hingga 180° dan kembali secara
-              otomatis dan bertahap menggunakan perulangan for loop.
+              Menggerakkan motor servo secara berurutan menggunakan perintah
+              write() dengan nilai sudut tertentu tanpa menggunakan perulangan
+              for.
             </p>
           </div>
         </div>
@@ -554,7 +556,7 @@
       const missions = {
         1: {
           filename: "sketch_misi1_servo_dasar.ino",
-          title: "Misi 1: Servo Sweep Otomatis",
+          title: "Misi 1: Kontrol Posisi Servo Manual Berurutan",
           icon: "fa-rotate",
           statusText: "Ready | SERVO: PIN 2",
           schemaTitle: "Skema Misi 1 (Servo Dasar)",
@@ -562,8 +564,8 @@
           schemaFallbackImg: "4.3.1.png",
           schemaDesc:
             "<strong>Skema Misi 1:</strong> Motor Servo SG90 terhubung ke Arduino. Kabel sinyal (Kuning) ke <strong class='text-teal-700'>Pin Digital 2</strong>, Kabel daya (Merah) ke 5V, dan Kabel GND (Hitam) ke GND.",
-          desc: "<strong>Tugas Misi 1:</strong> Menggerakkan motor servo dari sudut 0° hingga 180° dan kembali secara otomatis dan berkala.",
-          rawCode: `// --- MISI 1: KONTROL MOTOR SERVO DASAR ---
+          desc: "<strong>Tugas Misi 1:</strong> Menggerakkan motor servo ke berbagai sudut spesifik secara berurutan menggunakan fungsi myServo.write() tanpa perulangan for.",
+          rawCode: `// --- MISI 1: KONTROL MOTOR SERVO POSISI SPESIFIK ---
 #include <Servo.h>
 
 Servo myServo;      // Membuat objek servo
@@ -575,23 +577,53 @@ void setup() {
 }
 
 void loop() {
-  // Swaping dari 0 hingga 180 derajat
-  for (int pos = 0; pos <= 180; pos += 15) {
-    myServo.write(pos);
-    Serial.print("Posisi Servo: ");
-    Serial.print(pos);
-    Serial.println(" deg");
-    delay(300);
-  }
+  myServo.write(30);
+  Serial.println("Posisi: 30 deg");
+  delay(500);
 
-  // Swaping balik dari 180 ke 0 derajat
-  for (int pos = 180; pos >= 0; pos -= 15) {
-    myServo.write(pos);
-    Serial.print("Posisi Servo: ");
-    Serial.print(pos);
-    Serial.println(" deg");
-    delay(300);
-  }
+  myServo.write(60);
+  Serial.println("Posisi: 60 deg");
+  delay(500);
+
+  myServo.write(90);
+  Serial.println("Posisi: 90 deg");
+  delay(500);
+
+  myServo.write(120);
+  Serial.println("Posisi: 120 deg");
+  delay(500);
+
+  myServo.write(150);
+  Serial.println("Posisi: 150 deg");
+  delay(500);
+
+  myServo.write(180);
+  Serial.println("Posisi: 180 deg");
+  delay(500);
+
+  myServo.write(150);
+  Serial.println("Posisi: 150 deg");
+  delay(500);
+
+  myServo.write(120);
+  Serial.println("Posisi: 120 deg");
+  delay(500);
+
+  myServo.write(90);
+  Serial.println("Posisi: 90 deg");
+  delay(500);
+
+  myServo.write(60);
+  Serial.println("Posisi: 60 deg");
+  delay(500);
+
+  myServo.write(30);
+  Serial.println("Posisi: 30 deg");
+  delay(500);
+
+  myServo.write(0);
+  Serial.println("Posisi: 0 deg");
+  delay(1000);
 }`,
         },
         2: {
@@ -639,8 +671,12 @@ void loop() {
       let currentMissionKey = "1";
       let liveTimer = null;
       let isUploading = false;
-      let sweepPos = 0;
-      let sweepDirection = 1; // 1: maju, -1: mundur
+
+      // Array urutan sudut untuk Misi 1 simulator
+      const mission1Angles = [
+        30, 60, 90, 120, 150, 180, 150, 120, 90, 60, 30, 0,
+      ];
+      let mission1Index = 0;
 
       /* UPDATE SIMULASI ROTASI SERVO VISUAL */
       function setServoAngleVisual(angle) {
@@ -648,7 +684,6 @@ void loop() {
         const angleBadge = document.getElementById("angleDisplayBadge");
         const angleText = document.getElementById("servoAngleText");
 
-        // Pembatasan sudut 0 - 180
         const clampedAngle = Math.max(0, Math.min(180, angle));
 
         arm.style.transform = `rotate(${clampedAngle}deg)`;
@@ -772,23 +807,18 @@ void loop() {
         monitor.innerHTML = "";
 
         if (key === "1") {
-          printLiveLog("System Ready - Misi 1: Sweep Servo Otomatis");
-          sweepPos = 0;
-          sweepDirection = 1;
+          printLiveLog(
+            "System Ready - Misi 1: Servo write() Manual Sevens/Angles",
+          );
+          mission1Index = 0;
 
           liveTimer = setInterval(() => {
-            setServoAngleVisual(sweepPos);
-            printLiveLog(`Posisi Servo: ${sweepPos} deg`);
+            const currentAngle = mission1Angles[mission1Index];
+            setServoAngleVisual(currentAngle);
+            printLiveLog(`Posisi: ${currentAngle} deg`);
 
-            sweepPos += 15 * sweepDirection;
-            if (sweepPos >= 180) {
-              sweepPos = 180;
-              sweepDirection = -1;
-            } else if (sweepPos <= 0) {
-              sweepPos = 0;
-              sweepDirection = 1;
-            }
-          }, 350);
+            mission1Index = (mission1Index + 1) % mission1Angles.length;
+          }, 600);
         } else if (key === "2") {
           printLiveLog("System Ready - Misi 2: Potensiometer + Servo");
           liveTimer = setInterval(() => {

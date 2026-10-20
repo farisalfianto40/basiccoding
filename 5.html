@@ -2,44 +2,123 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <title>MIKRO EDU | Modul 05 - Studi Kasus Otomasi Industri</title>
-
-    <!-- Tailwind CSS Offline -->
-    <link rel="stylesheet" href="./dist/css/output.css" />
-    <!-- CDN Fallback Tailwind CSS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sub 5.1: Studi Kasus Deteksi Api Gudang</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- FontAwesome -->
+    <!-- FontAwesome Icons -->
     <link
       rel="stylesheet"
-      href="./node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-    />
-
     <style>
+      @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+
       body {
-        user-select: none;
-        -webkit-user-select: none;
-        touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: #f8fafc;
+        color: #1e293b;
       }
+
+      .font-mono-code {
+        font-family: "IBM Plex Mono", monospace;
+      }
+
+      h1,
+      h2,
+      h3,
+      .display-font {
+        font-family: "Space Grotesk", sans-serif;
+      }
+
+      /* Animasi Sirine & Warning Lights */
+      .siren-glow {
+        transform-origin: 625px 108px;
+        transition: all 0.3s ease;
+      }
+
+      .siren-active {
+        filter: drop-shadow(0 0 16px rgba(239, 68, 68, 0.95));
+        animation: pulse-siren 0.6s ease-in-out infinite alternate;
+      }
+
+      @keyframes pulse-siren {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(1.15);
+        }
+      }
+
+      .pulse-ring-1 {
+        animation: ring 1.2s ease-out infinite;
+        transform-origin: 625px 108px;
+      }
+      .pulse-ring-2 {
+        animation: ring 1.2s ease-out infinite 0.4s;
+        transform-origin: 625px 108px;
+      }
+
+      @keyframes ring {
+        0% {
+          r: 8px;
+          opacity: 0.9;
+          stroke-width: 3px;
+        }
+        100% {
+          r: 42px;
+          opacity: 0;
+          stroke-width: 1px;
+        }
+      }
+
+      /* Animasi Flash Latar SVG saat Bahaya */
+      .alarm-bg-flash {
+        animation: bg-flash 0.8s ease-in-out infinite alternate;
+      }
+      @keyframes bg-flash {
+        0% {
+          fill: #f8fafc;
+        }
+        100% {
+          fill: #fef2f2;
+        }
+      }
+
+      /* Animasi Api Multi-layer */
+      .flame-main {
+        transform-origin: 227px 115px;
+        animation: flame-dance 0.8s ease-in-out infinite alternate;
+      }
+      .flame-core {
+        transform-origin: 227px 115px;
+        animation: flame-dance 0.5s ease-in-out infinite alternate-reverse;
+      }
+
+      @keyframes flame-dance {
+        0% {
+          transform: scale(1) rotate(-2deg);
+          opacity: 0.9;
+        }
+        50% {
+          transform: scale(1.12, 1.18) rotate(3deg);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(0.92, 0.88) rotate(-2deg);
+          opacity: 0.85;
+        }
+      }
+
+      /* Custom Scrollbar */
       ::-webkit-scrollbar {
-        width: 4px;
-        height: 4px;
-      }
-      ::-webkit-scrollbar-track {
-        background: transparent;
+        width: 6px;
+        height: 6px;
       }
       ::-webkit-scrollbar-thumb {
         background: #cbd5e1;
-        border-radius: 9999px;
+        border-radius: 99px;
       }
       ::-webkit-scrollbar-thumb:hover {
         background: #94a3b8;
@@ -47,575 +126,1095 @@
     </style>
   </head>
   <body
-    class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased select-none pb-10"
+    class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased pb-10"
   >
-    <!-- HEADER APP -->
-    <header
-      class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs"
-    >
-      <div
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3"
+    <div>
+      <!-- HEADER APP -->
+      <header
+        class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs"
       >
-        <!-- Left: Brand & Nav Back -->
-        <div class="flex items-center gap-3 min-w-0">
-          <a
-            href="index.html"
-            class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 hover:bg-teal-50 hover:text-teal-700 border border-slate-200 flex items-center justify-center shrink-0 transition-colors"
-            title="Kembali ke Halaman Utama"
-          >
-            <i class="fa-solid fa-home text-sm"></i>
-          </a>
-
-          <div class="flex items-center gap-2.5 min-w-0">
-            <div
-              class="w-9 h-9 rounded-xl bg-teal-600 text-white flex items-center justify-center shrink-0 shadow-sm"
+        <div
+          class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3"
+        >
+          <div class="flex items-center gap-3">
+            <a
+              href="5.0.html"
+              class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-sm transition-colors"
+              title="Kembali"
             >
-              <i class="fa-solid fa-microchip text-base"></i>
-            </div>
-
-            <div class="flex flex-col min-w-0">
-              <div class="flex items-center gap-1.5">
-                <h1
-                  class="text-base font-black tracking-wide text-slate-900 leading-none"
-                >
-                  MIKRO<span class="text-teal-600">EDU</span>
-                </h1>
+              <i class="fa-solid fa-home"></i>
+            </a>
+            <div>
+              <div class="flex items-center gap-2">
                 <span
-                  class="text-[10px] font-bold bg-teal-100 text-teal-700 px-1.5 py-0.5 rounded leading-none uppercase tracking-wider"
+                  class="text-[10px] font-extrabold bg-teal-100 text-teal-800 px-2 py-0.5 rounded uppercase tracking-wider"
                 >
-                  TM
+                  SUB 5.1
                 </span>
               </div>
-              <p
-                class="text-[11px] text-slate-500 font-medium leading-none mt-1 truncate"
+              <h1
+                class="text-sm sm:text-base font-black text-slate-900 leading-tight mt-0.5"
               >
-                SMK SMTI Yogyakarta
-              </p>
+                Studi Kasus: Sistem Deteksi Api Gudang
+              </h1>
             </div>
           </div>
+          <div
+            class="hidden sm:flex items-center gap-2 text-xs font-semibold text-slate-500"
+          >
+            <i class="fa-solid fa-microchip text-teal-600"></i>
+            <span>Flame Sensor &amp; Alarm Siren Simulation</span>
+          </div>
         </div>
+      </header>
 
-        <!-- Right: Instructor Chip -->
-        <div
-          class="flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/80 shadow-2xs shrink-0"
+      <!-- MAIN CONTENT -->
+      <main
+        class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6"
+      >
+        <!-- HERO BANNER RINGKAS -->
+        <section
+          class="bg-gradient-to-r from-teal-800 to-teal-700 text-white rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden"
         >
           <div
-            class="w-7 h-7 rounded-lg bg-teal-100 text-teal-700 flex items-center justify-center text-xs shrink-0"
+            class="absolute -right-4 -bottom-6 opacity-15 pointer-events-none hidden sm:block select-none"
           >
-            <i class="fa-solid fa-user-tie"></i>
+            <i
+              class="fa-solid fa-fire-extinguisher text-[140px] text-teal-100"
+            ></i>
           </div>
-          <div class="flex flex-col text-left">
-            <span
-              class="text-[9px] font-bold text-slate-400 tracking-wider uppercase leading-none"
+          <div class="relative z-10 space-y-1.5 max-w-3xl">
+            <div
+              class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
             >
-              PENYUSUN
-            </span>
-            <span
-              class="text-xs font-bold text-slate-700 leading-tight mt-0.5 whitespace-nowrap"
-            >
-              Faris Alfianto, S.Pd.
-            </span>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <!-- MAIN CONTENT -->
-    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-8">
-      <!-- BREADCRUMB -->
-      <nav class="flex items-center gap-2 text-xs font-medium text-slate-500">
-        <a href="index.html" class="hover:text-teal-600 transition-colors"
-          >Beranda</a
-        >
-        <i class="fa-solid fa-chevron-right text-[10px] text-slate-400"></i>
-        <span class="text-slate-800 font-semibold"
-          >Modul 05: Studi Kasus Otomasi Industri</span
-        >
-      </nav>
-
-      <!-- HERO BANNER REVISI -->
-      <section
-        class="bg-gradient-to-r from-teal-800 via-teal-700 to-teal-600 text-white rounded-2xl p-6 sm:p-8 shadow-md relative overflow-hidden"
-      >
-        <!-- Elemen Dekoratif Kanan (Diagram Block / Node) -->
-        <div
-          class="absolute right-6 top-1/2 -translate-y-1/2 opacity-20 pointer-events-none hidden md:block select-none text-white"
-        >
-          <svg
-            width="150"
-            height="150"
-            viewBox="0 0 150 150"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <rect
-              x="80"
-              y="5"
-              width="48"
-              height="48"
-              rx="12"
-              fill="currentColor"
-            />
-            <rect
-              x="75"
-              y="75"
-              width="60"
-              height="60"
-              rx="16"
-              fill="currentColor"
-            />
-            <rect
-              x="5"
-              y="65"
-              width="50"
-              height="50"
-              rx="14"
-              fill="currentColor"
-            />
-            <path
-              d="M104 53V75"
-              stroke="currentColor"
-              stroke-width="7"
-              stroke-linecap="round"
-            />
-            <path
-              d="M55 90H75"
-              stroke="currentColor"
-              stroke-width="7"
-              stroke-linecap="round"
-            />
-          </svg>
-        </div>
-
-        <div class="relative z-10 space-y-4 max-w-3xl">
-          <!-- Badge Kategori Atas -->
-          <div>
-            <span
-              class="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-teal-100 px-3 py-1 rounded-full text-xs font-semibold backdrop-blur-md"
-            >
-              <i class="fa-solid fa-industry text-teal-300"></i>
-              <span>Modul 05 — Media Pembelajaran Interaktif</span>
-            </span>
-          </div>
-
-          <!-- Judul & Deskripsi Utama -->
-          <div class="space-y-2">
+              <i
+                class="fa-solid fa-triangle-exclamation text-amber-300 text-xs"
+              ></i>
+              <span>Sistem Proteksi Kebakaran Real-Time</span>
+            </div>
             <h2
-              class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight display-font"
+              class="text-lg sm:text-xl font-extrabold text-white leading-tight display-font"
             >
-              Studi Kasus Otomasi Industri
+              Simulasi Peringatan Dini Kebakaran Gudang
             </h2>
-            <p
-              class="text-xs sm:text-sm text-teal-50/90 leading-relaxed max-w-2xl"
-            >
-              Pelajari penerapan sistem kontrol berbasis mikrokontroler pada
-              berbagai studi kasus riil industri: deteksi keselamatan, sistem
-              dosing, interlock keamanan, hingga lini produksi otomatis.
+            <p class="text-xs text-teal-50/90 leading-relaxed">
+              Pantau masukan dari Flame Sensor (Pin D2) dan keluaran
+              Buzzer/Sirine (Pin D4) secara langsung melalui Web Serial API.
             </p>
           </div>
+        </section>
 
-          <!-- Badge Informatif Bawah -->
-          <div class="flex flex-wrap items-center gap-2 pt-1">
+        <!-- GRID DUA KOLOM -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          <!-- KOLOM KIRI (7/12): STATUS & ANIMASI ILUSTRASI SIMULASI -->
+          <div class="lg:col-span-7 flex flex-col space-y-4">
+            <!-- STATUS CARDS GRID -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <!-- Status Utama -->
+              <div
+                id="cardStatus"
+                class="bg-white border border-slate-200 shadow-xs rounded-xl px-3.5 py-3 transition-all"
+              >
+                <div class="flex items-center justify-between mb-1">
+                  <p
+                    class="text-[10px] font-bold uppercase tracking-wider text-slate-400"
+                  >
+                    Status Gudang
+                  </p>
+                  <i
+                    id="statusIcon"
+                    class="fa-solid fa-shield-halved text-emerald-500 text-xs"
+                  ></i>
+                </div>
+                <p
+                  id="statusText"
+                  class="font-black text-sm sm:text-base text-emerald-600 display-font"
+                >
+                  AMAN
+                </p>
+              </div>
+
+              <!-- Sensor Pin -->
+              <div
+                class="bg-white border border-slate-200 shadow-xs rounded-xl px-3.5 py-3"
+              >
+                <div class="flex items-center justify-between mb-1">
+                  <p
+                    class="text-[10px] font-bold uppercase tracking-wider text-slate-400"
+                  >
+                    Flame (D2)
+                  </p>
+                  <i class="fa-solid fa-fire text-slate-400 text-xs"></i>
+                </div>
+                <p
+                  id="sensorPinText"
+                  class="font-bold text-xs sm:text-sm text-slate-800 font-mono-code"
+                >
+                  —
+                </p>
+              </div>
+
+              <!-- Buzzer Pin -->
+              <div
+                class="bg-white border border-slate-200 shadow-xs rounded-xl px-3.5 py-3"
+              >
+                <div class="flex items-center justify-between mb-1">
+                  <p
+                    class="text-[10px] font-bold uppercase tracking-wider text-slate-400"
+                  >
+                    Alarm (D4)
+                  </p>
+                  <i class="fa-solid fa-bullhorn text-slate-400 text-xs"></i>
+                </div>
+                <p
+                  id="buzzerPinText"
+                  class="font-bold text-xs sm:text-sm text-slate-800 font-mono-code"
+                >
+                  —
+                </p>
+              </div>
+
+              <!-- Last Serial Data -->
+              <div
+                class="bg-white border border-slate-200 shadow-xs rounded-xl px-3.5 py-3"
+              >
+                <div class="flex items-center justify-between mb-1">
+                  <p
+                    class="text-[10px] font-bold uppercase tracking-wider text-slate-400"
+                  >
+                    Serial In
+                  </p>
+                  <i class="fa-solid fa-terminal text-slate-400 text-xs"></i>
+                </div>
+                <p
+                  id="lastMsg"
+                  class="font-bold text-xs sm:text-sm text-slate-800 font-mono-code truncate"
+                >
+                  —
+                </p>
+              </div>
+            </div>
+
+            <!-- GRAPHICAL ILLUSTRATION (SVG CANVAS) -->
             <div
-              class="inline-flex items-center gap-2 bg-white/10 border border-white/15 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white backdrop-blur-md"
+              class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs flex-1 flex flex-col justify-between"
             >
-              <i class="fa-solid fa-diagram-project text-teal-300"></i>
-              <span>9 Studi Kasus Industri</span>
+              <div
+                class="bg-slate-100 px-4 py-2 border-b border-slate-200 flex items-center justify-between"
+              >
+                <div class="flex items-center gap-2">
+                  <span
+                    class="w-2.5 h-2.5 rounded-full bg-red-400 inline-block"
+                  ></span>
+                  <span
+                    class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"
+                  ></span>
+                  <span
+                    class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block"
+                  ></span>
+                  <span
+                    class="text-xs font-bold text-slate-600 ml-2 font-mono-code"
+                    >WAREHOUSE_SIMULATION.SVG</span
+                  >
+                </div>
+                <span
+                  class="text-[11px] font-bold text-slate-500 uppercase tracking-wider"
+                  >Live Visualizer</span
+                >
+              </div>
+
+              <svg
+                id="scene"
+                viewBox="0 0 760 400"
+                class="w-full h-auto block flex-1"
+              >
+                <defs>
+                  <clipPath id="clip">
+                    <rect x="0" y="0" width="760" height="400" rx="0" />
+                  </clipPath>
+                  <radialGradient id="beamGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#ef4444" stop-opacity="0.8" />
+                    <stop offset="100%" stop-color="#ef4444" stop-opacity="0" />
+                  </radialGradient>
+                </defs>
+                <g clip-path="url(#clip)">
+                  <!-- Latar Belakang Denah -->
+                  <rect
+                    id="bgRect"
+                    x="0"
+                    y="0"
+                    width="760"
+                    height="400"
+                    fill="#f8fafc"
+                  />
+
+                  <!-- Top & Bottom Structural Beams -->
+                  <rect x="0" y="0" width="760" height="14" fill="#334155" />
+                  <rect x="0" y="384" width="760" height="16" fill="#334155" />
+
+                  <!-- Warehouse Building Section -->
+                  <rect
+                    x="34"
+                    y="163"
+                    width="146"
+                    height="220"
+                    fill="#e2e8f0"
+                    stroke="#334155"
+                    stroke-width="2"
+                  />
+                  <rect
+                    x="30"
+                    y="150"
+                    width="154"
+                    height="18"
+                    rx="3"
+                    fill="#334155"
+                  />
+                  <g stroke="#cbd5e1" stroke-width="2">
+                    <line x1="34" y1="185" x2="180" y2="185" />
+                    <line x1="34" y1="207" x2="180" y2="207" />
+                    <line x1="34" y1="229" x2="180" y2="229" />
+                    <line x1="34" y1="251" x2="180" y2="251" />
+                    <line x1="34" y1="273" x2="180" y2="273" />
+                    <line x1="34" y1="295" x2="180" y2="295" />
+                    <line x1="34" y1="317" x2="180" y2="317" />
+                    <line x1="34" y1="339" x2="180" y2="339" />
+                    <line x1="34" y1="361" x2="180" y2="361" />
+                  </g>
+
+                  <!-- Sensor Cable Lines -->
+                  <line
+                    x1="227"
+                    y1="14"
+                    x2="227"
+                    y2="62"
+                    stroke="#64748b"
+                    stroke-width="2"
+                    stroke-dasharray="4 4"
+                  />
+                  <line
+                    x1="227"
+                    y1="140"
+                    x2="227"
+                    y2="384"
+                    stroke="#94a3b8"
+                    stroke-width="1.5"
+                    stroke-dasharray="5 5"
+                  />
+
+                  <!-- Sensor Housing -->
+                  <rect
+                    x="204"
+                    y="62"
+                    width="46"
+                    height="70"
+                    rx="8"
+                    fill="#ffffff"
+                    stroke="#334155"
+                    stroke-width="2.5"
+                  />
+                  <circle cx="227" cy="78" r="5" fill="#0f172a" />
+
+                  <!-- Visual Flame Animation -->
+                  <g
+                    id="flameGroup"
+                    opacity="0"
+                    class="transition-opacity duration-300"
+                  >
+                    <path
+                      class="flame-main"
+                      d="M227 88 C218 98 218 114 227 122 C236 114 236 98 227 88 Z"
+                      fill="#ef4444"
+                    />
+                    <path
+                      class="flame-core"
+                      d="M227 96 C222 102 222 112 227 117 C232 112 232 102 227 96 Z"
+                      fill="#f59e0b"
+                    />
+                  </g>
+
+                  <circle cx="227" cy="136" r="4.5" fill="#0284c7" />
+                  <text
+                    x="258"
+                    y="92"
+                    font-family="Space Grotesk, sans-serif"
+                    font-weight="700"
+                    font-size="14"
+                    fill="#0f172a"
+                  >
+                    SENSOR FLAME
+                  </text>
+                  <text
+                    x="258"
+                    y="108"
+                    font-family="IBM Plex Mono, monospace"
+                    font-weight="600"
+                    font-size="11"
+                    fill="#64748b"
+                  >
+                    PIN DIGITAL 2
+                  </text>
+
+                  <!-- Storage Racks -->
+                  <g stroke="#1e40af" stroke-width="2.5" fill="none">
+                    <rect x="252" y="204" width="188" height="176" />
+                    <line x1="346" y1="204" x2="346" y2="380" />
+                    <line x1="252" y1="262" x2="440" y2="262" />
+                    <line x1="252" y1="320" x2="440" y2="320" />
+                  </g>
+                  <rect
+                    x="263"
+                    y="222"
+                    width="30"
+                    height="34"
+                    fill="#d97706"
+                    rx="2"
+                  />
+                  <rect
+                    x="300"
+                    y="230"
+                    width="24"
+                    height="26"
+                    fill="#9a3412"
+                    rx="2"
+                  />
+                  <rect
+                    x="357"
+                    y="222"
+                    width="26"
+                    height="34"
+                    fill="#d97706"
+                    rx="2"
+                  />
+                  <rect
+                    x="392"
+                    y="222"
+                    width="34"
+                    height="34"
+                    fill="#9a3412"
+                    rx="2"
+                  />
+                  <rect
+                    x="263"
+                    y="282"
+                    width="30"
+                    height="34"
+                    fill="#9a3412"
+                    rx="2"
+                  />
+                  <rect
+                    x="392"
+                    y="282"
+                    width="34"
+                    height="34"
+                    fill="#d97706"
+                    rx="2"
+                  />
+
+                  <!-- Storage Tanks -->
+                  <rect
+                    x="458"
+                    y="199"
+                    width="34"
+                    height="181"
+                    fill="#94a3b8"
+                    stroke="#64748b"
+                    stroke-width="1.5"
+                    rx="3"
+                  />
+                  <rect
+                    x="496"
+                    y="199"
+                    width="22"
+                    height="181"
+                    fill="#cbd5e1"
+                    stroke="#64748b"
+                    stroke-width="1.5"
+                    rx="2"
+                  />
+                  <rect
+                    x="540"
+                    y="222"
+                    width="34"
+                    height="158"
+                    fill="#94a3b8"
+                    stroke="#64748b"
+                    stroke-width="1.5"
+                    rx="3"
+                  />
+                  <rect
+                    x="578"
+                    y="222"
+                    width="22"
+                    height="158"
+                    fill="#cbd5e1"
+                    stroke="#64748b"
+                    stroke-width="1.5"
+                    rx="2"
+                  />
+
+                  <!-- Cargo Crates (Tumpukan Kardus Gudang Rapi) -->
+                  <g id="cargoCrates">
+                    <!-- Kardus Bawah Kiri -->
+                    <rect
+                      x="600"
+                      y="324"
+                      width="55"
+                      height="60"
+                      fill="#d97706"
+                      stroke="#92400e"
+                      stroke-width="1.5"
+                      rx="3"
+                    />
+                    <line
+                      x1="600"
+                      y1="354"
+                      x2="655"
+                      y2="354"
+                      stroke="#b45309"
+                      stroke-width="2"
+                    />
+                    <rect
+                      x="622"
+                      y="324"
+                      width="11"
+                      height="60"
+                      fill="#f59e0b"
+                      opacity="0.6"
+                    />
+
+                    <!-- Kardus Bawah Kanan -->
+                    <rect
+                      x="660"
+                      y="310"
+                      width="68"
+                      height="74"
+                      fill="#b45309"
+                      stroke="#78350f"
+                      stroke-width="1.5"
+                      rx="3"
+                    />
+                    <line
+                      x1="660"
+                      y1="347"
+                      x2="728"
+                      y2="347"
+                      stroke="#78350f"
+                      stroke-width="2"
+                    />
+                    <rect
+                      x="688"
+                      y="310"
+                      width="12"
+                      height="74"
+                      fill="#d97706"
+                      opacity="0.6"
+                    />
+
+                    <!-- Kardus Atas (Tumpukan) -->
+                    <rect
+                      x="608"
+                      y="266"
+                      width="48"
+                      height="58"
+                      fill="#f59e0b"
+                      stroke="#b45309"
+                      stroke-width="1.5"
+                      rx="3"
+                    />
+                    <line
+                      x1="608"
+                      y1="295"
+                      x2="656"
+                      y2="295"
+                      stroke="#d97706"
+                      stroke-width="2"
+                    />
+                    <rect
+                      x="627"
+                      y="266"
+                      width="10"
+                      height="58"
+                      fill="#fbbf24"
+                      opacity="0.7"
+                    />
+                  </g>
+
+                  <!-- Alarm Wiring Line -->
+                  <line
+                    x1="625"
+                    y1="14"
+                    x2="625"
+                    y2="80"
+                    stroke="#64748b"
+                    stroke-width="2"
+                    stroke-dasharray="4 4"
+                  />
+                  <line
+                    x1="625"
+                    y1="140"
+                    x2="625"
+                    y2="384"
+                    stroke="#94a3b8"
+                    stroke-width="1.5"
+                    stroke-dasharray="5 5"
+                  />
+
+                  <!-- Label Alarm Siren (Digeser ke Kiri Agar Tidak Menabrak Siren) -->
+                  <text
+                    x="560"
+                    y="55"
+                    text-anchor="end"
+                    font-family="Space Grotesk, sans-serif"
+                    font-weight="700"
+                    font-size="14"
+                    fill="#0f172a"
+                  >
+                    ALARM SIREN
+                  </text>
+                  <text
+                    x="560"
+                    y="71"
+                    text-anchor="end"
+                    font-family="IBM Plex Mono, monospace"
+                    font-weight="600"
+                    font-size="11"
+                    fill="#64748b"
+                  >
+                    PIN DIGITAL 4
+                  </text>
+
+                  <!-- Alarm Siren Group -->
+                  <g id="sirenGroup" class="siren-glow">
+                    <circle
+                      id="pulseRing1"
+                      class="pulse-ring-1"
+                      cx="625"
+                      cy="108"
+                      r="8"
+                      fill="none"
+                      stroke="#ef4444"
+                      opacity="0"
+                    />
+                    <circle
+                      id="pulseRing2"
+                      class="pulse-ring-2"
+                      cx="625"
+                      cy="108"
+                      r="8"
+                      fill="none"
+                      stroke="#ef4444"
+                      opacity="0"
+                    />
+
+                    <path
+                      d="M600 112 a25 22 0 0 1 50 0 z"
+                      fill="#dc2626"
+                      stroke="#1e293b"
+                      stroke-width="2"
+                    />
+                    <rect
+                      x="612"
+                      y="110"
+                      width="26"
+                      height="8"
+                      fill="#f8fafc"
+                      stroke="#1e293b"
+                      stroke-width="1.5"
+                    />
+                    <circle cx="625" cy="122" r="5" fill="#f59e0b" />
+                  </g>
+                </g>
+              </svg>
             </div>
+          </div>
+
+          <!-- KOLOM KANAN (5/12): KONEKSI ARDUINO & SERIAL MONITOR -->
+          <div class="lg:col-span-5 flex flex-col space-y-4">
+            <!-- PANEL 1: STATUS KONEKSI & TOMBOL HUBUNGKAN ARDUINO -->
             <div
-              class="inline-flex items-center gap-2 bg-white/10 border border-white/15 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white backdrop-blur-md"
+              class="bg-white border border-slate-200 shadow-xs rounded-2xl p-4 sm:p-5 space-y-3"
             >
-              <i class="fa-solid fa-laptop-code text-teal-300"></i>
-              <span>Simulasi Interaktif</span>
+              <div class="flex items-center justify-between">
+                <h3
+                  class="display-font text-sm font-bold text-slate-900 flex items-center gap-2"
+                >
+                  <i class="fa-solid fa-plug text-teal-600"></i>
+                  <span>Koneksi Device</span>
+                </h3>
+                <span
+                  class="text-[10px] font-extrabold bg-slate-100 text-slate-600 px-2 py-0.5 rounded font-mono-code"
+                  >WEB SERIAL API</span
+                >
+              </div>
+
+              <!-- Status Terhubung / Belum -->
+              <div
+                class="flex items-center justify-between p-3 bg-slate-50 border border-slate-200/80 rounded-xl"
+              >
+                <div class="flex items-center gap-2.5">
+                  <span
+                    id="connDot"
+                    class="w-3 h-3 rounded-full bg-slate-400 shrink-0"
+                  ></span>
+                  <div>
+                    <p
+                      class="text-[10px] uppercase font-bold text-slate-400 leading-none"
+                    >
+                      Status Koneksi
+                    </p>
+                    <p
+                      id="connLabel"
+                      class="text-xs font-bold text-slate-700 mt-0.5"
+                    >
+                      Belum terhubung
+                    </p>
+                  </div>
+                </div>
+                <i class="fa-brands fa-usb text-slate-400 text-lg"></i>
+              </div>
+
+              <!-- Tombol Hubungkan -->
+              <button
+                id="connectBtn"
+                class="w-full py-2.5 bg-teal-600 hover:bg-teal-700 active:scale-[0.99] text-white font-bold text-xs rounded-xl transition-all shadow-xs flex items-center justify-center gap-2"
+              >
+                <i class="fa-solid fa-plug text-xs"></i>
+                <span>Hubungkan Arduino</span>
+              </button>
             </div>
+
+            <!-- PANEL 2: MONITOR SERIAL LOG CERAH (LIGHT MODE) -->
             <div
-              class="inline-flex items-center gap-2 bg-white/10 border border-white/15 px-3.5 py-1.5 rounded-xl text-xs font-semibold text-white backdrop-blur-md"
+              class="bg-white border border-slate-200 shadow-xs rounded-2xl p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-3"
             >
-              <i class="fa-solid fa-shield-halved text-teal-300"></i>
-              <span>Sistem Proteksi & Safety</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- LIST CARD STUDI KASUS (SUB 5.1 - SUB 5.9) -->
-      <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- SUB 5.1 -->
-        <div
-          onclick="openModule('5.1.html')"
-          class="bg-white rounded-2xl border border-teal-200/80 p-5 hover:border-teal-600 hover:shadow-lg hover:shadow-teal-900/5 transition-all cursor-pointer group flex flex-col justify-between"
-        >
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span
-                class="text-xs font-extrabold bg-teal-50 text-teal-700 px-3 py-1 rounded-full border border-teal-200"
-              >
-                Sub 5.1
-              </span>
-              <div
-                class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors"
-              >
-                <i class="fa-solid fa-fire-flame-curved text-lg"></i>
+              <div class="flex items-center justify-between">
+                <h3
+                  class="display-font text-sm font-bold text-slate-900 flex items-center gap-2"
+                >
+                  <i class="fa-solid fa-terminal text-teal-600"></i>
+                  <span>Serial Monitor Log</span>
+                </h3>
+                <span
+                  class="text-[10px] font-mono-code bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200"
+                  >9600 BAUD</span
+                >
               </div>
-            </div>
-            <div>
-              <h3
-                class="text-base font-bold text-slate-800 group-hover:text-teal-700 transition-colors"
+
+              <!-- Terminal Output -->
+              <div
+                id="log"
+                class="flex-1 min-h-[16rem] overflow-y-auto text-xs font-mono-code bg-slate-50 border border-slate-200 text-slate-800 p-3 rounded-xl space-y-1.5 leading-relaxed"
               >
-                Studi Kasus Deteksi Api Gudang
-              </h3>
-              <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">
-                Sistem deteksi dini potensi kebakaran gudang berbasis sensor
-                flame & gas, sirine alarm, serta indikator keselamatan.
+                <div class="text-slate-400 font-medium">
+                  // Menunggu koneksi serial dari Arduino...
+                </div>
+              </div>
+
+              <p class="text-[11px] text-slate-500 flex items-center gap-1.5">
+                <i class="fa-solid fa-circle-info text-teal-600"></i>
+                <span
+                  >Menerima data string
+                  <code
+                    class="bg-slate-100 text-slate-800 font-bold px-1 py-0.5 rounded border border-slate-200"
+                    >FIRE_DETECTED</code
+                  >
+                  /
+                  <code
+                    class="bg-slate-100 text-slate-800 font-bold px-1 py-0.5 rounded border border-slate-200"
+                    >SAFE</code
+                  >.</span
+                >
               </p>
             </div>
           </div>
-          <div
-            class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-teal-600"
+        </div>
+
+        <!-- BARIS BAWAH 1: PANDUAN PENGGUNAAN -->
+        <div class="bg-white border border-slate-200 shadow-xs rounded-2xl p-5">
+          <h3
+            class="display-font text-sm font-bold text-slate-900 mb-3 flex items-center gap-2"
           >
-            <span>Buka Studi Kasus</span>
-            <i
-              class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"
-            ></i>
+            <i class="fa-solid fa-list-check text-teal-600"></i>
+            <span>Panduan Penggunaan</span>
+          </h3>
+          <ol
+            class="list-decimal list-inside text-xs text-slate-600 space-y-2 leading-relaxed font-medium"
+          >
+            <li class="pl-1">
+              Unggah sketch program Arduino ke modul <b>Arduino Uno</b> Anda.
+            </li>
+            <li class="pl-1">
+              Hubungkan <b>Flame Sensor</b> ke
+              <code
+                class="bg-slate-100 text-slate-800 font-bold px-1 py-0.5 rounded"
+                >Pin 2</code
+              >
+              dan <b>Buzzer/Siren</b> ke
+              <code
+                class="bg-slate-100 text-slate-800 font-bold px-1 py-0.5 rounded"
+                >Pin 4</code
+              >.
+            </li>
+            <li class="pl-1">
+              Gunakan browser <b class="text-slate-800">Chrome</b> atau
+              <b class="text-slate-800">Edge</b>, lalu klik tombol
+              <span class="text-teal-700 font-bold">"Hubungkan Arduino"</span>
+              di kanan atas.
+            </li>
+            <li class="pl-1">
+              Pilih port USB COM Arduino Anda pada jendela pop-up.
+            </li>
+            <li class="pl-1">
+              Uji sensor dengan korek api/sumber cahaya inframerah untuk memicu
+              alarm fisik & animasi.
+            </li>
+          </ol>
+        </div>
+
+        <!-- BARIS BAWAH 2: KUNCI JAWABAN PROGRAM ARDUINO IDE (TAMPILAN CERAH / LIGHT THEME) -->
+        <div
+          class="bg-white border border-slate-200 shadow-xs rounded-2xl p-5 space-y-4"
+        >
+          <div
+            id="toggleCodeHeader"
+            class="flex items-center justify-between cursor-pointer select-none group"
+          >
+            <div class="flex items-center gap-2.5">
+              <div
+                class="w-8 h-8 rounded-lg bg-teal-50 border border-teal-100 text-teal-700 flex items-center justify-center text-xs group-hover:bg-teal-100 transition-colors"
+              >
+                <i class="fa-solid fa-code"></i>
+              </div>
+              <div>
+                <h3 class="display-font text-sm font-bold text-slate-900">
+                  Kunci Jawaban Program Arduino IDE
+                </h3>
+                <p class="text-[11px] text-slate-500 font-medium">
+                  Klik untuk membuka atau menyembunyikan referensi source code
+                  Arduino.
+                </p>
+              </div>
+            </div>
+            <button
+              id="toggleCodeBtn"
+              type="button"
+              class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-700 font-bold text-xs transition-all border border-slate-200"
+            >
+              <span id="toggleText">Tampilkan Kode</span>
+              <i
+                id="toggleIcon"
+                class="fa-solid fa-chevron-down text-xs transition-transform duration-300"
+              ></i>
+            </button>
+          </div>
+
+          <!-- KONTEN KODE CERAH (Light Theme) -->
+          <div
+            id="arduinoCodeSection"
+            class="hidden space-y-0 border border-slate-200 rounded-xl overflow-hidden shadow-2xs"
+          >
+            <div
+              class="flex items-center justify-between bg-slate-100 text-slate-700 px-4 py-2.5 text-xs font-mono-code border-b border-slate-200"
+            >
+              <span class="flex items-center gap-2 font-bold text-slate-700">
+                <i class="fa-solid fa-file-code text-teal-600"></i>
+                deteksi_api_gudang.ino
+              </span>
+              <button
+                id="copyCodeBtn"
+                class="hover:bg-slate-200 bg-white text-slate-700 px-2.5 py-1 rounded-md text-[11px] font-bold transition-colors flex items-center gap-1.5 border border-slate-300 shadow-2xs"
+              >
+                <i class="fa-regular fa-copy"></i>
+                <span id="copyBtnText">Salin Kode</span>
+              </button>
+            </div>
+
+            <pre
+              class="bg-slate-50 text-slate-800 p-4 text-xs font-mono-code overflow-x-auto leading-relaxed select-all"
+            ><code id="codeText">// ======================================================
+// PROGRAM DETEKSI API GUDANG (SMK SMTI YOGYAKARTA)
+// Pin Digital 2 : Flame Sensor (Digital Output)
+// Pin Digital 4 : Buzzer / Alarm Siren
+// Baud Rate     : 9600 bps
+// ======================================================
+
+const int FLAME_PIN  = 2;  // Pin masukan Flame Sensor
+const int ALARM_PIN  = 4;  // Pin keluaran Buzzer/Sirine
+
+void setup() {
+  // Inisialisasi komunikasi Serial
+  Serial.begin(9600);
+
+  // Konfigurasi Pin Digital
+  pinMode(FLAME_PIN, INPUT);
+  pinMode(ALARM_PIN, OUTPUT);
+
+  // Pasang sirine awal kondisi MATI
+  digitalWrite(ALARM_PIN, LOW);
+}
+
+void loop() {
+  // Membaca status sensor (Kebanyakan sensor flame aktif LOW / 0 saat ada api)
+  int flameState = digitalRead(FLAME_PIN);
+
+  if (flameState == LOW) {
+    // API TERDETEKSI!
+    digitalWrite(ALARM_PIN, HIGH);  // Hidupkan Buzzer/Sirine
+    Serial.println("FIRE_DETECTED");  // Kirim data serial ke Web
+  } else {
+    // KONDISI AMAN
+    digitalWrite(ALARM_PIN, LOW);   // Matikan Buzzer/Sirine
+    Serial.println("SAFE");          // Kirim data serial ke Web
+  }
+
+  // Delay interaksi pembacaan (500 ms)
+  delay(500);
+}</code></pre>
           </div>
         </div>
 
-        <!-- SUB 5.2 -->
-        <div
-          onclick="openModule('5.2.html')"
-          class="bg-white rounded-2xl border border-teal-200/80 p-5 hover:border-teal-600 hover:shadow-lg hover:shadow-teal-900/5 transition-all cursor-pointer group flex flex-col justify-between"
-        >
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span
-                class="text-xs font-extrabold bg-teal-50 text-teal-700 px-3 py-1 rounded-full border border-teal-200"
-              >
-                Sub 5.2
-              </span>
-              <div
-                class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors"
-              >
-                <i class="fa-solid fa-flask-vial text-lg"></i>
-              </div>
-            </div>
-            <div>
-              <h3
-                class="text-base font-bold text-slate-800 group-hover:text-teal-700 transition-colors"
-              >
-                Studi Kasus Automatic Chemical Dosing & Emergency Servo Valve
-              </h3>
-              <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">
-                Pengukuran dan takaran dosis bahan kimia secara presisi
-                dilengkapi katup penutup darurat berbasis servo interlock.
-              </p>
-            </div>
-          </div>
-          <div
-            class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-teal-600"
+        <!-- NAVIGATION FOOTER -->
+        <nav class="flex items-center justify-between pt-2">
+          <a
+            href="index.html"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs transition-colors shadow-2xs"
           >
-            <span>Buka Studi Kasus</span>
-            <i
-              class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"
-            ></i>
-          </div>
-        </div>
-
-        <!-- SUB 5.3 -->
-        <div
-          onclick="openModule('5.3.html')"
-          class="bg-white rounded-2xl border border-teal-200/80 p-5 hover:border-teal-600 hover:shadow-lg hover:shadow-teal-900/5 transition-all cursor-pointer group flex flex-col justify-between"
-        >
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span
-                class="text-xs font-extrabold bg-teal-50 text-teal-700 px-3 py-1 rounded-full border border-teal-200"
-              >
-                Sub 5.3
-              </span>
-              <div
-                class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors"
-              >
-                <i class="fa-solid fa-faucet-drip text-lg"></i>
-              </div>
-            </div>
-            <div>
-              <h3
-                class="text-base font-bold text-slate-800 group-hover:text-teal-700 transition-colors"
-              >
-                Studi Kasus Proteksi Kebakaran & Isolation Valve Pipa Gas
-              </h3>
-              <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">
-                Pengamanan alur distribusi pipa gas industri melalui deteksi
-                kebocoran, peringatan bahaya, dan isolasi katup otomatis.
-              </p>
-            </div>
-          </div>
-          <div
-            class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-teal-600"
-          >
-            <span>Buka Studi Kasus</span>
-            <i
-              class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"
-            ></i>
-          </div>
-        </div>
-
-        <!-- SUB 5.4 -->
-        <div
-          onclick="openModule('5.4.html')"
-          class="bg-white rounded-2xl border border-teal-200/80 p-5 hover:border-teal-600 hover:shadow-lg hover:shadow-teal-900/5 transition-all cursor-pointer group flex flex-col justify-between"
-        >
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span
-                class="text-xs font-extrabold bg-teal-50 text-teal-700 px-3 py-1 rounded-full border border-teal-200"
-              >
-                Sub 5.4
-              </span>
-              <div
-                class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors"
-              >
-                <i class="fa-solid fa-water-ladder text-lg"></i>
-              </div>
-            </div>
-            <div>
-              <h3
-                class="text-base font-bold text-slate-800 group-hover:text-teal-700 transition-colors"
-              >
-                Studi Kasus Multi-Level Tank Monitoring & Dry-Run Pump
-                Protection
-              </h3>
-              <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">
-                Monitoring level fluida bertingkat pada tangki penampung serta
-                pengamanan pompa dari kerusakan akibat dry-run.
-              </p>
-            </div>
-          </div>
-          <div
-            class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-teal-600"
-          >
-            <span>Buka Studi Kasus</span>
-            <i
-              class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"
-            ></i>
-          </div>
-        </div>
-
-        <!-- SUB 5.5 -->
-        <div
-          onclick="openModule('5.5.html')"
-          class="bg-white rounded-2xl border border-teal-200/80 p-5 hover:border-teal-600 hover:shadow-lg hover:shadow-teal-900/5 transition-all cursor-pointer group flex flex-col justify-between"
-        >
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span
-                class="text-xs font-extrabold bg-teal-50 text-teal-700 px-3 py-1 rounded-full border border-teal-200"
-              >
-                Sub 5.5
-              </span>
-              <div
-                class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors"
-              >
-                <i class="fa-solid fa-bottle-droplet text-lg"></i>
-              </div>
-            </div>
-            <div>
-              <h3
-                class="text-base font-bold text-slate-800 group-hover:text-teal-700 transition-colors"
-              >
-                Studi Kasus Automatic Bottling & Capping Line (F&B Industry)
-              </h3>
-              <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">
-                Automasi lini pengisian cairan dan penyegelan tutup botol secara
-                sekuensial pada industri Makanan & Minuman.
-              </p>
-            </div>
-          </div>
-          <div
-            class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-teal-600"
-          >
-            <span>Buka Studi Kasus</span>
-            <i
-              class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"
-            ></i>
-          </div>
-        </div>
-
-        <!-- SUB 5.6 -->
-        <div
-          onclick="openModule('5.6.html')"
-          class="bg-white rounded-2xl border border-teal-200/80 p-5 hover:border-teal-600 hover:shadow-lg hover:shadow-teal-900/5 transition-all cursor-pointer group flex flex-col justify-between"
-        >
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span
-                class="text-xs font-extrabold bg-teal-50 text-teal-700 px-3 py-1 rounded-full border border-teal-200"
-              >
-                Sub 5.6
-              </span>
-              <div
-                class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors"
-              >
-                <i class="fa-solid fa-magnifying-glass-chart text-lg"></i>
-              </div>
-            </div>
-            <div>
-              <h3
-                class="text-base font-bold text-slate-800 group-hover:text-teal-700 transition-colors"
-              >
-                Studi Kasus High-Speed Quality Inspection & Rejector (FMCG
-                Industry)
-              </h3>
-              <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">
-                Pemeriksaan kualitas kemasan barang berkecepatan tinggi dengan
-                mekanisme actuator pemilah produk reject pada conveyor.
-              </p>
-            </div>
-          </div>
-          <div
-            class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-teal-600"
-          >
-            <span>Buka Studi Kasus</span>
-            <i
-              class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"
-            ></i>
-          </div>
-        </div>
-
-        <!-- SUB 5.7 -->
-        <div
-          onclick="openModule('5.7.html')"
-          class="bg-white rounded-2xl border border-teal-200/80 p-5 hover:border-teal-600 hover:shadow-lg hover:shadow-teal-900/5 transition-all cursor-pointer group flex flex-col justify-between"
-        >
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span
-                class="text-xs font-extrabold bg-teal-50 text-teal-700 px-3 py-1 rounded-full border border-teal-200"
-              >
-                Sub 5.7
-              </span>
-              <div
-                class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors"
-              >
-                <i class="fa-solid fa-temperature-high text-lg"></i>
-              </div>
-            </div>
-            <div>
-              <h3
-                class="text-base font-bold text-slate-800 group-hover:text-teal-700 transition-colors"
-              >
-                Studi Kasus Boiler Steam Relief & Manhole Interlock (CPO &
-                Tekstil)
-              </h3>
-              <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">
-                Pengontrolan tekanan berlebih pada boiler uap serta penguncian
-                manhole keselamatan kerja pada pabrik CPO & Tekstil.
-              </p>
-            </div>
-          </div>
-          <div
-            class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-teal-600"
-          >
-            <span>Buka Studi Kasus</span>
-            <i
-              class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"
-            ></i>
-          </div>
-        </div>
-
-        <!-- SUB 5.8 -->
-        <div
-          onclick="openModule('5.8.html')"
-          class="bg-white rounded-2xl border border-teal-200/80 p-5 hover:border-teal-600 hover:shadow-lg hover:shadow-teal-900/5 transition-all cursor-pointer group flex flex-col justify-between"
-        >
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span
-                class="text-xs font-extrabold bg-teal-50 text-teal-700 px-3 py-1 rounded-full border border-teal-200"
-              >
-                Sub 5.8
-              </span>
-              <div
-                class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors"
-              >
-                <i class="fa-solid fa-mountain-sun text-lg"></i>
-              </div>
-            </div>
-            <div>
-              <h3
-                class="text-base font-bold text-slate-800 group-hover:text-teal-700 transition-colors"
-              >
-                Studi Kasus Outdoor Stockpile Protection System
-              </h3>
-              <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">
-                Pemantauan lingkungan & suhu area penumpukan bahan mentah
-                outdoor guna mencegah bahaya swabakar (spontaneous combustion).
-              </p>
-            </div>
-          </div>
-          <div
-            class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-teal-600"
-          >
-            <span>Buka Studi Kasus</span>
-            <i
-              class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"
-            ></i>
-          </div>
-        </div>
-
-        <!-- SUB 5.9 -->
-        <div
-          onclick="openModule('5.9.html')"
-          class="bg-white rounded-2xl border border-teal-200/80 p-5 hover:border-teal-600 hover:shadow-lg hover:shadow-teal-900/5 transition-all cursor-pointer group flex flex-col justify-between"
-        >
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span
-                class="text-xs font-extrabold bg-teal-50 text-teal-700 px-3 py-1 rounded-full border border-teal-200"
-              >
-                Sub 5.9
-              </span>
-              <div
-                class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center group-hover:bg-teal-600 group-hover:text-white transition-colors"
-              >
-                <i class="fa-solid fa-snowflake text-lg"></i>
-              </div>
-            </div>
-            <div>
-              <h3
-                class="text-base font-bold text-slate-800 group-hover:text-teal-700 transition-colors"
-              >
-                Studi Kasus Cold Storage & Trap Door Interlock
-              </h3>
-              <p class="text-xs text-slate-500 mt-1.5 leading-relaxed">
-                Monitoring suhu terendah gudang pendingin (cold storage) dan
-                sistem pengunci interlock pintu jebakan keselamatan teknisi.
-              </p>
-            </div>
-          </div>
-          <div
-            class="mt-6 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-teal-600"
-          >
-            <span>Buka Studi Kasus</span>
-            <i
-              class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"
-            ></i>
-          </div>
-        </div>
-      </section>
-    </main>
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Kembali</span>
+          </a>
+        </nav>
+      </main>
+    </div>
 
     <footer
-      class="max-w-6xl mx-auto w-full px-4 pt-6 text-center text-xs text-slate-400 font-medium"
+      class="max-w-6xl mx-auto w-full px-4 pt-4 text-center text-xs text-slate-400 font-medium"
     >
       <p>© MIKRO EDU - SMK SMTI Yogyakarta | Teknik Kimia Industri</p>
     </footer>
 
-    <!-- NAVIGASI HALAMAN -->
+    <!-- SCRIPT LOGIC -->
     <script>
-      function openModule(url) {
-        window.location.href = url;
+      // DOM Elements
+      const connectBtn = document.getElementById("connectBtn");
+      const connDot = document.getElementById("connDot");
+      const connLabel = document.getElementById("connLabel");
+      const statusText = document.getElementById("statusText");
+      const cardStatus = document.getElementById("cardStatus");
+      const statusIcon = document.getElementById("statusIcon");
+      const sensorPinText = document.getElementById("sensorPinText");
+      const buzzerPinText = document.getElementById("buzzerPinText");
+      const lastMsg = document.getElementById("lastMsg");
+      const logEl = document.getElementById("log");
+      const sirenGroup = document.getElementById("sirenGroup");
+      const flameGroup = document.getElementById("flameGroup");
+      const pulseRing1 = document.getElementById("pulseRing1");
+      const pulseRing2 = document.getElementById("pulseRing2");
+      const bgRect = document.getElementById("bgRect");
+
+      // Collapsible Code Elements
+      const toggleCodeHeader = document.getElementById("toggleCodeHeader");
+      const arduinoCodeSection = document.getElementById("arduinoCodeSection");
+      const toggleText = document.getElementById("toggleText");
+      const toggleIcon = document.getElementById("toggleIcon");
+      const copyCodeBtn = document.getElementById("copyCodeBtn");
+      const copyBtnText = document.getElementById("copyBtnText");
+      const codeText = document.getElementById("codeText");
+
+      let port,
+        reader,
+        keepReading = true;
+
+      // Toggle Tampilkan / Sembunyikan Kode Arduino
+      toggleCodeHeader.addEventListener("click", () => {
+        const isHidden = arduinoCodeSection.classList.contains("hidden");
+        if (isHidden) {
+          arduinoCodeSection.classList.remove("hidden");
+          toggleText.textContent = "Sembunyikan Kode";
+          toggleIcon.style.transform = "rotate(180deg)";
+        } else {
+          arduinoCodeSection.classList.add("hidden");
+          toggleText.textContent = "Tampilkan Kode";
+          toggleIcon.style.transform = "rotate(0deg)";
+        }
+      });
+
+      // Copy Code Functionality
+      copyCodeBtn.addEventListener("click", () => {
+        navigator.clipboard.writeText(codeText.textContent.trim()).then(() => {
+          copyBtnText.textContent = "Tersalin!";
+          setTimeout(() => {
+            copyBtnText.textContent = "Salin Kode";
+          }, 2000);
+        });
+      });
+
+      function addLog(line) {
+        const p = document.createElement("div");
+        const t = new Date().toLocaleTimeString();
+        p.innerHTML = `<span class="text-slate-400">[${t}]</span> ${line}`;
+        logEl.prepend(p);
+        while (logEl.childElementCount > 50) logEl.removeChild(logEl.lastChild);
       }
+
+      function setAlarmState(active) {
+        if (active) {
+          sirenGroup.classList.add("siren-active");
+          flameGroup.setAttribute("opacity", "1");
+          bgRect.classList.add("alarm-bg-flash");
+          pulseRing1.style.opacity = "1";
+          pulseRing2.style.opacity = "1";
+
+          cardStatus.className =
+            "bg-red-50 border border-red-200 shadow-xs rounded-xl px-3.5 py-3 transition-all";
+          statusIcon.className =
+            "fa-solid fa-triangle-exclamation text-red-600 text-xs animate-bounce";
+          statusText.textContent = "API TERDETEKSI!";
+          statusText.className =
+            "font-black text-sm sm:text-base text-red-600 display-font";
+
+          buzzerPinText.textContent = "HIGH (ON)";
+          buzzerPinText.className =
+            "font-bold text-xs sm:text-sm text-red-600 font-mono-code";
+
+          sensorPinText.textContent = "LOW (API)";
+          sensorPinText.className =
+            "font-bold text-xs sm:text-sm text-red-600 font-mono-code";
+        } else {
+          sirenGroup.classList.remove("siren-active");
+          flameGroup.setAttribute("opacity", "0");
+          bgRect.classList.remove("alarm-bg-flash");
+          pulseRing1.style.opacity = "0";
+          pulseRing2.style.opacity = "0";
+
+          cardStatus.className =
+            "bg-white border border-slate-200 shadow-xs rounded-xl px-3.5 py-3 transition-all";
+          statusIcon.className =
+            "fa-solid fa-shield-halved text-emerald-500 text-xs";
+          statusText.textContent = "AMAN";
+          statusText.className =
+            "font-black text-sm sm:text-base text-emerald-600 display-font";
+
+          buzzerPinText.textContent = "LOW (OFF)";
+          buzzerPinText.className =
+            "font-bold text-xs sm:text-sm text-slate-800 font-mono-code";
+
+          sensorPinText.textContent = "HIGH (NORMAL)";
+          sensorPinText.className =
+            "font-bold text-xs sm:text-sm text-slate-800 font-mono-code";
+        }
+      }
+
+      function handleLine(line) {
+        line = line.trim();
+        if (!line) return;
+        lastMsg.textContent = line;
+        addLog(line);
+
+        if (
+          line.includes("FIRE_DETECTED") ||
+          line.includes("FIRE") ||
+          line.includes("1")
+        ) {
+          setAlarmState(true);
+        } else if (
+          line.includes("SAFE") ||
+          line.includes("NORMAL") ||
+          line.includes("0")
+        ) {
+          setAlarmState(false);
+        }
+      }
+
+      async function connectSerial() {
+        if (!("serial" in navigator)) {
+          alert(
+            "Browser ini tidak mendukung Web Serial API. Gunakan Chrome atau Edge terbaru.",
+          );
+          return;
+        }
+        try {
+          port = await navigator.serial.requestPort();
+          await port.open({ baudRate: 9600 });
+
+          connDot.className = "w-3 h-3 rounded-full bg-emerald-500 shrink-0";
+          connLabel.textContent = "Terhubung via USB";
+          connectBtn.innerHTML = `<i class="fa-solid fa-plug-circle-xmark text-xs"></i> <span>Putuskan Koneksi</span>`;
+          connectBtn.className =
+            "w-full py-2.5 bg-rose-600 hover:bg-rose-700 active:scale-[0.99] text-white font-bold text-xs rounded-xl transition-all shadow-xs flex items-center justify-center gap-2";
+
+          addLog(
+            "<span class='text-teal-700 font-bold'>[SYSTEM] Terhubung ke Serial Port Arduino.</span>",
+          );
+
+          const decoder = new TextDecoderStream();
+          port.readable.pipeTo(decoder.writable);
+          reader = decoder.readable.getReader();
+
+          keepReading = true;
+          readLoop();
+        } catch (err) {
+          addLog(
+            `<span class='text-rose-600 font-bold'>[ERROR] ${err.message}</span>`,
+          );
+        }
+      }
+
+      async function readLoop() {
+        let buffer = "";
+        try {
+          while (keepReading) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            if (value) {
+              buffer += value;
+              let idx;
+              while ((idx = buffer.indexOf("\n")) >= 0) {
+                const line = buffer.slice(0, idx);
+                buffer = buffer.slice(idx + 1);
+                handleLine(line);
+              }
+            }
+          }
+        } catch (err) {
+          addLog(
+            `<span class='text-rose-600 font-bold'>[KONEKSI TERPUTUS] ${err.message}</span>`,
+          );
+        } finally {
+          reader?.releaseLock();
+        }
+      }
+
+      async function disconnectSerial() {
+        keepReading = false;
+        try {
+          await reader?.cancel();
+        } catch (e) {}
+        try {
+          await port?.close();
+        } catch (e) {}
+
+        connDot.className = "w-3 h-3 rounded-full bg-slate-400 shrink-0";
+        connLabel.textContent = "Belum terhubung";
+        connectBtn.innerHTML = `<i class="fa-solid fa-plug text-xs"></i> <span>Hubungkan Arduino</span>`;
+        connectBtn.className =
+          "w-full py-2.5 bg-teal-600 hover:bg-teal-700 active:scale-[0.99] text-white font-bold text-xs rounded-xl transition-all shadow-xs flex items-center justify-center gap-2";
+
+        addLog(
+          "<span class='text-amber-700 font-bold'>[SYSTEM] Koneksi terputus dari Arduino.</span>",
+        );
+      }
+
+      connectBtn.addEventListener("click", () => {
+        if (connLabel.textContent.includes("Terhubung")) {
+          disconnectSerial();
+        } else {
+          connectSerial();
+        }
+      });
+
+      // Default State Init
+      setAlarmState(false);
     </script>
   </body>
 </html>
