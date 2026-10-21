@@ -94,7 +94,8 @@
             class="text-xs sm:text-sm text-teal-50/90 leading-relaxed font-normal"
           >
             Studi kasus pemanfaatan sensor ultrasonik dan sensor api (flame
-            sensor) dengan antarmuka penampil LCD I2C 16x2 pada Arduino Uno.
+            sensor) dengan antarmuka penampil LCD I2C 16x2 serta indikator LED
+            pada Arduino Uno.
           </p>
         </div>
       </section>
@@ -303,9 +304,11 @@
           <p class="text-slate-700 leading-relaxed">
             Buatlah sistem deteksi api menggunakan sensor flame yang terhubung
             ke Arduino. Sistem ini harus mampu menampilkan status deteksi api
-            dan kondisi keselamatan pada LCD 16x2. Ketika api terdeteksi, LCD
-            akan menampilkan peringatan bahaya. Jika tidak ada api yang
-            terdeteksi, LCD akan menampilkan status "Aman".
+            dan kondisi keselamatan pada LCD 16x2 serta mengontrol indikator LED
+            (LED ON ketika ada api dan LED OFF ketika tidak ada api). Ketika api
+            terdeteksi, LCD akan menampilkan peringatan bahaya dan LED menyala.
+            Jika tidak ada api yang terdeteksi, LCD akan menampilkan status
+            "Aman" dan LED mati.
           </p>
           <ul class="list-disc pl-5 space-y-1 text-slate-700">
             <li>
@@ -317,6 +320,11 @@
               <strong>Baris 2:</strong> Menampilkan teks
               <code>"Kondisi: Bahaya"</code> ketika api terdeteksi, dan
               <code>"Kondisi: Aman"</code> ketika tidak ada api.
+            </li>
+            <li>
+              <strong>Indikator LED:</strong> <code>LED ON</code> (menyala)
+              ketika ada api, dan <code>LED OFF</code> (mati) ketika tidak ada
+              api.
             </li>
           </ul>
         </div>
@@ -344,6 +352,9 @@
                   <th class="p-2.5 border border-slate-200 text-left">
                     Tampilan Layar LCD 16x2
                   </th>
+                  <th class="p-2.5 border border-slate-200 text-center">
+                    Kondisi LED
+                  </th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100 text-[11px] font-mono">
@@ -360,6 +371,11 @@
                   </td>
                   <td
                     class="p-2.5 border border-slate-200 font-sans text-slate-400"
+                  >
+                    ...
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center text-slate-400 font-bold"
                   >
                     ...
                   </td>
@@ -380,6 +396,11 @@
                   >
                     ...
                   </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center text-slate-400 font-bold"
+                  >
+                    ...
+                  </td>
                 </tr>
                 <tr class="hover:bg-slate-50">
                   <td
@@ -394,6 +415,11 @@
                   </td>
                   <td
                     class="p-2.5 border border-slate-200 font-sans text-slate-400"
+                  >
+                    ...
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center text-slate-400 font-bold"
                   >
                     ...
                   </td>
@@ -415,20 +441,35 @@
           </h4>
           <p class="text-xs text-slate-600">
             Gunakan fungsi <code>digitalRead()</code> untuk membaca sinyal
-            digital dari sensor api:
+            digital dari sensor api dan <code>digitalWrite()</code> untuk
+            mengontrol LED:
           </p>
           <div
             class="bg-white border border-slate-200 text-slate-800 p-3 rounded-lg font-mono text-xs overflow-x-auto shadow-2xs"
           >
             <span class="text-slate-400"
-              >// Logika Sensor Api (Umumnya aktif LOW)</span
+              >// Logika Sensor Api & Indikator LED (Aktif LOW)</span
             ><br />
             <span class="text-teal-700 font-semibold">int</span> sensorState =
             <span class="text-amber-600 font-semibold">digitalRead</span
             >(flamePin);<br />
             <span class="text-teal-700 font-semibold">if</span> (sensorState ==
-            LOW) &#123;
-            <span class="text-slate-400">// Terdeteksi Api</span> &#125;
+            LOW) &#123; <br />
+            &nbsp;&nbsp;<span class="text-slate-400"
+              >// Terdeteksi Api -> LED ON</span
+            ><br />
+            &nbsp;&nbsp;<span class="text-amber-600 font-semibold"
+              >digitalWrite</span
+            >(ledPin, HIGH);<br />
+            &#125;
+            <span class="text-teal-700 font-semibold">else</span> &#123;<br />
+            &nbsp;&nbsp;<span class="text-slate-400"
+              >// Tidak Ada Api -> LED OFF</span
+            ><br />
+            &nbsp;&nbsp;<span class="text-amber-600 font-semibold"
+              >digitalWrite</span
+            >(ledPin, LOW);<br />
+            &#125;
           </div>
         </div>
       </section>
