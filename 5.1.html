@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sub 4.6 - Studi Kasus Pemrograman Sensor & LCD</title>
+    <title>Sub 5.1 - Praktik Modul RFID RC522</title>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,6 +20,10 @@
         -webkit-user-select: none;
         touch-action: manipulation;
         -webkit-tap-highlight-color: transparent;
+      }
+      #codeDisplay {
+        user-select: text !important;
+        -webkit-user-select: text !important;
       }
       ::-webkit-scrollbar {
         width: 6px;
@@ -54,13 +58,13 @@
               <span
                 class="text-[10px] font-extrabold bg-teal-100 text-teal-800 px-2 py-0.5 rounded uppercase tracking-wider"
               >
-                SUB 4.6
+                SUB 5.1
               </span>
             </div>
             <h1
               class="text-sm sm:text-base font-black text-slate-900 leading-tight mt-0.5"
             >
-              Studi Kasus Pemrograman Sensor & Display LCD 16x2
+              Praktik Modul RFID RC522 & Sistem Keamanan Akses
             </h1>
           </div>
         </div>
@@ -76,400 +80,416 @@
         <div
           class="absolute -right-4 -bottom-6 opacity-15 pointer-events-none hidden sm:block select-none"
         >
-          <i class="fa-solid fa-laptop-code text-[140px] text-teal-100"></i>
+          <i class="fa-solid fa-id-card text-[140px] text-teal-100"></i>
         </div>
-        <div class="relative z-10 space-y-1.5 max-w-2xl">
+        <div class="relative z-10 space-y-1.5 max-w-3xl">
           <div
             class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
           >
-            <i class="fa-solid fa-laptop-code text-teal-200 text-xs"></i>
-            <span>Lembar Kerja Studi Kasus Modul 4</span>
+            <i class="fa-solid fa-microchip text-teal-200 text-xs"></i>
+            <span>Praktik Teknologi Identifikasi Frekuensi Radio (RFID)</span>
           </div>
           <h2
             class="text-lg sm:text-xl font-extrabold text-white leading-tight display-font"
           >
-            Soal & Data Pengamatan Sistem Sensor & LCD
+            Pembacaan UID, Validasi Biodata, & Solenoid Door Lock
           </h2>
           <p
             class="text-xs sm:text-sm text-teal-50/90 leading-relaxed font-normal"
           >
-            Studi kasus pemanfaatan sensor ultrasonik dan sensor api (flame
-            sensor) dengan antarmuka penampil LCD I2C 16x2 serta indikator LED
-            pada Arduino Uno.
+            Pelajari komunikasi SPI antara Arduino Uno dan modul RFID RC522
+            untuk membaca kode unik kartu (UID), memvalidasi database kartu
+            terdaftar, serta mengontrol aktuator pengaman pintu otomatis
+            (Solenoid Door Lock).
           </p>
         </div>
       </section>
 
-      <!-- ========================================== -->
-      <!-- STUDI KASUS SOAL 1                        -->
-      <!-- ========================================== -->
-      <section
-        class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5"
-      >
-        <!-- HEADER SOAL 1 -->
+      <!-- SKEMA RANGKAIAN & HARDWARE VISUAL -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- GAMBAR RANGKAIAN (2 Kolom) -->
         <div
-          class="flex items-center justify-between border-b border-slate-100 pb-3"
+          class="md:col-span-2 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-3"
         >
-          <div class="flex items-center gap-2.5">
-            <span
-              class="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center font-bold text-xs"
-              >1</span
-            >
-            <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
-              Studi Kasus Soal 1: Pembacaan Sensor Ultrasonik pada LCD 16x2
-            </h3>
-          </div>
-          <span
-            class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded border border-teal-200 uppercase"
-          >
-            Soal Studi Kasus
-          </span>
-        </div>
-
-        <!-- INSTRUKSI / SOAL 1 -->
-        <div
-          class="bg-teal-50/80 border border-teal-200 rounded-xl p-3.5 text-xs sm:text-sm text-teal-950 space-y-1.5"
-        >
-          <div class="font-bold flex items-center gap-1.5">
-            <i class="fa-solid fa-circle-info text-teal-600"></i> Instruksi
-            Soal:
-          </div>
-          <p class="text-slate-700 leading-relaxed">
-            Buatlah program untuk menampilkan hasil pembacaan sensor ultrasonik
-            pada layar LCD 16x2 menggunakan Arduino Uno.
-          </p>
-          <ul class="list-disc pl-5 space-y-1 text-slate-700">
-            <li>
-              <strong>Baris 1:</strong> Menampilkan teks
-              <code>"Jarak: XX cm"</code>, di mana XX adalah nilai jarak yang
-              diukur dalam satuan sentimeter (cm).
-            </li>
-            <li>
-              <strong>Baris 2:</strong> Menampilkan status berdasarkan jarak:
-              <code>"Dekat"</code> jika jarak kurang dari 10 cm,
-              <code>"Sedang"</code> jika jarak antara 10 cm hingga 50 cm, dan
-              <code>"Jauh"</code> jika jarak lebih dari 50 cm.
-            </li>
-          </ul>
-        </div>
-
-        <!-- TABEL DATA PENGAMATAN 1 -->
-        <div class="space-y-2">
-          <h4
-            class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5"
-          >
-            <i class="fa-solid fa-table text-teal-600"></i> Tabel Data
-            Pengamatan Sensor Ultrasonik
-          </h4>
-          <div class="overflow-x-auto">
-            <table class="w-full text-xs border-collapse">
-              <thead>
-                <tr
-                  class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200"
-                >
-                  <th class="p-2.5 border border-slate-200 text-center w-12">
-                    No
-                  </th>
-                  <th class="p-2.5 border border-slate-200 text-center">
-                    Jarak Objek
-                  </th>
-                  <th class="p-2.5 border border-slate-200 text-left">
-                    Tampilan Layar LCD 16x2
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100 text-[11px] font-mono">
-                <tr class="hover:bg-slate-50">
-                  <td
-                    class="p-2.5 border border-slate-200 text-center font-bold"
-                  >
-                    1
-                  </td>
-                  <td
-                    class="p-2.5 border border-slate-200 text-center text-rose-600 font-bold"
-                  >
-                    ... cm
-                  </td>
-                  <td
-                    class="p-2.5 border border-slate-200 font-sans text-slate-400"
-                  >
-                    ...
-                  </td>
-                </tr>
-                <tr class="hover:bg-slate-50">
-                  <td
-                    class="p-2.5 border border-slate-200 text-center font-bold"
-                  >
-                    2
-                  </td>
-                  <td
-                    class="p-2.5 border border-slate-200 text-center text-amber-600 font-bold"
-                  >
-                    ... cm
-                  </td>
-                  <td
-                    class="p-2.5 border border-slate-200 font-sans text-slate-400"
-                  >
-                    ...
-                  </td>
-                </tr>
-                <tr class="hover:bg-slate-50">
-                  <td
-                    class="p-2.5 border border-slate-200 text-center font-bold"
-                  >
-                    Dst.
-                  </td>
-                  <td
-                    class="p-2.5 border border-slate-200 text-center text-slate-400 font-bold"
-                  >
-                    ...
-                  </td>
-                  <td
-                    class="p-2.5 border border-slate-200 font-sans text-slate-400"
-                  >
-                    ...
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- PETUNJUK KODE ARDUINO 1 -->
-        <div
-          class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2"
-        >
-          <h4
-            class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5"
-          >
-            <i class="fa-solid fa-code text-teal-600"></i> Petunjuk Logika
-            Pemrograman Soal 1
-          </h4>
-          <p class="text-xs text-slate-600">
-            Gunakan pengkondisian <code>if-else</code> untuk menentukan status
-            jarak pada baris kedua LCD:
-          </p>
           <div
-            class="bg-white border border-slate-200 text-slate-800 p-3 rounded-lg font-mono text-xs overflow-x-auto shadow-2xs"
+            class="w-full flex items-center justify-between border-b border-slate-100 pb-2.5"
           >
-            <span class="text-slate-400">// Logika Status Jarak Ultrasonik</span
-            ><br />
-            <span class="text-teal-700 font-semibold">if</span> (jarak &lt;
-            <span class="text-emerald-600 font-bold">10</span>) &#123;
-            lcd.print(<span class="text-amber-600">"Dekat"</span>); &#125;<br />
-            <span class="text-teal-700 font-semibold">else if</span> (jarak
-            &gt;= <span class="text-emerald-600 font-bold">10</span> && jarak
-            &lt;= <span class="text-emerald-600 font-bold">50</span>) &#123;
-            lcd.print(<span class="text-amber-600">"Sedang"</span>); &#125;<br />
-            <span class="text-teal-700 font-semibold">else</span> &#123;
-            lcd.print(<span class="text-amber-600">"Jauh"</span>); &#125;
+            <h2
+              class="text-sm sm:text-base font-extrabold text-slate-800 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-diagram-project text-teal-600"></i> Skema
+              Rangkaian
+            </h2>
+            <span
+              id="schemaTitleTag"
+              class="text-xs font-bold bg-teal-100 text-teal-800 px-2.5 py-1 rounded-lg"
+            >
+              Skema Misi 1 & 2
+            </span>
+          </div>
+
+          <!-- KONTEN GAMBAR SKEMA -->
+          <div class="space-y-2">
+            <p id="schemaDesc" class="text-xs text-slate-600 leading-relaxed">
+              <!-- Deskripsi skema diisi oleh JavaScript -->
+            </p>
+            <div
+              class="w-full bg-slate-50 p-2 sm:p-3 rounded-xl border border-slate-200 flex flex-col items-center justify-center min-h-[220px] relative group"
+            >
+              <img
+                id="schemaImage"
+                src="img/modul05/5.1.1.png"
+                alt="Skema Rangkaian RFID"
+                class="max-h-[280px] w-auto max-w-full object-contain rounded-lg border border-slate-200 bg-white p-2 shadow-2xs cursor-zoom-in transition transform group-hover:scale-[1.01]"
+                onclick="openImageModal(this.src, this.alt)"
+                title="Klik untuk memperbesar gambar"
+                onerror="
+                  this.onerror = null;
+                  this.src = '5.1.1.png';
+                "
+              />
+              <span
+                class="absolute bottom-4 right-4 bg-slate-900/70 text-white text-[10px] px-2 py-1 rounded-md backdrop-blur-xs opacity-80 group-hover:opacity-100 transition pointer-events-none flex items-center gap-1"
+              >
+                <i class="fa-solid fa-magnifying-glass-plus"></i> Klik untuk
+                perbesar
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SIMULASI PEMINDAIAN KARTU RFID (1 Kolom) -->
+        <div
+          class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between items-center text-center overflow-hidden"
+        >
+          <div
+            class="w-full border-b border-slate-100 pb-2.5 flex items-center justify-between mb-2"
+          >
+            <h2
+              class="text-sm sm:text-base font-extrabold text-slate-800 flex items-center gap-2"
+            >
+              <i class="fa-solid fa-tower-broadcast text-teal-600"></i>
+              Simulator RFID
+            </h2>
+            <span
+              id="rfidStatusBadge"
+              class="text-[10px] font-bold text-teal-800 bg-teal-100 px-2 py-0.5 rounded border border-teal-200"
+              >Standby</span
+            >
+          </div>
+
+          <!-- CONTAINER SIMULATOR VISUAL KARTU -->
+          <div
+            class="relative w-full h-full min-h-[170px] bg-slate-50 rounded-2xl p-4 flex flex-col items-center justify-center overflow-hidden border border-slate-200 shadow-xs my-auto space-y-3"
+          >
+            <div
+              class="w-16 h-16 rounded-2xl bg-teal-100 border border-teal-300 flex items-center justify-center shadow-md transition-all duration-300"
+              id="rfidIconBox"
+            >
+              <i class="fa-solid fa-address-card text-2xl text-teal-600"></i>
+            </div>
+            <div>
+              <span
+                id="scannedUidText"
+                class="font-mono text-xs font-bold text-slate-700 block"
+                >Belum ada kartu dipindai</span
+              >
+              <span
+                id="scannedInfoText"
+                class="text-[11px] text-slate-500 block mt-0.5"
+                >Dekatkan kartu ke pembaca</span
+              >
+            </div>
+          </div>
+
+          <!-- TOMBOL SIMULASI SCAN KARTU -->
+          <div class="w-full space-y-1.5 mt-3">
+            <div class="text-[10px] font-bold text-slate-600 text-left">
+              Simulasikan Pemindaian Kartu:
+            </div>
+            <div class="grid grid-cols-3 gap-1.5">
+              <button
+                onclick="simulateScan('card1')"
+                class="px-2 py-1.5 rounded-lg text-[10px] font-bold bg-teal-600 hover:bg-teal-700 text-white shadow-xs cursor-pointer transition"
+              >
+                Kartu 1
+              </button>
+              <button
+                onclick="simulateScan('card2')"
+                class="px-2 py-1.5 rounded-lg text-[10px] font-bold bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs cursor-pointer transition"
+              >
+                Kartu 2
+              </button>
+              <button
+                onclick="simulateScan('cardUnknown')"
+                class="px-2 py-1.5 rounded-lg text-[10px] font-bold bg-rose-600 hover:bg-rose-700 text-white shadow-xs cursor-pointer transition"
+              >
+                Asing
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
-      <!-- ========================================== -->
-      <!-- STUDI KASUS SOAL 2                        -->
-      <!-- ========================================== -->
-      <section
-        class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5"
-      >
-        <!-- HEADER SOAL 2 -->
-        <div
-          class="flex items-center justify-between border-b border-slate-100 pb-3"
-        >
-          <div class="flex items-center gap-2.5">
-            <span
-              class="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center font-bold text-xs"
-              >2</span
-            >
-            <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
-              Studi Kasus Soal 2: Sistem Deteksi Api (Flame Sensor) & LCD 16x2
-            </h3>
-          </div>
-          <span
-            class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded border border-teal-200 uppercase"
+      <!-- SELEKTOR MISI PRAKTIKUM RFID (Pill Buttons) -->
+      <section class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h3
+            class="text-base sm:text-lg font-extrabold text-slate-900 flex items-center gap-2"
           >
-            Soal Studi Kasus
+            <i class="fa-solid fa-gamepad text-teal-600"></i> Pilih Misi
+            Praktikum
+          </h3>
+          <span
+            class="text-xs font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-100"
+          >
+            3 Misi Utama
           </span>
         </div>
 
-        <!-- INSTRUKSI / SOAL 2 -->
-        <div
-          class="bg-teal-50/80 border border-teal-200 rounded-xl p-3.5 text-xs sm:text-sm text-teal-950 space-y-1.5"
-        >
-          <div class="font-bold flex items-center gap-1.5">
-            <i class="fa-solid fa-circle-info text-teal-600"></i> Instruksi
-            Soal:
-          </div>
-          <p class="text-slate-700 leading-relaxed">
-            Buatlah sistem deteksi api menggunakan sensor flame yang terhubung
-            ke Arduino. Sistem ini harus mampu menampilkan status deteksi api
-            dan kondisi keselamatan pada LCD 16x2 serta mengontrol indikator LED
-            (LED ON ketika ada api dan LED OFF ketika tidak ada api). Ketika api
-            terdeteksi, LCD akan menampilkan peringatan bahaya dan LED menyala.
-            Jika tidak ada api yang terdeteksi, LCD akan menampilkan status
-            "Aman" dan LED mati.
-          </p>
-          <ul class="list-disc pl-5 space-y-1 text-slate-700">
-            <li>
-              <strong>Baris 1:</strong> Menampilkan teks
-              <code>"Terdeteksi Api"</code> atau
-              <code>"Tidak Terdeteksi Api"</code> sesuai kondisi sensor.
-            </li>
-            <li>
-              <strong>Baris 2:</strong> Menampilkan teks
-              <code>"Kondisi: Bahaya"</code> ketika api terdeteksi, dan
-              <code>"Kondisi: Aman"</code> ketika tidak ada api.
-            </li>
-            <li>
-              <strong>Indikator LED:</strong> <code>LED ON</code> (menyala)
-              ketika ada api, dan <code>LED OFF</code> (mati) ketika tidak ada
-              api.
-            </li>
-          </ul>
+        <!-- TOMBOL STRIP MISI 1, 2, & 3 -->
+        <div class="flex flex-wrap gap-2.5">
+          <button
+            onclick="switchMission('1')"
+            id="sub-btn-1"
+            class="px-4 py-2.5 rounded-2xl text-xs font-bold bg-teal-700 text-white shadow-xs transition cursor-pointer flex items-center gap-2"
+          >
+            <i class="fa-solid fa-id-badge"></i> Misi 1: Membaca UID
+          </button>
+          <button
+            onclick="switchMission('2')"
+            id="sub-btn-2"
+            class="px-4 py-2.5 rounded-2xl text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition cursor-pointer flex items-center gap-2"
+          >
+            <i class="fa-solid fa-address-book"></i> Misi 2: Validasi Biodata
+          </button>
+          <button
+            onclick="switchMission('3')"
+            id="sub-btn-3"
+            class="px-4 py-2.5 rounded-2xl text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition cursor-pointer flex items-center gap-2"
+          >
+            <i class="fa-solid fa-lock-open"></i> Misi 3: Solenoid Door Lock
+          </button>
         </div>
 
-        <!-- TABEL DATA PENGAMATAN 2 -->
-        <div class="space-y-2">
-          <h4
-            class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5"
-          >
-            <i class="fa-solid fa-table text-teal-600"></i> Tabel Data
-            Pengamatan Sistem Deteksi Api
-          </h4>
-          <div class="overflow-x-auto">
-            <table class="w-full text-xs border-collapse">
-              <thead>
-                <tr
-                  class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200"
-                >
-                  <th class="p-2.5 border border-slate-200 text-center w-12">
-                    No
-                  </th>
-                  <th class="p-2.5 border border-slate-200 text-center">
-                    Kondisi Sensor
-                  </th>
-                  <th class="p-2.5 border border-slate-200 text-left">
-                    Tampilan Layar LCD 16x2
-                  </th>
-                  <th class="p-2.5 border border-slate-200 text-center">
-                    Kondisi LED
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100 text-[11px] font-mono">
-                <tr class="hover:bg-slate-50">
-                  <td
-                    class="p-2.5 border border-slate-200 text-center font-bold"
-                  >
-                    1
-                  </td>
-                  <td
-                    class="p-2.5 border border-slate-200 text-center text-slate-400 font-bold"
-                  >
-                    ...
-                  </td>
-                  <td
-                    class="p-2.5 border border-slate-200 font-sans text-slate-400"
-                  >
-                    ...
-                  </td>
-                  <td
-                    class="p-2.5 border border-slate-200 text-center text-slate-400 font-bold"
-                  >
-                    ...
-                  </td>
-                </tr>
-                <tr class="hover:bg-slate-50">
-                  <td
-                    class="p-2.5 border border-slate-200 text-center font-bold"
-                  >
-                    2
-                  </td>
-                  <td
-                    class="p-2.5 border border-slate-200 text-center text-slate-400 font-bold"
-                  >
-                    ...
-                  </td>
-                  <td
-                    class="p-2.5 border border-slate-200 font-sans text-slate-400"
-                  >
-                    ...
-                  </td>
-                  <td
-                    class="p-2.5 border border-slate-200 text-center text-slate-400 font-bold"
-                  >
-                    ...
-                  </td>
-                </tr>
-                <tr class="hover:bg-slate-50">
-                  <td
-                    class="p-2.5 border border-slate-200 text-center font-bold"
-                  >
-                    Dst.
-                  </td>
-                  <td
-                    class="p-2.5 border border-slate-200 text-center text-slate-400 font-bold"
-                  >
-                    ...
-                  </td>
-                  <td
-                    class="p-2.5 border border-slate-200 font-sans text-slate-400"
-                  >
-                    ...
-                  </td>
-                  <td
-                    class="p-2.5 border border-slate-200 text-center text-slate-400 font-bold"
-                  >
-                    ...
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- PETUNJUK KODE ARDUINO 2 -->
+        <!-- PANEL DESKRIPSI MISI -->
         <div
-          class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2"
+          id="mission-description-box"
+          class="bg-teal-50/80 border border-teal-200 rounded-xl p-3.5 text-xs sm:text-sm text-teal-950 flex items-start gap-3"
         >
-          <h4
-            class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5"
-          >
-            <i class="fa-solid fa-code text-teal-600"></i> Petunjuk Logika
-            Pemrograman Soal 2
-          </h4>
-          <p class="text-xs text-slate-600">
-            Gunakan fungsi <code>digitalRead()</code> untuk membaca sinyal
-            digital dari sensor api dan <code>digitalWrite()</code> untuk
-            mengontrol LED:
-          </p>
           <div
-            class="bg-white border border-slate-200 text-slate-800 p-3 rounded-lg font-mono text-xs overflow-x-auto shadow-2xs"
+            class="w-8 h-8 rounded-lg bg-teal-600 text-white flex items-center justify-center shrink-0 font-bold text-sm"
           >
-            <span class="text-slate-400"
-              >// Logika Sensor Api & Indikator LED (Aktif LOW)</span
-            ><br />
-            <span class="text-teal-700 font-semibold">int</span> sensorState =
-            <span class="text-amber-600 font-semibold">digitalRead</span
-            >(flamePin);<br />
-            <span class="text-teal-700 font-semibold">if</span> (sensorState ==
-            LOW) &#123; <br />
-            &nbsp;&nbsp;<span class="text-slate-400"
-              >// Terdeteksi Api -> LED ON</span
-            ><br />
-            &nbsp;&nbsp;<span class="text-amber-600 font-semibold"
-              >digitalWrite</span
-            >(ledPin, HIGH);<br />
-            &#125;
-            <span class="text-teal-700 font-semibold">else</span> &#123;<br />
-            &nbsp;&nbsp;<span class="text-slate-400"
-              >// Tidak Ada Api -> LED OFF</span
-            ><br />
-            &nbsp;&nbsp;<span class="text-amber-600 font-semibold"
-              >digitalWrite</span
-            >(ledPin, LOW);<br />
-            &#125;
+            <i id="mission-icon" class="fa-solid fa-id-badge"></i>
+          </div>
+          <div class="space-y-1">
+            <div id="mission-title" class="font-bold">
+              Misi 1: Membaca Kode Unik (UID) Kartu RFID
+            </div>
+            <p id="mission-goal" class="text-slate-600 text-xs">
+              Mendeteksi keberadaan kartu pada medan magnetik modul RC522 dan
+              menampilkan nomor identifikasi unik (UID) serta tipe kartu melalui
+              Serial Monitor.
+            </p>
+          </div>
+        </div>
+
+        <!-- EDITOR ARDUINO IDE -->
+        <div
+          class="rounded-xl overflow-hidden shadow-md border border-slate-300 bg-white font-sans"
+        >
+          <!-- ARDUINO IDE HEADER BAR -->
+          <div
+            class="bg-[#008184] px-3 py-2 flex items-center justify-between text-white select-none"
+          >
+            <div class="flex items-center gap-3">
+              <div class="flex items-center gap-1.5">
+                <button
+                  title="Verify Sketch"
+                  class="w-7 h-7 rounded-full bg-[#006e71] hover:bg-[#005a5d] text-emerald-300 flex items-center justify-center transition"
+                >
+                  <i class="fa-solid fa-check text-xs"></i>
+                </button>
+              </div>
+
+              <div
+                class="bg-white text-slate-800 px-3 py-1 rounded-md text-xs font-medium flex items-center gap-2 border border-teal-700 shadow-xs"
+              >
+                <i class="fa-solid fa-microchip text-teal-600"></i>
+                <span>Arduino Uno</span>
+                <i
+                  class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1"
+                ></i>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button
+                id="btnCopy"
+                onclick="copyCode()"
+                class="bg-[#006e71] hover:bg-[#005a5d] text-white text-xs font-semibold px-3 py-1 rounded-md flex items-center gap-1.5 transition border border-teal-600 cursor-pointer"
+              >
+                <i id="btnCopyIcon" class="fa-solid fa-copy"></i>
+                <span id="btnCopyText" class="hidden sm:inline"
+                  >Salin Kode</span
+                >
+              </button>
+            </div>
+          </div>
+
+          <!-- ARDUINO IDE SUB-HEADER -->
+          <div
+            class="bg-slate-100 border-b border-slate-200 px-3 py-1.5 flex items-center justify-between text-slate-600 text-xs select-none"
+          >
+            <div
+              class="flex items-center gap-2 font-mono font-medium text-slate-700"
+            >
+              <i class="fa-solid fa-file-code text-teal-600"></i>
+              <span id="ideTitle">sketch_misi1_membaca_uid.ino</span>
+            </div>
+            <div class="flex items-center gap-3 text-slate-400 text-xs">
+              <i
+                class="fa-solid fa-terminal text-teal-600"
+                title="Serial Monitor Active"
+              ></i>
+            </div>
+          </div>
+
+          <!-- EDITOR WORKSPACE -->
+          <div class="flex min-h-[220px]">
+            <div
+              class="w-10 bg-slate-50 border-r border-slate-200 flex flex-col items-center py-3 gap-4 text-slate-400 text-xs select-none hidden sm:flex shrink-0"
+            >
+              <i class="fa-regular fa-copy text-teal-700 font-bold"></i>
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <i class="fa-solid fa-cubes"></i>
+              <i class="fa-solid fa-book"></i>
+            </div>
+
+            <div class="p-3 sm:p-4 overflow-x-auto w-full bg-white">
+              <div
+                id="codeDisplay"
+                class="font-mono text-xs sm:text-sm leading-relaxed"
+              ></div>
+            </div>
+          </div>
+
+          <!-- IDE STATUS BAR -->
+          <div
+            class="bg-[#005f63] px-3 py-1 text-[11px] text-teal-100 flex justify-between items-center font-sans border-t border-teal-800 select-none"
+          >
+            <span class="flex items-center gap-1.5" id="ideStatusContainer">
+              <span
+                class="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse"
+              ></span>
+              <span id="ideStatusText">Ready | SS_PIN: 10, RST_PIN: 9</span>
+            </span>
+            <span class="font-mono text-[10px] text-teal-200"
+              >Arduino Uno on COM3</span
+            >
+          </div>
+        </div>
+
+        <!-- SERIAL MONITOR SECTION -->
+        <div
+          class="rounded-xl overflow-hidden shadow-sm border border-slate-300 bg-white font-sans mt-4"
+        >
+          <!-- SERIAL MONITOR HEADER -->
+          <div
+            class="bg-slate-200/90 border-b border-slate-300 px-3 py-2 flex flex-wrap items-center justify-between gap-2 text-slate-800 select-none"
+          >
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-terminal text-teal-700 text-xs"></i>
+              <span class="font-bold text-xs uppercase tracking-wide"
+                >Serial Monitor (Simulasi RFID)</span
+              >
+              <span
+                class="text-[10px] font-mono bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold hidden sm:inline-block"
+                >COM3: 9600 baud</span
+              >
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="flex items-center gap-1.5">
+              <button
+                id="btnUpload"
+                onclick="uploadAndRun()"
+                class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-2.5 py-1 rounded shadow-xs flex items-center gap-1.5 transition cursor-pointer"
+                title="Jalankan Simulasi"
+              >
+                <i class="fa-solid fa-play text-[10px]"></i>
+                <span>Upload & Run</span>
+              </button>
+
+              <button
+                id="btnStop"
+                onclick="stopProgram()"
+                class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold px-2.5 py-1 rounded shadow-xs flex items-center gap-1.5 transition cursor-pointer"
+                title="Hentikan Simulasi"
+              >
+                <i class="fa-solid fa-stop text-[10px]"></i>
+                <span>Stop</span>
+              </button>
+
+              <button
+                onclick="clearSerialMonitor()"
+                class="bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold px-2 py-1 rounded border border-slate-300 transition cursor-pointer"
+                title="Bersihkan Tampilan"
+              >
+                <i class="fa-solid fa-eraser text-slate-500 mr-1"></i>Clear
+              </button>
+            </div>
+          </div>
+
+          <!-- SERIAL MONITOR DISPLAY AREA -->
+          <div
+            class="p-3 bg-white min-h-[150px] max-h-[200px] overflow-y-auto font-mono text-xs text-slate-800 space-y-1.5 border-b border-slate-200"
+            id="serialMonitorOutput"
+          >
+            <div class="text-slate-400 italic">
+              [Serial Monitor Siap. Klik "Upload & Run" untuk memulai]
+            </div>
+          </div>
+
+          <!-- SERIAL MONITOR FOOTER / OPTIONS -->
+          <div
+            class="bg-slate-50 px-3 py-1.5 text-[11px] text-slate-600 flex justify-between items-center font-sans"
+          >
+            <div class="flex items-center gap-2 text-xs">
+              <span
+                class="w-2 h-2 rounded-full bg-emerald-500 inline-block"
+              ></span>
+              <span class="text-slate-500 font-mono text-[11px]"
+                >Status: Connected @ 9600 baud</span
+              >
+            </div>
+
+            <div class="flex items-center gap-3 text-[11px] text-slate-500">
+              <label
+                class="flex items-center gap-1.5 cursor-pointer select-none"
+              >
+                <input
+                  type="checkbox"
+                  id="chkTimestamp"
+                  onchange="toggleTimestampVisibility()"
+                  checked
+                  class="rounded text-teal-600 focus:ring-teal-500 cursor-pointer"
+                />
+                <span class="font-medium text-slate-600">Show Timestamp</span>
+              </label>
+
+              <label
+                class="flex items-center gap-1.5 cursor-pointer select-none"
+              >
+                <input
+                  type="checkbox"
+                  id="chkAutoscroll"
+                  checked
+                  class="rounded text-teal-600 focus:ring-teal-500 cursor-pointer"
+                />
+                <span class="font-medium text-slate-600">Autoscroll</span>
+              </label>
+            </div>
           </div>
         </div>
       </section>
@@ -487,16 +507,699 @@
           href="index.html"
           class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 font-bold text-xs transition-colors shadow-xs"
         >
-          <span>Finish</span>
-          <i class="fa-solid fa-check"></i>
+          <span>Sub 5.2: Sensor Ultrasonik</span>
+          <i class="fa-solid fa-arrow-right"></i>
         </a>
       </nav>
     </main>
 
+    <!-- MODAL POPUP LIGHTBOX UNTUK GAMBAR SKEMA BESAR -->
+    <div
+      id="imageModal"
+      class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm hidden items-center justify-center p-4 transition-all duration-300"
+      onclick="closeImageModal()"
+    >
+      <div
+        class="relative max-w-5xl max-h-[90vh] w-full bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+        onclick="event.stopPropagation()"
+      >
+        <!-- MODAL HEADER -->
+        <div
+          class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between"
+        >
+          <h3
+            id="modalImageTitle"
+            class="text-xs sm:text-sm font-bold truncate pr-4"
+          >
+            Detail Skema Rangkaian
+          </h3>
+          <button
+            onclick="closeImageModal()"
+            class="w-8 h-8 rounded-full bg-slate-800 hover:bg-rose-600 text-slate-300 hover:text-white flex items-center justify-center transition cursor-pointer text-sm"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <!-- MODAL BODY IMAGE -->
+        <div
+          class="p-3 sm:p-6 bg-slate-950 flex items-center justify-center overflow-auto max-h-[calc(90vh-60px)]"
+        >
+          <img
+            id="modalImageElem"
+            src=""
+            alt="Skema Rangkaian Diperbesar"
+            class="max-h-[75vh] w-auto max-w-full object-contain rounded-lg shadow-lg bg-white p-2"
+          />
+        </div>
+      </div>
+    </div>
+
     <footer
-      class="max-w-7xl mx-auto w-full px-4 pt-4 text-center text-xs text-slate-400 font-medium"
+      class="max-w-6xl mx-auto w-full px-4 pt-4 text-center text-xs text-slate-400 font-medium"
     >
       <p>© MIKRO EDU - SMK SMTI Yogyakarta | Teknik Kimia Industri</p>
     </footer>
+
+    <!-- SCRIPT LOGIKA PROGRAM -->
+    <script>
+      const missions = {
+        1: {
+          filename: "sketch_misi1_membaca_uid.ino",
+          title: "Misi 1: Membaca Kode Unik (UID) Kartu RFID",
+          icon: "fa-id-badge",
+          statusText: "Ready | SS_PIN: 10, RST_PIN: 9",
+          schemaTitle: "Skema Misi 1 & 2 (RFID RC522 Standalone)",
+          schemaImg: "img/modul05/5.1.1.png",
+          schemaFallbackImg: "5.1.1.png",
+          schemaDesc:
+            "<strong>Skema Misi 1 & 2:</strong> Modul RFID RC522 terhubung ke Arduino Uno. Pin <strong class='text-teal-700'>SDA (SS) ke Pin 10</strong>, <strong class='text-teal-700'>SCK ke Pin 13</strong>, <strong class='text-teal-700'>MOSI ke Pin 11</strong>, <strong class='text-teal-700'>MISO ke Pin 12</strong>, <strong class='text-teal-700'>GND ke GND</strong>, <strong class='text-teal-700'>RST ke Pin 9</strong>, dan <strong class='text-teal-700'>3.3V ke 3.3V</strong>[cite: 31].",
+          desc: "<strong>Tugas Misi 1:</strong> Mendeteksi keberadaan kartu pada medan magnetik modul RC522 dan menampilkan nomor identifikasi unik (UID) serta tipe kartu melalui Serial Monitor[cite: 22].",
+          rawCode: `// --- MISI 1: MEMBACA UID KARTU RFID (RC522) ---[cite: 22]
+#include <SPI.h>
+#include <MFRC522.h>
+
+#define SS_PIN 10   // Pin SDA dihubungkan ke pin 10[cite: 22]
+#define RST_PIN 9   // Pin RST dihubungkan ke pin 9[cite: 22]
+
+MFRC522 mfrc522(SS_PIN, RST_PIN); // Membuat instance MFRC522[cite: 22]
+
+void setup() {
+  Serial.begin(9600); // Memulai komunikasi Serial[cite: 22]
+  SPI.begin();        // Memulai SPI[cite: 22]
+  mfrc522.PCD_Init(); // Inisialisasi RFID reader[cite: 22]
+  Serial.println("Scan kartu RFID untuk membaca UID");[cite: 22]
+}
+
+void loop() {
+  // Periksa apakah ada kartu yang tersedia[cite: 22]
+  if (!mfrc522.PICC_IsNewCardPresent()) {
+    return;
+  }
+
+  // Memeriksa apakah kartu dapat dibaca[cite: 22]
+  if (!mfrc522.PICC_ReadCardSerial()) {
+    return;
+  }
+
+  // Menampilkan kode UID kartu Anda[cite: 22]
+  Serial.print("UID kartu: ");
+  for (byte i = 0; i < mfrc522.uid.size; i++) {
+    Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
+    Serial.print(mfrc522.uid.uidByte[i], HEX);
+  }
+  Serial.println();
+
+  // Menampilkan tipe kartu[cite: 22]
+  MFRC522::PICC_Type piccType = mfrc522.PICC_GetType(mfrc522.uid.sak);
+  Serial.print("Tipe kartu: ");
+  Serial.println(mfrc522.PICC_GetTypeName(piccType));
+
+  // Berhenti membaca kartu[cite: 22]
+  mfrc522.PICC_HaltA();
+}`,
+        },
+        2: {
+          filename: "sketch_misi2_validasi_biodata.ino",
+          title:
+            "Misi 2: Menampilkan Biodata (2 UID Terdaftar & 1 Tidak Terdaftar)",
+          icon: "fa-address-book",
+          statusText: "Ready | RFID Database 2 Kartu Aktif",
+          schemaTitle: "Skema Misi 1 & 2 (RFID RC522 Standalone)",
+          schemaImg: "img/modul05/5.1.1.png",
+          schemaFallbackImg: "5.1.1.png",
+          schemaDesc:
+            "<strong>Skema Misi 2:</strong> Menggunakan rangkaian hardware RFID RC522 yang sama (Pin 10, 9, 13, 12, 11) untuk mencocokkan UID kartu yang dipindai dengan database internal program[cite: 23, 31].",
+          desc: "<strong>Tugas Misi 2:</strong> Membandingkan UID kartu yang dipindai dengan 2 data UID kartu terdaftar untuk menampilkan biodata pemilik, serta memunculkan status 'Kartu Tidak Terdaftar' jika UID asing ditempelkan[cite: 23].",
+          rawCode: `// --- MISI 2: VALIDASI BIODATA & KARTU TERDAFTAR ---[cite: 23]
+#include <SPI.h>
+#include <MFRC522.h>
+
+// Deklarasi pin RFID[cite: 23]
+#define SS_PIN 10
+#define RST_PIN 9
+
+// Inisialisasi modul RFID[cite: 23]
+MFRC522 mfrc522(SS_PIN, RST_PIN);
+
+// Ganti dengan UID kartu yang terdaftar[cite: 23]
+byte kartu1[4] = {0x0B, 0x3C, 0xB5, 0x02};
+byte kartu2[4] = {0x12, 0x34, 0x56, 0x78};
+
+// Fungsi untuk membandingkan UID kartu[cite: 23]
+bool compareUID(byte *readUID, byte *storedUID, byte size) {
+  if (size != 4) return false;
+
+  for (byte i = 0; i < size; i++) {
+    if (readUID[i] != storedUID[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+void setup() {
+  // Memulai komunikasi Serial dan RFID[cite: 23]
+  Serial.begin(9600);
+  SPI.begin();
+  mfrc522.PCD_Init();
+
+  // Menampilkan pesan awal[cite: 23]
+  Serial.println("Sistem RFID");
+  Serial.println("Scan Kartu RFID");
+}
+
+void loop() {
+  // Memeriksa keberadaan kartu RFID[cite: 23]
+  if (!mfrc522.PICC_IsNewCardPresent()) {
+    return;
+  }
+
+  // Membaca data kartu RFID[cite: 23]
+  if (!mfrc522.PICC_ReadCardSerial()) {
+    return;
+  }
+
+  // Menyimpan UID kartu yang terbaca[cite: 23]
+  byte readUID[4];
+
+  if (mfrc522.uid.size == 4) {
+    for (byte i = 0; i < 4; i++) {
+      readUID[i] = mfrc522.uid.uidByte[i];
+    }
+  }
+
+  // Memeriksa apakah kartu adalah kartu1[cite: 23]
+  if (mfrc522.uid.size == 4 &&
+      compareUID(readUID, kartu1, 4)) {
+
+    Serial.println("Kartu 1 Terdaftar");
+    Serial.println("Nama: Faris Alfianto");
+    Serial.println("Kelas: XII Mekatronika");
+
+  }
+
+  // Memeriksa apakah kartu adalah kartu2[cite: 23]
+  else if (mfrc522.uid.size == 4 &&
+           compareUID(readUID, kartu2, 4)) {
+
+    Serial.println("Kartu 2 Terdaftar");
+    Serial.println("Nama: Joshua Williem");
+    Serial.println("Kelas: XII Mekatronika");
+
+  }
+
+  // Jika kartu tidak terdaftar[cite: 23]
+  else {
+    Serial.println("Kartu Tidak Terdaftar");
+    Serial.print("UID Kartu: ");
+
+    for (byte i = 0; i < mfrc522.uid.size; i++) {
+      Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
+      Serial.print(mfrc522.uid.uidByte[i], HEX);
+    }
+    Serial.println();
+  }
+
+  Serial.println("--------------------");
+
+  // Mengakhiri komunikasi dengan kartu RFID[cite: 23]
+  mfrc522.PICC_HaltA();
+  mfrc522.PCD_StopCrypto1();
+
+  delay(1000);
+}`,
+        },
+        3: {
+          filename: "sketch_misi3_solenoid_door.ino",
+          title: "Misi 3: Membuka Solenoid Door Lock dengan RFID",
+          icon: "fa-lock-open",
+          statusText: "Ready | RFID: 10,9 | RELAY: PIN 2 | MOTOR GETAR: PIN 3",
+          schemaTitle:
+            "Skema Misi 3 (Solenoid Door Lock + Relay + Motor Getar)",
+          schemaImg: "img/modul05/5.1.2.png",
+          schemaFallbackImg: "5.1.2.png",
+          schemaDesc:
+            "<strong>Skema Misi 3:</strong> Modul RFID RC522, Modul Relay untuk Solenoid Door Lock terhubung ke <strong class='text-teal-700'>Pin 2</strong>, dan Motor Getar (buzzer/vibration) terhubung ke <strong class='text-teal-700'>Pin 3</strong> dengan suplai eksternal adaptor 12V[cite: 32].",
+          desc: "<strong>Tugas Misi 3:</strong> Mengontrol akses pintu otomatis menggunakan Solenoid Door Lock. Akses diterima akan mengaktifkan relay selama 5 detik, sedangkan akses ditolak akan memicu motor getar[cite: 24].",
+          rawCode: `// --- MISI 3: SOLENOID DOOR LOCK DENGAN RFID ---[cite: 24]
+#include <SPI.h>
+#include <MFRC522.h>
+
+// Deklarasi pin komponen[cite: 24]
+#define SS_PIN 10
+#define RST_PIN 9
+#define RELAY_PIN 2
+#define GETAR_PIN 3
+
+// Inisialisasi modul RFID[cite: 24]
+MFRC522 mfrc522(SS_PIN, RST_PIN);
+
+// Ganti dengan UID kartu yang diizinkan[cite: 24]
+byte kartu1[4] = {0x0B, 0x3C, 0xB5, 0x02};
+
+// Fungsi untuk membandingkan UID kartu[cite: 24]
+bool compareUID(byte *readUID, byte *kartu1, byte size) {
+  if (size != 4) return false;
+
+  for (byte i = 0; i < size; i++) {
+    if (readUID[i] != kartu1[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
+void setup() {
+  // Memulai komunikasi Serial dan RFID[cite: 24]
+  Serial.begin(9600);
+  SPI.begin();
+  mfrc522.PCD_Init();
+
+  // Mengatur pin relay dan motor getar sebagai output[cite: 24]
+  pinMode(RELAY_PIN, OUTPUT);
+  pinMode(GETAR_PIN, OUTPUT);
+
+  // Memastikan relay dan motor getar mati[cite: 24]
+  digitalWrite(RELAY_PIN, LOW);
+  digitalWrite(GETAR_PIN, LOW);
+
+  // Menampilkan pesan awal[cite: 24]
+  Serial.println("RFID Door Lock");
+  Serial.println("Scan Kartu RFID");
+}
+
+void loop() {
+  // Memeriksa keberadaan kartu RFID[cite: 24]
+  if (!mfrc522.PICC_IsNewCardPresent()) {
+    return;
+  }
+
+  // Membaca data kartu RFID[cite: 24]
+  if (!mfrc522.PICC_ReadCardSerial()) {
+    return;
+  }
+
+  // Menyimpan UID kartu yang terbaca[cite: 24]
+  byte readUID[4];
+
+  if (mfrc522.uid.size == 4) {
+    for (byte i = 0; i < 4; i++) {
+      readUID[i] = mfrc522.uid.uidByte[i];
+    }
+  }
+
+  // Memeriksa apakah UID sesuai dengan kartu1[cite: 24]
+  if (mfrc522.uid.size == 4 &&
+      compareUID(readUID, kartu1, mfrc522.uid.size)) {
+
+    // Jika kartu diterima, relay aktif 5 detik[cite: 24]
+    Serial.println("Akses Diterima - Kartu 1");
+
+    digitalWrite(RELAY_PIN, HIGH);
+    delay(5000);
+    digitalWrite(RELAY_PIN, LOW);
+
+    Serial.println("Pintu Terkunci Kembali");
+
+  } else {
+
+    // Jika kartu ditolak, motor getar aktif 5 detik[cite: 24]
+    Serial.println("Akses Ditolak");
+    Serial.println("Motor Getar Aktif");
+
+    digitalWrite(GETAR_PIN, HIGH);
+    delay(5000);
+    digitalWrite(GETAR_PIN, LOW);
+
+    Serial.println("Motor Getar Mati");
+  }
+
+  // Mengakhiri komunikasi dengan kartu RFID[cite: 24]
+  mfrc522.PICC_HaltA();
+  mfrc522.PCD_StopCrypto1();
+
+  // Menunggu pemindaian kartu berikutnya[cite: 24]
+  Serial.println("Scan Kartu RFID");
+}`,
+        },
+      };
+
+      let currentMissionKey = "1";
+      let liveTimer = null;
+      let isUploading = false;
+
+      /* FUNGSI MODAL LIGHTBOX GAMBAR SKEMA */
+      function openImageModal(imgSrc, imgAlt) {
+        const modal = document.getElementById("imageModal");
+        const modalImg = document.getElementById("modalImageElem");
+        const modalTitle = document.getElementById("modalImageTitle");
+
+        modalImg.src = imgSrc;
+        modalTitle.innerText =
+          document.getElementById("schemaTitleTag").innerText + " - " + imgAlt;
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        document.body.style.overflow = "hidden"; // Mencegah background scroll
+      }
+
+      function closeImageModal() {
+        const modal = document.getElementById("imageModal");
+        modal.classList.remove("flex");
+        modal.classList.add("hidden");
+        document.body.style.overflow = "auto";
+      }
+
+      /* SIMULASI PEMINDAIAN KARTU RFID */
+      function simulateScan(cardType) {
+        if (!liveTimer && !isUploading) {
+          printLiveLog(
+            "[Info] Harap klik tombol 'Upload & Run' terlebih dahulu untuk menjalankan program.",
+          );
+          return;
+        }
+
+        const badge = document.getElementById("rfidStatusBadge");
+        const uidText = document.getElementById("scannedUidText");
+        const iconBox = document.getElementById("rfidIconBox");
+
+        if (cardType === "card1") {
+          badge.innerText = "Terdaftar (1)";
+          badge.className =
+            "text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200";
+          uidText.innerText = "UID: 0B 3C B5 02";
+          iconBox.className =
+            "w-16 h-16 rounded-2xl bg-emerald-100 border border-emerald-300 flex items-center justify-center shadow-md transition-all duration-300 animate-pulse";
+
+          if (currentMissionKey === "1") {
+            printLiveLog("UID kartu:  0B 3C B5 02");
+            printLiveLog("Tipe kartu: MIFARE 1KB");
+          } else if (currentMissionKey === "2") {
+            printLiveLog("Kartu 1 Terdaftar");
+            printLiveLog("Nama: Faris Alfianto");
+            printLiveLog("Kelas: XII Mekatronika");
+            printLiveLog("--------------------");
+          } else if (currentMissionKey === "3") {
+            printLiveLog("Akses Diterima - Kartu 1");
+            printLiveLog("Solenoid Door Lock Terbuka (Relay ON)");
+            setTimeout(() => {
+              printLiveLog("Pintu Terkunci Kembali (Relay OFF)");
+            }, 3000);
+          }
+        } else if (cardType === "card2") {
+          badge.innerText = "Terdaftar (2)";
+          badge.className =
+            "text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200";
+          uidText.innerText = "UID: 12 34 56 78";
+          iconBox.className =
+            "w-16 h-16 rounded-2xl bg-indigo-100 border border-indigo-300 flex items-center justify-center shadow-md transition-all duration-300 animate-pulse";
+
+          if (currentMissionKey === "1") {
+            printLiveLog("UID kartu:  12 34 56 78");
+            printLiveLog("Tipe kartu: MIFARE 1KB");
+          } else if (currentMissionKey === "2") {
+            printLiveLog("Kartu 2 Terdaftar");
+            printLiveLog("Nama: Joshua Williem");
+            printLiveLog("Kelas: XII Mekatronika");
+            printLiveLog("--------------------");
+          } else if (currentMissionKey === "3") {
+            printLiveLog(
+              "Akses Ditolak (Kartu 2 Tidak Diprogram untuk Pintu Ini)",
+            );
+            printLiveLog("Motor Getar Aktif");
+            setTimeout(() => {
+              printLiveLog("Motor Getar Mati");
+            }, 3000);
+          }
+        } else {
+          badge.innerText = "Tidak Dikenal";
+          badge.className =
+            "text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-200";
+          uidText.innerText = "UID: DE AD BE EF";
+          iconBox.className =
+            "w-16 h-16 rounded-2xl bg-rose-100 border border-rose-300 flex items-center justify-center shadow-md transition-all duration-300 animate-bounce";
+
+          if (currentMissionKey === "1") {
+            printLiveLog("UID kartu:  DE AD BE EF");
+            printLiveLog("Tipe kartu: MIFARE 1KB");
+          } else if (currentMissionKey === "2") {
+            printLiveLog("Kartu Tidak Terdaftar");
+            printLiveLog("UID Kartu:  DE AD BE EF");
+            printLiveLog("--------------------");
+          } else if (currentMissionKey === "3") {
+            printLiveLog("Akses Ditolak");
+            printLiveLog("Motor Getar Aktif");
+            setTimeout(() => {
+              printLiveLog("Motor Getar Mati");
+            }, 3000);
+          }
+        }
+      }
+
+      function getRealtimeTimestamp() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const seconds = String(now.getSeconds()).padStart(2, "0");
+        return `[${hours}:${minutes}:${seconds}]`;
+      }
+
+      function escapeHtml(text) {
+        return text
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+
+      function renderArduinoSyntax(code) {
+        const lines = code.split("\n");
+        let htmlResult =
+          '<div class="table w-full border-collapse font-mono text-xs sm:text-sm">';
+
+        lines.forEach((line, index) => {
+          let comment = "";
+          let codePart = line;
+
+          const commentIdx = line.indexOf("//");
+          if (commentIdx !== -1) {
+            codePart = line.substring(0, commentIdx);
+            comment = `<span class="text-slate-400 italic font-normal">${escapeHtml(line.substring(commentIdx))}</span>`;
+          }
+
+          codePart = escapeHtml(codePart);
+
+          codePart = codePart
+            .replace(
+              /\b(int|void|float|long|boolean|bool|char|const|unsigned|if|else|byte|include|define)\b/g,
+              '<span class="text-[#05797d] font-bold">$1</span>',
+            )
+            .replace(
+              /\b(setup|loop|pinMode|digitalWrite|digitalRead|delay|millis|begin|print|println|PCD_Init|PICC_IsNewCardPresent|PICC_ReadCardSerial|PICC_GetType|PICC_GetTypeName|PICC_HaltA|PCD_StopCrypto1|compareUID)\b/g,
+              '<span class="text-[#d97706] font-semibold">$1</span>',
+            )
+            .replace(
+              /\b(HIGH|LOW|OUTPUT|INPUT|SS_PIN|RST_PIN|RELAY_PIN|GETAR_PIN|mfrc522|SPI|Serial|kartu1|kartu2)\b/g,
+              '<span class="text-[#0284c7] font-bold">$1</span>',
+            )
+            .replace(
+              /\b(\d+)\b/g,
+              '<span class="text-emerald-600 font-medium">$1</span>',
+            );
+
+          htmlResult += `
+            <div class="table-row hover:bg-slate-50">
+              <div class="table-cell text-right select-none pr-3.5 text-slate-300 font-mono text-xs w-7 border-r border-slate-100 py-0.5">${index + 1}</div>
+              <div class="table-cell pl-3.5 whitespace-pre font-mono text-slate-800 py-0.5">${codePart}${comment}</div>
+            </div>`;
+        });
+
+        htmlResult += "</div>";
+        return htmlResult;
+      }
+
+      function printLiveLog(logText) {
+        const monitor = document.getElementById("serialMonitorOutput");
+        const showTimestamp = document.getElementById("chkTimestamp").checked;
+        const autoScroll = document.getElementById("chkAutoscroll").checked;
+
+        const line = document.createElement("div");
+        line.className =
+          "flex items-center gap-2 text-xs font-mono text-slate-800 log-line";
+
+        const hideClass = showTimestamp ? "" : "hidden";
+        const timestampStr = getRealtimeTimestamp();
+
+        line.innerHTML = `
+          <span class="text-teal-600 font-semibold">&gt;</span>
+          <span class="timestamp-tag text-slate-400 text-[11px] font-mono ${hideClass}">${timestampStr}</span>
+          <span class="text-slate-800 font-mono">${escapeHtml(logText)}</span>
+        `;
+
+        monitor.appendChild(line);
+
+        if (autoScroll) {
+          monitor.scrollTop = monitor.scrollHeight;
+        }
+      }
+
+      function toggleTimestampVisibility() {
+        const showTimestamp = document.getElementById("chkTimestamp").checked;
+        const tags = document.querySelectorAll(".timestamp-tag");
+        tags.forEach((tag) => {
+          if (showTimestamp) {
+            tag.classList.remove("hidden");
+          } else {
+            tag.classList.add("hidden");
+          }
+        });
+      }
+
+      function startContinuousOutput(key) {
+        stopProgramSilently();
+        const monitor = document.getElementById("serialMonitorOutput");
+        monitor.innerHTML = "";
+
+        if (key === "1") {
+          printLiveLog("Scan kartu RFID untuk membaca UID");
+        } else if (key === "2") {
+          printLiveLog("Sistem RFID");
+          printLiveLog("Scan Kartu RFID");
+        } else if (key === "3") {
+          printLiveLog("RFID Door Lock");
+          printLiveLog("Scan Kartu RFID");
+        }
+      }
+
+      function uploadAndRun() {
+        if (isUploading) return;
+        isUploading = true;
+
+        stopProgramSilently();
+
+        const statusText = document.getElementById("ideStatusText");
+        const btnUpload = document.getElementById("btnUpload");
+
+        btnUpload.disabled = true;
+        btnUpload.classList.add("opacity-50", "cursor-not-allowed");
+
+        statusText.innerHTML = `<span class="text-amber-300 font-bold"><i class="fa-solid fa-spinner animate-spin mr-1"></i>Compiling sketch...</span>`;
+
+        setTimeout(() => {
+          statusText.innerHTML = `<span class="text-emerald-300 font-bold"><i class="fa-solid fa-upload mr-1"></i>Uploading to board...</span>`;
+          setTimeout(() => {
+            statusText.innerHTML = `<span class="text-emerald-300 font-bold"><i class="fa-solid fa-play mr-1"></i>Running Program...</span>`;
+            btnUpload.disabled = false;
+            btnUpload.classList.remove("opacity-50", "cursor-not-allowed");
+            isUploading = false;
+
+            startContinuousOutput(currentMissionKey);
+          }, 600);
+        }, 500);
+      }
+
+      function stopProgramSilently() {
+        if (liveTimer) {
+          clearInterval(liveTimer);
+          liveTimer = null;
+        }
+        isUploading = false;
+      }
+
+      function stopProgram() {
+        stopProgramSilently();
+
+        const btnUpload = document.getElementById("btnUpload");
+        btnUpload.disabled = false;
+        btnUpload.classList.remove("opacity-50", "cursor-not-allowed");
+
+        const statusText = document.getElementById("ideStatusText");
+        statusText.innerHTML = `<span class="text-rose-300 font-semibold"><i class="fa-solid fa-circle-stop mr-1"></i>Program Stopped</span>`;
+
+        const monitor = document.getElementById("serialMonitorOutput");
+        const line = document.createElement("div");
+        line.className = "text-rose-600 font-mono text-xs italic mt-1";
+        line.innerText = "[Program Dihentikan]";
+        monitor.appendChild(line);
+      }
+
+      function clearSerialMonitor() {
+        document.getElementById("serialMonitorOutput").innerHTML =
+          `<span class="text-slate-400 italic">[Serial Monitor Cleared]</span>`;
+      }
+
+      function switchMission(key) {
+        const keys = ["1", "2", "3"];
+        keys.forEach((k) => {
+          const btn = document.getElementById(`sub-btn-${k}`);
+          if (btn) {
+            if (k === key) {
+              btn.className =
+                "px-4 py-2.5 rounded-2xl text-xs font-bold bg-teal-700 text-white shadow-xs transition cursor-pointer flex items-center gap-2";
+            } else {
+              btn.className =
+                "px-4 py-2.5 rounded-2xl text-xs font-bold bg-slate-200 text-slate-700 hover:bg-slate-300 transition cursor-pointer flex items-center gap-2";
+            }
+          }
+        });
+
+        updateView(key);
+      }
+
+      function updateView(key) {
+        stopProgramSilently();
+
+        currentMissionKey = key;
+        const data = missions[key];
+
+        // Update Header & Editor IDE
+        document.getElementById("ideTitle").innerText = data.filename;
+        document.getElementById("ideStatusText").innerText = data.statusText;
+        document.getElementById("codeDisplay").innerHTML = renderArduinoSyntax(
+          data.rawCode,
+        );
+        document.getElementById("mission-title").innerText = data.title;
+        document.getElementById("mission-goal").innerHTML = data.desc;
+        document.getElementById("mission-icon").className =
+          `fa-solid ${data.icon}`;
+
+        // Update Skema Image & Desc (Misi 3 memakai 5.1.2.png, Misi 1 & 2 memakai 5.1.1.png)
+        document.getElementById("schemaTitleTag").innerText = data.schemaTitle;
+        document.getElementById("schemaDesc").innerHTML = data.schemaDesc;
+        const imgElem = document.getElementById("schemaImage");
+        imgElem.src = data.schemaImg;
+        imgElem.onerror = function () {
+          this.onerror = null;
+          this.src = data.schemaFallbackImg;
+        };
+
+        const monitor = document.getElementById("serialMonitorOutput");
+        monitor.innerHTML = `<span class="text-slate-400 italic">[Serial Monitor Siap. Klik "Upload & Run" untuk memulai]</span>`;
+
+        document.getElementById("rfidStatusBadge").innerText = "Standby";
+        document.getElementById("rfidStatusBadge").className =
+          "text-[10px] font-bold text-teal-800 bg-teal-100 px-2 py-0.5 rounded border border-teal-200";
+        document.getElementById("scannedUidText").innerText =
+          "Belum ada kartu dipindai";
+      }
+
+      function copyCode() {
+        const rawCodeText = missions[currentMissionKey].rawCode;
+        navigator.clipboard.writeText(rawCodeText).then(() => {
+          const btnText = document.getElementById("btnCopyText");
+          const btnIcon = document.getElementById("btnCopyIcon");
+
+          btnText.innerText = "Tersalin!";
+          btnIcon.className = "fa-solid fa-check text-emerald-300";
+
+          setTimeout(() => {
+            btnText.innerText = "Salin Kode";
+            btnIcon.className = "fa-solid fa-copy";
+          }, 2000);
+        });
+      }
+
+      window.onload = function () {
+        switchMission("1");
+      };
+    </script>
   </body>
 </html>
