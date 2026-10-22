@@ -572,36 +572,36 @@
           schemaImg: "img/modul05/5.1.1.png",
           schemaFallbackImg: "5.1.1.png",
           schemaDesc:
-            "<strong>Skema Misi 1 & 2:</strong> Modul RFID RC522 terhubung ke Arduino Uno. Pin <strong class='text-teal-700'>SDA (SS) ke Pin 10</strong>, <strong class='text-teal-700'>SCK ke Pin 13</strong>, <strong class='text-teal-700'>MOSI ke Pin 11</strong>, <strong class='text-teal-700'>MISO ke Pin 12</strong>, <strong class='text-teal-700'>GND ke GND</strong>, <strong class='text-teal-700'>RST ke Pin 9</strong>, dan <strong class='text-teal-700'>3.3V ke 3.3V</strong>[cite: 31].",
-          desc: "<strong>Tugas Misi 1:</strong> Mendeteksi keberadaan kartu pada medan magnetik modul RC522 dan menampilkan nomor identifikasi unik (UID) serta tipe kartu melalui Serial Monitor[cite: 22].",
-          rawCode: `// --- MISI 1: MEMBACA UID KARTU RFID (RC522) ---[cite: 22]
+            "<strong>Skema Misi 1 & 2:</strong> Modul RFID RC522 terhubung ke Arduino Uno. Pin <strong class='text-teal-700'>SDA (SS) ke Pin 10</strong>, <strong class='text-teal-700'>SCK ke Pin 13</strong>, <strong class='text-teal-700'>MOSI ke Pin 11</strong>, <strong class='text-teal-700'>MISO ke Pin 12</strong>, <strong class='text-teal-700'>GND ke GND</strong>, <strong class='text-teal-700'>RST ke Pin 9</strong>, dan <strong class='text-teal-700'>3.3V ke 3.3V</strong>.",
+          desc: "<strong>Tugas Misi 1:</strong> Mendeteksi keberadaan kartu pada medan magnetik modul RC522 dan menampilkan nomor identifikasi unik (UID) serta tipe kartu melalui Serial Monitor.",
+          rawCode: `// --- MISI 1: MEMBACA UID KARTU RFID (RC522) ---
 #include <SPI.h>
 #include <MFRC522.h>
 
-#define SS_PIN 10   // Pin SDA dihubungkan ke pin 10[cite: 22]
-#define RST_PIN 9   // Pin RST dihubungkan ke pin 9[cite: 22]
+#define SS_PIN 10   // Pin SDA dihubungkan ke pin 10
+#define RST_PIN 9   // Pin RST dihubungkan ke pin 9
 
-MFRC522 mfrc522(SS_PIN, RST_PIN); // Membuat instance MFRC522[cite: 22]
+MFRC522 mfrc522(SS_PIN, RST_PIN); // Membuat instance MFRC522
 
 void setup() {
-  Serial.begin(9600); // Memulai komunikasi Serial[cite: 22]
-  SPI.begin();        // Memulai SPI[cite: 22]
-  mfrc522.PCD_Init(); // Inisialisasi RFID reader[cite: 22]
-  Serial.println("Scan kartu RFID untuk membaca UID");[cite: 22]
+  Serial.begin(9600); // Memulai komunikasi Serial
+  SPI.begin();        // Memulai SPI
+  mfrc522.PCD_Init(); // Inisialisasi RFID reader
+  Serial.println("Scan kartu RFID untuk membaca UID");
 }
 
 void loop() {
-  // Periksa apakah ada kartu yang tersedia[cite: 22]
+  // Periksa apakah ada kartu yang tersedia
   if (!mfrc522.PICC_IsNewCardPresent()) {
     return;
   }
 
-  // Memeriksa apakah kartu dapat dibaca[cite: 22]
+  // Memeriksa apakah kartu dapat dibaca
   if (!mfrc522.PICC_ReadCardSerial()) {
     return;
   }
 
-  // Menampilkan kode UID kartu Anda[cite: 22]
+  // Menampilkan kode UID kartu Anda
   Serial.print("UID kartu: ");
   for (byte i = 0; i < mfrc522.uid.size; i++) {
     Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
@@ -609,12 +609,12 @@ void loop() {
   }
   Serial.println();
 
-  // Menampilkan tipe kartu[cite: 22]
+  // Menampilkan tipe kartu
   MFRC522::PICC_Type piccType = mfrc522.PICC_GetType(mfrc522.uid.sak);
   Serial.print("Tipe kartu: ");
   Serial.println(mfrc522.PICC_GetTypeName(piccType));
 
-  // Berhenti membaca kartu[cite: 22]
+  // Berhenti membaca kartu
   mfrc522.PICC_HaltA();
 }`,
         },
@@ -628,24 +628,24 @@ void loop() {
           schemaImg: "img/modul05/5.1.1.png",
           schemaFallbackImg: "5.1.1.png",
           schemaDesc:
-            "<strong>Skema Misi 2:</strong> Menggunakan rangkaian hardware RFID RC522 yang sama (Pin 10, 9, 13, 12, 11) untuk mencocokkan UID kartu yang dipindai dengan database internal program[cite: 23, 31].",
-          desc: "<strong>Tugas Misi 2:</strong> Membandingkan UID kartu yang dipindai dengan 2 data UID kartu terdaftar untuk menampilkan biodata pemilik, serta memunculkan status 'Kartu Tidak Terdaftar' jika UID asing ditempelkan[cite: 23].",
-          rawCode: `// --- MISI 2: VALIDASI BIODATA & KARTU TERDAFTAR ---[cite: 23]
+            "<strong>Skema Misi 2:</strong> Menggunakan rangkaian hardware RFID RC522 yang sama (Pin 10, 9, 13, 12, 11) untuk mencocokkan UID kartu yang dipindai dengan database internal program.",
+          desc: "<strong>Tugas Misi 2:</strong> Membandingkan UID kartu yang dipindai dengan 2 data UID kartu terdaftar untuk menampilkan biodata pemilik, serta memunculkan status 'Kartu Tidak Terdaftar' jika UID asing ditempelkan.",
+          rawCode: `// --- MISI 2: VALIDASI BIODATA & KARTU TERDAFTAR ---
 #include <SPI.h>
 #include <MFRC522.h>
 
-// Deklarasi pin RFID[cite: 23]
+// Deklarasi pin RFID
 #define SS_PIN 10
 #define RST_PIN 9
 
-// Inisialisasi modul RFID[cite: 23]
+// Inisialisasi modul RFID
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
-// Ganti dengan UID kartu yang terdaftar[cite: 23]
+// Ganti dengan UID kartu yang terdaftar
 byte kartu1[4] = {0x0B, 0x3C, 0xB5, 0x02};
 byte kartu2[4] = {0x12, 0x34, 0x56, 0x78};
 
-// Fungsi untuk membandingkan UID kartu[cite: 23]
+// Fungsi untuk membandingkan UID kartu
 bool compareUID(byte *readUID, byte *storedUID, byte size) {
   if (size != 4) return false;
 
@@ -658,28 +658,28 @@ bool compareUID(byte *readUID, byte *storedUID, byte size) {
 }
 
 void setup() {
-  // Memulai komunikasi Serial dan RFID[cite: 23]
+  // Memulai komunikasi Serial dan RFID
   Serial.begin(9600);
   SPI.begin();
   mfrc522.PCD_Init();
 
-  // Menampilkan pesan awal[cite: 23]
+  // Menampilkan pesan awal
   Serial.println("Sistem RFID");
   Serial.println("Scan Kartu RFID");
 }
 
 void loop() {
-  // Memeriksa keberadaan kartu RFID[cite: 23]
+  // Memeriksa keberadaan kartu RFID
   if (!mfrc522.PICC_IsNewCardPresent()) {
     return;
   }
 
-  // Membaca data kartu RFID[cite: 23]
+  // Membaca data kartu RFID
   if (!mfrc522.PICC_ReadCardSerial()) {
     return;
   }
 
-  // Menyimpan UID kartu yang terbaca[cite: 23]
+  // Menyimpan UID kartu yang terbaca
   byte readUID[4];
 
   if (mfrc522.uid.size == 4) {
@@ -688,7 +688,7 @@ void loop() {
     }
   }
 
-  // Memeriksa apakah kartu adalah kartu1[cite: 23]
+  // Memeriksa apakah kartu adalah kartu1
   if (mfrc522.uid.size == 4 &&
       compareUID(readUID, kartu1, 4)) {
 
@@ -698,7 +698,7 @@ void loop() {
 
   }
 
-  // Memeriksa apakah kartu adalah kartu2[cite: 23]
+  // Memeriksa apakah kartu adalah kartu2
   else if (mfrc522.uid.size == 4 &&
            compareUID(readUID, kartu2, 4)) {
 
@@ -708,7 +708,7 @@ void loop() {
 
   }
 
-  // Jika kartu tidak terdaftar[cite: 23]
+  // Jika kartu tidak terdaftar
   else {
     Serial.println("Kartu Tidak Terdaftar");
     Serial.print("UID Kartu: ");
@@ -722,7 +722,7 @@ void loop() {
 
   Serial.println("--------------------");
 
-  // Mengakhiri komunikasi dengan kartu RFID[cite: 23]
+  // Mengakhiri komunikasi dengan kartu RFID
   mfrc522.PICC_HaltA();
   mfrc522.PCD_StopCrypto1();
 
@@ -739,25 +739,25 @@ void loop() {
           schemaImg: "img/modul05/5.1.2.png",
           schemaFallbackImg: "5.1.2.png",
           schemaDesc:
-            "<strong>Skema Misi 3:</strong> Modul RFID RC522, Modul Relay untuk Solenoid Door Lock terhubung ke <strong class='text-teal-700'>Pin 2</strong>, dan Motor Getar (buzzer/vibration) terhubung ke <strong class='text-teal-700'>Pin 3</strong> dengan suplai eksternal adaptor 12V[cite: 32].",
-          desc: "<strong>Tugas Misi 3:</strong> Mengontrol akses pintu otomatis menggunakan Solenoid Door Lock. Akses diterima akan mengaktifkan relay selama 5 detik, sedangkan akses ditolak akan memicu motor getar[cite: 24].",
-          rawCode: `// --- MISI 3: SOLENOID DOOR LOCK DENGAN RFID ---[cite: 24]
+            "<strong>Skema Misi 3:</strong> Modul RFID RC522, Modul Relay untuk Solenoid Door Lock terhubung ke <strong class='text-teal-700'>Pin 2</strong>, dan Motor Getar (buzzer/vibration) terhubung ke <strong class='text-teal-700'>Pin 3</strong> dengan suplai eksternal adaptor 12V.",
+          desc: "<strong>Tugas Misi 3:</strong> Mengontrol akses pintu otomatis menggunakan Solenoid Door Lock. Akses diterima akan mengaktifkan relay selama 5 detik, sedangkan akses ditolak akan memicu motor getar.",
+          rawCode: `// --- MISI 3: SOLENOID DOOR LOCK DENGAN RFID ---
 #include <SPI.h>
 #include <MFRC522.h>
 
-// Deklarasi pin komponen[cite: 24]
+// Deklarasi pin komponen
 #define SS_PIN 10
 #define RST_PIN 9
 #define RELAY_PIN 2
 #define GETAR_PIN 3
 
-// Inisialisasi modul RFID[cite: 24]
+// Inisialisasi modul RFID
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
-// Ganti dengan UID kartu yang diizinkan[cite: 24]
+// Ganti dengan UID kartu yang diizinkan
 byte kartu1[4] = {0x0B, 0x3C, 0xB5, 0x02};
 
-// Fungsi untuk membandingkan UID kartu[cite: 24]
+// Fungsi untuk membandingkan UID kartu
 bool compareUID(byte *readUID, byte *kartu1, byte size) {
   if (size != 4) return false;
 
@@ -770,36 +770,36 @@ bool compareUID(byte *readUID, byte *kartu1, byte size) {
 }
 
 void setup() {
-  // Memulai komunikasi Serial dan RFID[cite: 24]
+  // Memulai komunikasi Serial dan RFID
   Serial.begin(9600);
   SPI.begin();
   mfrc522.PCD_Init();
 
-  // Mengatur pin relay dan motor getar sebagai output[cite: 24]
+  // Mengatur pin relay dan motor getar sebagai output
   pinMode(RELAY_PIN, OUTPUT);
   pinMode(GETAR_PIN, OUTPUT);
 
-  // Memastikan relay dan motor getar mati[cite: 24]
+  // Memastikan relay dan motor getar mati
   digitalWrite(RELAY_PIN, LOW);
   digitalWrite(GETAR_PIN, LOW);
 
-  // Menampilkan pesan awal[cite: 24]
+  // Menampilkan pesan awal
   Serial.println("RFID Door Lock");
   Serial.println("Scan Kartu RFID");
 }
 
 void loop() {
-  // Memeriksa keberadaan kartu RFID[cite: 24]
+  // Memeriksa keberadaan kartu RFID
   if (!mfrc522.PICC_IsNewCardPresent()) {
     return;
   }
 
-  // Membaca data kartu RFID[cite: 24]
+  // Membaca data kartu RFID
   if (!mfrc522.PICC_ReadCardSerial()) {
     return;
   }
 
-  // Menyimpan UID kartu yang terbaca[cite: 24]
+  // Menyimpan UID kartu yang terbaca
   byte readUID[4];
 
   if (mfrc522.uid.size == 4) {
@@ -808,11 +808,11 @@ void loop() {
     }
   }
 
-  // Memeriksa apakah UID sesuai dengan kartu1[cite: 24]
+  // Memeriksa apakah UID sesuai dengan kartu1
   if (mfrc522.uid.size == 4 &&
       compareUID(readUID, kartu1, mfrc522.uid.size)) {
 
-    // Jika kartu diterima, relay aktif 5 detik[cite: 24]
+    // Jika kartu diterima, relay aktif 5 detik
     Serial.println("Akses Diterima - Kartu 1");
 
     digitalWrite(RELAY_PIN, HIGH);
@@ -823,7 +823,7 @@ void loop() {
 
   } else {
 
-    // Jika kartu ditolak, motor getar aktif 5 detik[cite: 24]
+    // Jika kartu ditolak, motor getar aktif 5 detik
     Serial.println("Akses Ditolak");
     Serial.println("Motor Getar Aktif");
 
@@ -834,11 +834,11 @@ void loop() {
     Serial.println("Motor Getar Mati");
   }
 
-  // Mengakhiri komunikasi dengan kartu RFID[cite: 24]
+  // Mengakhiri komunikasi dengan kartu RFID
   mfrc522.PICC_HaltA();
   mfrc522.PCD_StopCrypto1();
 
-  // Menunggu pemindaian kartu berikutnya[cite: 24]
+  // Menunggu pemindaian kartu berikutnya
   Serial.println("Scan Kartu RFID");
 }`,
         },
