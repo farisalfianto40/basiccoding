@@ -1,0 +1,569 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sub 5.3 - Studi Kasus Sistem Penyiraman Otomatis</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      body {
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 9999px;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-100 text-slate-800 font-sans min-h-screen flex flex-col antialiased pb-10"
+  >
+    <!-- HEADER APP -->
+    <header
+      class="bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-3"
+      >
+        <div class="flex items-center gap-3">
+          <a
+            href="index.html"
+            class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-sm transition-colors"
+            title="Kembali"
+          >
+            <i class="fa-solid fa-home"></i>
+          </a>
+          <div>
+            <div class="flex items-center gap-2">
+              <span
+                class="text-[10px] font-extrabold bg-teal-100 text-teal-800 px-2 py-0.5 rounded uppercase tracking-wider"
+              >
+                SUB 5.3
+              </span>
+            </div>
+            <h1
+              class="text-sm sm:text-base font-black text-slate-900 leading-tight mt-0.5"
+            >
+              Studi Kasus Sistem Penyiraman Otomatis
+            </h1>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <!-- HERO BANNER RINGKAS -->
+      <section
+        class="bg-gradient-to-r from-teal-800 to-teal-700 text-white rounded-2xl p-5 sm:p-6 shadow-xs relative overflow-hidden"
+      >
+        <div
+          class="absolute -right-4 -bottom-6 opacity-15 pointer-events-none hidden sm:block select-none"
+        >
+          <i class="fa-solid fa-droplet text-[140px] text-teal-100"></i>
+        </div>
+        <div class="relative z-10 space-y-1.5 max-w-2xl">
+          <div
+            class="inline-flex items-center gap-2 bg-white/15 border border-white/20 text-teal-50 px-2.5 py-0.5 rounded-full text-xs font-semibold backdrop-blur-md"
+          >
+            <i class="fa-solid fa-laptop-code text-teal-200 text-xs"></i>
+            <span>Lembar Kerja Studi Kasus Modul 5</span>
+          </div>
+          <h2
+            class="text-lg sm:text-xl font-extrabold text-white leading-tight display-font"
+          >
+            Kalibrasi & Kontrol Otomatis Kelembapan Tanah
+          </h2>
+          <p
+            class="text-xs sm:text-sm text-teal-50/90 leading-relaxed font-normal"
+          >
+            Pengujian kalibrasi sensor Capacitive Soil Moisture v1.2 (Hitam),
+            konversi nilai analog ke persentase (0–100%), serta kontrol otomatis
+            pompa 5V dan LED indikator.
+          </p>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- STUDI KASUS SOAL 5.3                       -->
+      <!-- ========================================== -->
+      <section
+        class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5"
+      >
+        <!-- HEADER SOAL -->
+        <div
+          class="flex items-center justify-between border-b border-slate-100 pb-3"
+        >
+          <div class="flex items-center gap-2.5">
+            <span
+              class="w-7 h-7 rounded-lg bg-teal-600 text-white flex items-center justify-center font-bold text-xs"
+              >1</span
+            >
+            <h3 class="text-sm sm:text-base font-extrabold text-slate-900">
+              Studi Kasus - Kalibrasi Sensor Capacitive v1.2 & Kontrol Pompa Air
+              5V
+            </h3>
+          </div>
+          <span
+            class="text-[10px] font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded border border-teal-200 uppercase"
+          >
+            Soal Studi Kasus
+          </span>
+        </div>
+
+        <!-- INSTRUKSI / SOAL -->
+        <div
+          class="bg-teal-50/80 border border-teal-200 rounded-xl p-3.5 text-xs sm:text-sm text-teal-950 space-y-2"
+        >
+          <div class="font-bold flex items-center gap-1.5">
+            <i class="fa-solid fa-circle-info text-teal-600"></i> Skenario &amp;
+            Prosedur Praktikum:
+          </div>
+          <p class="text-slate-700 leading-relaxed">
+            Pada sistem pertanian cerdas, digunakan
+            <strong>Capacitive Soil Moisture Sensor v1.2 (Warna Hitam)</strong>
+            yang terhubung ke pin analog <strong>A0</strong>. Sensor ini
+            menghasilkan sinyal analog tegangan terbalik:
+            <i
+              >semakin kering media tanah, semakin tinggi nilai ADC yang
+              terbaca</i
+            >.
+          </p>
+          <div class="space-y-1.5 text-slate-700 pt-1">
+            <div class="font-bold text-teal-900">Langkah Kerjanya:</div>
+            <ol
+              class="list-decimal list-inside space-y-1 pl-1 text-xs sm:text-sm"
+            >
+              <li>
+                <strong>Kalibrasi Sensor:</strong> Catat nilai ADC saat sensor
+                di udara terbuka (<code class="font-semibold text-rose-700"
+                  >adcKering</code
+                >) dan saat sensor dicelupkan ke wadah air (<code
+                  class="font-semibold text-emerald-700"
+                  >adcBasah</code
+                >). Catat nilai hasil pengamatan ke dalam tabel.
+              </li>
+              <li>
+                <strong>Pemetaan Persentase:</strong> Gunakan rumus
+                <code
+                  class="bg-teal-100 text-teal-900 px-1 py-0.5 rounded font-mono"
+                  >map(nilaiADC, adcKering, adcBasah, 0, 100)</code
+                >
+                lalu kunci rentangnya menggunakan
+                <code
+                  class="bg-teal-100 text-teal-900 px-1 py-0.5 rounded font-mono"
+                  >constrain(persen, 0, 100)</code
+                >.
+              </li>
+              <li>
+                <strong>Aktivasi Relay &amp; Indikator LED:</strong>
+                <ul
+                  class="list-disc list-inside pl-4 mt-1 space-y-0.5 text-slate-600"
+                >
+                  <li>
+                    <strong>Kelembapan &lt; 40% (Kering):</strong> Relay Aktif
+                    (Pompa Air 5V ON), LED Merah ON, LED Kuning OFF, LED Hijau
+                    OFF.
+                  </li>
+                  <li>
+                    <strong>Kelembapan 40% – 70% (Lembap Ideal):</strong> Relay
+                    Nonaktif (Pompa Air 5V OFF), LED Merah OFF, LED Kuning ON,
+                    LED Hijau OFF.
+                  </li>
+                  <li>
+                    <strong>Kelembapan &gt; 70% (Sangat Basah):</strong> Relay
+                    Nonaktif (Pompa Air 5V OFF), LED Merah OFF, LED Kuning OFF,
+                    LED Hijau ON.
+                  </li>
+                </ul>
+              </li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- TABEL 1: KALIBRASI NILAI ANALOG (KOSONG UTK PENGAMATAN) -->
+        <div class="space-y-2">
+          <h4
+            class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-sliders text-teal-600"></i> Tabel Pengamatan
+            1: Hasil Kalibrasi Nilai Analog (ADC)
+          </h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs border-collapse">
+              <thead>
+                <tr
+                  class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200"
+                >
+                  <th class="p-2.5 border border-slate-200 text-center w-12">
+                    No
+                  </th>
+                  <th class="p-2.5 border border-slate-200 text-left">
+                    Kondisi Pengujian Media Sensor
+                  </th>
+                  <th class="p-2.5 border border-slate-200 text-center">
+                    Pembacaan Analog ADC (0–1023)
+                  </th>
+                  <th class="p-2.5 border border-slate-200 text-center">
+                    Target Kelembapan (%)
+                  </th>
+                  <th class="p-2.5 border border-slate-200 text-center">
+                    Keterangan Kalibrasi
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-[11px] font-mono">
+                <tr class="hover:bg-slate-50">
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold"
+                  >
+                    1
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 font-sans text-slate-800"
+                  >
+                    Udara Bebas / Pot Kering
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center text-slate-400 italic bg-amber-50/50"
+                  >
+                    ... (Isi Nilai ADC)
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold text-rose-600"
+                  >
+                    0 %
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-sans font-bold text-rose-600"
+                  >
+                    Batas Maksimal ADC (<code class="text-[10px]"
+                      >adcKering</code
+                    >)
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold"
+                  >
+                    2
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 font-sans text-slate-800"
+                  >
+                    Sensor Terendam Air / Basah
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center text-slate-400 italic bg-teal-50/50"
+                  >
+                    ... (Isi Nilai ADC)
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold text-emerald-600"
+                  >
+                    100 %
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-sans font-bold text-emerald-600"
+                  >
+                    Batas Minimal ADC (<code class="text-[10px]">adcBasah</code
+                    >)
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TABEL 2: TEST CASE HASIL PEMETAAN & AKTUASI OTOMATIS -->
+        <div class="space-y-2">
+          <h4
+            class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-microchip text-teal-600"></i> Tabel Pengamatan
+            2: Hasil Pemetaan Persen &amp; Respon Output Sistem
+          </h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs border-collapse">
+              <thead>
+                <tr
+                  class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200"
+                >
+                  <th class="p-2.5 border border-slate-200 text-center w-10">
+                    No
+                  </th>
+                  <th class="p-2.5 border border-slate-200 text-left">
+                    Kondisi Sampel
+                  </th>
+                  <th class="p-2.5 border border-slate-200 text-center">
+                    Nilai Analog (ADC)
+                  </th>
+                  <th class="p-2.5 border border-slate-200 text-center">
+                    Hasil Persen (%)
+                  </th>
+                  <th class="p-2.5 border border-slate-200 text-center">
+                    Status Relay / Pompa
+                  </th>
+                  <th class="p-2.5 border border-slate-200 text-center">
+                    Indikator LED
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-[11px]">
+                <tr class="hover:bg-slate-50">
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold font-mono"
+                  >
+                    1
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 font-bold text-rose-700"
+                  >
+                    Sangat Kering
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-mono text-slate-400 italic"
+                  >
+                    ...
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-mono font-bold text-rose-600"
+                  >
+                    &lt; 40%
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold text-emerald-600"
+                  >
+                    ON (Pompa Menyala)
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold text-rose-600"
+                  >
+                    LED Merah ON
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold font-mono"
+                  >
+                    2
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 font-bold text-amber-600"
+                  >
+                    Lembap (Ideal)
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-mono text-slate-400 italic"
+                  >
+                    ...
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-mono font-bold text-amber-600"
+                  >
+                    40% - 70%
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold text-rose-600"
+                  >
+                    OFF (Mati)
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold text-amber-600"
+                  >
+                    LED Kuning ON
+                  </td>
+                </tr>
+                <tr class="hover:bg-slate-50">
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold font-mono"
+                  >
+                    3
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 font-bold text-emerald-700"
+                  >
+                    Sangat Basah
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-mono text-slate-400 italic"
+                  >
+                    ...
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-mono font-bold text-emerald-600"
+                  >
+                    &gt; 70%
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold text-rose-600"
+                  >
+                    OFF (Mati)
+                  </td>
+                  <td
+                    class="p-2.5 border border-slate-200 text-center font-bold text-emerald-600"
+                  >
+                    LED Hijau ON
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- PETUNJUK KODE ARDUINO (BG TERANG) -->
+        <div
+          class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2"
+        >
+          <h4
+            class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5"
+          >
+            <i class="fa-solid fa-code text-teal-600"></i> Petunjuk Pemrograman
+            Arduino C++
+          </h4>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Gunakan variabel konstanta kalibrasi hasil praktikum Anda pada
+            fungsi
+            <code
+              class="font-mono bg-slate-200 text-slate-800 px-1 py-0.5 rounded"
+              >map()</code
+            >
+            dan pembatas
+            <code
+              class="font-mono bg-slate-200 text-slate-800 px-1 py-0.5 rounded"
+              >constrain()</code
+            >:
+          </p>
+          <div
+            class="bg-white border border-slate-200 text-slate-800 p-3.5 rounded-lg font-mono text-xs overflow-x-auto shadow-2xs leading-relaxed"
+          >
+            <span class="text-slate-400"
+              >// 1. Nilai Hasil Kalibrasi Pengamatan Anda</span
+            ><br />
+            <span class="text-teal-700 font-semibold">const int</span> adcKering
+            = <span class="text-rose-600 font-bold">820</span>;
+            <span class="text-slate-400"
+              >// Ganti dengan ADC saat udara/tanah kering</span
+            ><br />
+            <span class="text-teal-700 font-semibold">const int</span> adcBasah
+            = <span class="text-emerald-600 font-bold">380</span>;
+            <span class="text-slate-400"
+              >// Ganti dengan ADC saat sensor terendam air</span
+            ><br /><br />
+
+            <span class="text-slate-400"
+              >// 2. Pembacaan ADC dan Konversi ke Persentase</span
+            ><br />
+            <span class="text-teal-700 font-semibold">int</span> nilaiADC =
+            <span class="text-amber-600 font-semibold">analogRead</span
+            >(A0);<br />
+            <span class="text-teal-700 font-semibold">int</span> persentase =
+            <span class="text-amber-600 font-semibold">map</span>(nilaiADC,
+            adcKering, adcBasah,
+            <span class="text-emerald-600 font-bold">0</span>,
+            <span class="text-emerald-600 font-bold">100</span>);<br />
+            persentase =
+            <span class="text-amber-600 font-semibold">constrain</span
+            >(persentase, <span class="text-emerald-600 font-bold">0</span>,
+            <span class="text-emerald-600 font-bold">100</span>);
+            <span class="text-slate-400">// Batasi agar tetap 0-100%</span
+            ><br /><br />
+
+            <span class="text-slate-400"
+              >// 3. Logika Otomatisasi Pompa & LED Indikator</span
+            ><br />
+            <span class="text-teal-700 font-semibold">if</span> (persentase &lt;
+            <span class="text-emerald-600 font-bold">40</span>) {<br />
+            &nbsp;&nbsp;<span class="text-amber-600 font-semibold"
+              >digitalWrite</span
+            >(pinRelay, LOW);
+            <span class="text-slate-400">// Pompa ON (Active-LOW)</span><br />
+            &nbsp;&nbsp;<span class="text-amber-600 font-semibold"
+              >digitalWrite</span
+            >(ledMerah, HIGH);
+            <span class="text-slate-400">// Indikator Kering</span><br />
+            &nbsp;&nbsp;<span class="text-amber-600 font-semibold"
+              >digitalWrite</span
+            >(ledKuning, LOW);<br />
+            &nbsp;&nbsp;<span class="text-amber-600 font-semibold"
+              >digitalWrite</span
+            >(ledHijau, LOW);<br />
+            }
+            <span class="text-teal-700 font-semibold">else if</span> (persentase
+            &lt;= <span class="text-emerald-600 font-bold">70</span>) {<br />
+            &nbsp;&nbsp;<span class="text-amber-600 font-semibold"
+              >digitalWrite</span
+            >(pinRelay, HIGH); <span class="text-slate-400">// Pompa OFF</span
+            ><br />
+            &nbsp;&nbsp;<span class="text-amber-600 font-semibold"
+              >digitalWrite</span
+            >(ledMerah, LOW);<br />
+            &nbsp;&nbsp;<span class="text-amber-600 font-semibold"
+              >digitalWrite</span
+            >(ledKuning, HIGH);
+            <span class="text-slate-400">// Indikator Ideal</span><br />
+            &nbsp;&nbsp;<span class="text-amber-600 font-semibold"
+              >digitalWrite</span
+            >(ledHijau, LOW);<br />
+            } <span class="text-teal-700 font-semibold">else</span> {<br />
+            &nbsp;&nbsp;<span class="text-amber-600 font-semibold"
+              >digitalWrite</span
+            >(pinRelay, HIGH); <span class="text-slate-400">// Pompa OFF</span
+            ><br />
+            &nbsp;&nbsp;<span class="text-amber-600 font-semibold"
+              >digitalWrite</span
+            >(ledMerah, LOW);<br />
+            &nbsp;&nbsp;<span class="text-amber-600 font-semibold"
+              >digitalWrite</span
+            >(ledKuning, LOW);<br />
+            &nbsp;&nbsp;<span class="text-amber-600 font-semibold"
+              >digitalWrite</span
+            >(ledHijau, HIGH);
+            <span class="text-slate-400">// Indikator Sangat Basah</span><br />
+            }
+          </div>
+        </div>
+      </section>
+
+      <!-- NAVIGATION FOOTER -->
+      <nav class="flex items-center justify-between pt-2">
+        <a
+          href="5.2.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 font-bold text-xs transition-colors shadow-2xs"
+        >
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Sub 5.2: Linear Selenoid</span>
+        </a>
+        <a
+          href="index.html"
+          class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-teal-600 text-white hover:bg-teal-700 font-bold text-xs transition-colors shadow-xs"
+        >
+          <span>Finish</span>
+          <i class="fa-solid fa-check"></i>
+        </a>
+      </nav>
+    </main>
+
+    <footer
+      class="max-w-4xl mx-auto w-full px-4 pt-4 text-center text-xs text-slate-400 font-medium"
+    >
+      <p>© MIKRO EDU - SMK SMTI Yogyakarta | Teknik Kimia Industri</p>
+    </footer>
+  </body>
+</html>
